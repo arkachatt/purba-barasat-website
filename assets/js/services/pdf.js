@@ -149,7 +149,7 @@ export async function buildApplicationPdf({ receipt }) {
   doc.text(`Phone ${school.phones.map((p) => p.label).join(' / ')} · ${school.email.label} · DISE ${school.diseCode}`,
     headCentre, y, { align: 'center' });
   y += 4;
-  doc.text('Government-aided · Affiliated to WBBSE & WBCHSE', headCentre, y, { align: 'center' });
+  doc.text('Government-sponsored · Affiliated to WBBSE & WBCHSE', headCentre, y, { align: 'center' });
 
   y = photo.y + photo.h + 6;
   doc.setDrawColor(40); doc.setLineWidth(0.5);

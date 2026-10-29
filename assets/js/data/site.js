@@ -46,13 +46,16 @@ export const school = {
   email: { label: 'pbab.1963@gmail.com', href: 'mailto:pbab.1963@gmail.com' },
   officeHours: 'Office hours: 10:30–16:30, Mon–Sat',
   session: 'Session 2026–27',
-  diseCode: '19110700000',
+  /* UDISE+ code, confirmed against the national school register and matched
+     to the school's WBCHSE institute code 103182. */
+  diseCode: '19112301305',
+  wbchseCode: '103182',
   lastUpdated: '18 Sep 2026',
 };
 
 /** The line above the masthead: what kind of school this is, at a glance. */
 export const headerStrip = {
-  authority: 'Government-aided · School Education Department, Govt. of West Bengal · Affiliated to WBBSE & WBCHSE',
+  authority: 'Government-sponsored · School Education Department, Govt. of West Bengal · Affiliated to WBBSE & WBCHSE',
   meta: [school.session, 'Office: 10:30–16:30, Mon–Sat'],
 };
 
@@ -97,7 +100,7 @@ export const carouselSlides = [
 ];
 
 export const carouselIntro = {
-  kicker: `Estd. ${school.established} · Govt.-aided · Classes V–XII`,
+  kicker: `Estd. ${school.established} · Govt.-sponsored · Classes V–XII`,
   title: `Welcome to ${school.name}`,
   titleBn: 'পূর্ব বারাসাত আদর্শ বিদ্যাপীঠে আপনাকে স্বাগত',
   shortMeta: `Estd. ${school.established} · Classes V–XII`,
@@ -153,7 +156,7 @@ export const footerLinks = [
 ];
 
 export const affiliation =
-  'Government-aided school under the <strong>School Education Department, Government of West Bengal</strong>. ' +
+  'Government-sponsored school under the <strong>School Education Department, Government of West Bengal</strong>. ' +
   'Affiliated to WBBSE (Madhyamik) and WBCHSE (Higher Secondary).';
 
 /** Log-in gateway. Roles are data, so a fourth one is a single entry. */
@@ -232,11 +235,12 @@ export const about = {
      still placeholders, so they are deliberately not repeated here. */
   glance: [
     ['Established', '1963'],
-    ['Type', 'Govt.-aided, co-ed'],
+    ['Type', 'Govt.-sponsored, co-ed'],
     ['Classes', 'V – XII'],
     ['Streams', 'Science · Commerce · Arts'],
     ['Boards', 'WBBSE · WBCHSE'],
     ['Vocational', 'WBSCVET'],
+    ['UDISE', '19112301305'],
     ['Medium', 'Bengali'],
     ['Category', '‘A’ Category school'],
   ],
@@ -262,10 +266,13 @@ export const hmLetter = {
   post: 'Headmaster (HM) · Chemistry',
   credentials: 'M.Sc. (Chemistry), B.Ed. (First Class)',
   meta: ['Message updated 12 Aug 2026', 'Session 2026–27'],
+  /* The Headmaster has no separate email — write to the school office. The
+     room number and parent-meeting hours that sat here were invented by the
+     design and have been removed rather than left on a live page about a
+     real person; add them back when the office confirms them. */
   details: [
-    ['Office', 'Room 1, Ground floor'],
-    ['Meets parents', 'Sat 11:00–13:00'],
-    ['Email', '<a href="mailto:hm.pbab@gmail.com">hm.pbab@gmail.com</a>'],
+    ['Email', '<a href="mailto:pbab.1963@gmail.com">pbab.1963@gmail.com</a> <span class="text-muted">(school office)</span>'],
+    ['Phone', '<a href="tel:+913325522928">(033) 2552 2928</a>'],
   ],
   salutation: 'Dear parents, students and colleagues,',
   paragraphs: [

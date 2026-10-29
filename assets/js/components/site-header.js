@@ -109,7 +109,7 @@ class SiteHeader extends SiteComponent {
                     <a class="drawer-child" href="${child.href}">${child.label}</a>`)}
                 </div>`)}
             </div>`)}
-          <div class="drawer-foot">Govt.-aided · School Education Dept., Govt. of West Bengal</div>
+          <div class="drawer-foot">Govt.-sponsored · School Education Dept., Govt. of West Bengal</div>
         </div>
       </header>`;
   }
