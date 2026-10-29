@@ -23,9 +23,13 @@ export const features = {
   results: false,
 
   /* The syllabus tab of the Academic Calendar. Off until the subject PDFs are
-     uploaded: hides the tab and the header dropdown entry. The holiday list
-     and the exam schedule are unaffected. */
+     uploaded: hides the tab and the header dropdown entry. */
   syllabus: false,
+
+  /* The exam schedule. Off because the routine still carries the design's
+     invented dates, which run Jun 2026 – Mar 2027 and so contradict the real
+     holiday list beside them. On again once the school's routine is in. */
+  exams: false,
 };
 
 export const school = {
@@ -77,7 +81,7 @@ export const navigation = [
   { label: 'Academic Calendar', bn: 'শিক্ষাবর্ষ পঞ্জিকা',     href: 'calendar.html',
     children: [
       { label: 'Holiday List',  bn: 'ছুটির তালিকা',          href: 'calendar.html#holidays' },
-      { label: 'Exam Schedule', bn: 'পরীক্ষার সূচি',          href: 'calendar.html#exams' },
+      { label: 'Exam Schedule', bn: 'পরীক্ষার সূচি',          href: 'calendar.html#exams', feature: 'exams' },
       { label: 'Syllabus',      bn: 'পাঠ্যসূচি',             href: 'calendar.html#syllabus', feature: 'syllabus' },
     ] },
   { label: 'Results & Events',  bn: 'ফলাফল ও অনুষ্ঠান',      href: 'results.html', feature: 'results' },
@@ -562,7 +566,7 @@ export const calendar = {
   titleBn: 'শিক্ষাবর্ষ পঞ্জিকা',
   tabs: [
     { id: 'holidays', label: 'Holiday List',   bn: 'ছুটির তালিকা', short: 'Holidays' },
-    { id: 'exams',    label: 'Exam Schedule',  bn: 'পরীক্ষার সূচি', short: 'Exams' },
+    { id: 'exams',    label: 'Exam Schedule',  bn: 'পরীক্ষার সূচি', short: 'Exams', feature: 'exams' },
     { id: 'syllabus', label: 'Syllabus',       bn: 'পাঠ্যসূচি',    short: 'Syllabus', feature: 'syllabus' },
   ],
 };

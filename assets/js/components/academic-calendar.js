@@ -65,6 +65,7 @@ class AcademicCalendar extends SiteComponent {
   render() {
     const current = this.tab;
     return html`
+      ${when(tabs.length > 1, () => html`
       <div class="tabs" role="tablist">
         ${each(tabs, (tab) => html`
           <a class="tab" role="tab" href="#${tab.id}" data-tab="${tab.id}"
@@ -74,14 +75,15 @@ class AcademicCalendar extends SiteComponent {
         ${each(tabs, (tab) => html`
           <a class="seg-opt" role="tab" href="#${tab.id}" data-tab="${tab.id}"
              aria-selected="${tab.id === current}">${tab.short}</a>`)}
-      </div>
+      </div>`)}
 
       <div class="calendar-panel" data-panel="holidays" ${raw(current === 'holidays' ? '' : 'hidden')}>
         ${this.renderHolidays()}
       </div>
-      <div class="calendar-panel" data-panel="exams" ${raw(current === 'exams' ? '' : 'hidden')}>
-        ${this.renderExams()}
-      </div>
+      ${when(features.exams, () => html`
+        <div class="calendar-panel" data-panel="exams" ${raw(current === 'exams' ? '' : 'hidden')}>
+          ${this.renderExams()}
+        </div>`)}
       ${when(features.syllabus, () => html`
         <div class="calendar-panel" data-panel="syllabus" ${raw(current === 'syllabus' ? '' : 'hidden')}>
           ${this.renderSyllabus()}
