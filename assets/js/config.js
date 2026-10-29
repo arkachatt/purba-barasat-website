@@ -14,7 +14,7 @@ export const config = {
    * and issues a local reference, and tells the applicant the reference was
    * issued by the website rather than the office.
    */
-  admissionEndpoint: '',
+  admissionEndpoint: 'https://script.google.com/macros/s/AKfycbyiriORtpA-_aiamU4h9cufWucCjXjOeJS3TRhjWSDKz9X3YU-KwQk31cDDTT66hXpPkA/exec',
 
   /** How long to wait for that endpoint before falling back (milliseconds). */
   admissionTimeoutMs: 12000,
