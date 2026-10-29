@@ -106,6 +106,50 @@ Three states every admin-updated site hits are real components, not decoration:
   and by `<offline-bar>`, which sits in every page shell and appears only when
   the browser goes offline.
 
+## The admission form
+
+`admission-form.html` is a single page of questions built from
+`admissionForm.groups` in `data/site.js`. Submitting does three things, in
+this order:
+
+1. **Posts to a Google Sheet** through a Google Apps Script web app, which
+   returns the official reference number. Set the endpoint in
+   `assets/js/config.js`; the script and its ten-minute deployment guide are
+   in `integrations/admission-sheet/`.
+2. **Builds and downloads a one-page A4 PDF** — the form the guardian prints,
+   signs and brings to school, with signature lines and an office-use box.
+3. **Hands over to the confirmation page**, which can download the PDF again.
+
+The PDF is produced **whatever the network does**. If the sheet cannot be
+reached the reference is minted locally and marked `W-` so the office can see
+at a glance that it was never registered online, and the confirmation page
+offers to retry sending.
+
+**Adding a question** is one object in one group in `data/site.js`, plus its
+`name` appended to `COLUMNS` in `Code.gs`. It then appears on screen, in the
+sheet and on the PDF automatically.
+
+**The one dependency.** jsPDF is fetched from a CDN *only when someone
+submits*, so ordinary visitors never download it. `config.pdfSources` lists
+fallbacks in order; to make the form work with no network at all, drop
+jsPDF's `jspdf.umd.min.js` into `assets/vendor/` and put it first in that
+list. Note that jsPDF's own `.es.min.js` build cannot be imported directly in
+a browser — it has bare specifiers — which is why the list uses jsDelivr's
+`/+esm` endpoint.
+
+**English only on the PDF.** The built-in PDF fonts cannot draw Bengali, so
+the Bengali name is collected and stored but left off the printout, and any
+other Bengali typed into an English field is dropped with a note at the foot
+of the form rather than printed as mojibake.
+
+## Hosting on GitHub Pages
+
+The site is plain static files with no build step, so it works as-is: push the
+repo and enable Pages. Every path is relative, so a project page served from
+`/<repo>/` works without changes, and a `.nojekyll` file is included so that
+nothing is run through Jekyll. The admission form posts cross-origin to Apps
+Script, which is fine from a Pages origin.
+
 ## Feature switches
 
 `features` at the top of `data/site.js` hides parts of the site without
@@ -133,11 +177,11 @@ with a `set*Adapter()` seam. Until those are wired:
 
 - **`auth.js`** — the log-in forms validate, then report that the management
   software is not connected. `setAuthAdapter(fn)` makes all three roles live.
-- **`admission.js`** — the draft is saved to the browser (`localStorage`),
-  uploads are checked for size and type but never leave the device, and
-  submission mints a local reference so the confirmation can be printed. The
-  confirmation page says so in as many words. Three seams:
-  `setUploadAdapter`, `setSubmitAdapter`, and `rules` for validation.
+- **`admission.js`** — **live**, once you deploy the Apps Script. The form
+  posts to a Google Sheet and prints a real PDF; see *The admission form*
+  below. With no endpoint configured it still validates, still produces the
+  PDF, and tells the applicant the reference came from the website rather than
+  the office. Seams: `setSubmitAdapter` and `rules`.
 - **`enquiry.js`** — the contact form validates, then points the visitor at the
   phone number. `setEnquiryAdapter(fn)` connects the office inbox.
 - **Photographs** — every image slot (`carouselSlides`, `headmaster.photo`,

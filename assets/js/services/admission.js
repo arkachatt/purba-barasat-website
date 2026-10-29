@@ -1,13 +1,21 @@
 /**
  * admission.js — the seam between the application form and the school office.
  *
- * Like services/auth.js, this is where the real system plugs in. Today the
- * draft lives in the browser, uploads never leave it, and submission produces
- * a local reference number. Swap the three adapters and the wizard is live.
+ * The form posts to a Google Apps Script web app, which appends a row to the
+ * school's spreadsheet and hands back an official reference number. None of
+ * that is required for the form to work: with no endpoint configured, or with
+ * the network down, the applicant still gets a validated form and a printable
+ * PDF carrying a locally-minted reference. The printout is what they bring to
+ * school, so it must never depend on a server answering.
  */
+import { config } from '../config.js';
+import { admissionForm } from '../data/site.js';
 
 const DRAFT_KEY = 'pbab.admission.draft';
 const SUBMISSION_KEY = 'pbab.admission.submitted';
+
+/** Every field, in order, flattened out of the form's visual groups. */
+export const allFields = () => admissionForm.groups.flatMap((group) => group.fields);
 
 /* ── validation ─────────────────────────────────────────────────────────── */
 
@@ -26,21 +34,24 @@ export const rules = {
   /** Class V needs the applicant to be 10+ on 1 January of the session year. */
   age(value, data) {
     if (!value) return null;
-    const cutoff = new Date('2027-01-01');
+    const cutoff = new Date(admissionForm.ageCutoff || '2027-01-01');
     const dob = new Date(value);
     if (Number.isNaN(dob.getTime())) return 'Enter a valid date of birth.';
     let age = cutoff.getFullYear() - dob.getFullYear();
     const before = cutoff.getMonth() < dob.getMonth() ||
       (cutoff.getMonth() === dob.getMonth() && cutoff.getDate() < dob.getDate());
     if (before) age -= 1;
-    if (data.class === 'Class V' && age < 10) {
-      return 'Applicant must be 10+ on 1 Jan 2027 for Class V.';
-    }
+    if (age < 10) return 'Applicant must be 10+ on 1 Jan 2027 for Class V.';
+    if (age > 14) return 'Please check the date of birth — the applicant is over 14.';
     return null;
   },
 };
 
-/** Validate one step's fields. Returns { fieldName: message } — empty when clean. */
+/**
+ * Validate a set of fields. Takes anything with a `.fields` array, which is
+ * why the contact form reuses it — do not narrow this signature.
+ * @returns {Record<string,string>} field name → message; empty when clean
+ */
 export function validateStep(step, data) {
   const errors = {};
   for (const field of step.fields || []) {
@@ -57,42 +68,107 @@ export function validateStep(step, data) {
   return errors;
 }
 
-/* ── uploads ────────────────────────────────────────────────────────────── */
+/** The whole form at once, across every group. */
+export function validateAll(data) {
+  return validateStep({ fields: allFields() }, data);
+}
 
-export class UploadError extends Error {}
+/* ── references ─────────────────────────────────────────────────────────── */
 
 /**
- * The upload adapter. The default one only checks the file and reports
- * progress — nothing leaves the browser. Replace it with a real upload:
- *   setUploadAdapter(async (file, onProgress) => { … return { url } })
+ * A stable key for one attempt, so a retry updates the same row rather than
+ * adding a second one. Minted once per draft and carried through.
  */
-let uploadAdapter = async (file, onProgress) => {
-  for (let percent = 20; percent < 100; percent += 20) {
-    await new Promise((resolve) => setTimeout(resolve, 120));
-    onProgress(percent);
-  }
-  return { url: null, local: true };
-};
-
-export function setUploadAdapter(next) { uploadAdapter = next; }
-
-export async function uploadDocument(file, { maxMb, accept }, onProgress = () => {}) {
-  const maxBytes = maxMb * 1024 * 1024;
-  if (file.size > maxBytes) {
-    throw new UploadError(`${file.name} is ${formatSize(file.size)} — limit is ${maxMb} MB.`);
-  }
-  if (accept && !accept.includes(file.type)) {
-    throw new UploadError(`${file.name} is not a JPG, PNG or PDF.`);
-  }
-  return uploadAdapter(file, onProgress);
+export function newClientRef() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  return `c-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function formatSize(bytes) {
-  if (bytes >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
-  return `${Math.round(bytes / 1024)} KB`;
+/**
+ * The reference used when the office's sheet could not be reached. The `W-`
+ * marks it as issued by the website, so the office can tell at a glance that
+ * this printout was never registered online.
+ */
+export function localReference() {
+  const serial = String(Math.floor(Math.random() * 9000) + 1000);
+  return `PBAB/27/V/W-${serial}`;
 }
 
-/* ── draft ──────────────────────────────────────────────────────────────── */
+/** A temporary reference shown while the application is still a draft. */
+export function draftReference(draft) {
+  return draft?.ref || `TMP-27-${String(Math.floor(Math.random() * 90000) + 10000)}`;
+}
+
+/* ── the sheet ──────────────────────────────────────────────────────────── */
+
+/**
+ * Post to the Apps Script web app.
+ *
+ * The request must be a CORS "simple request", because an Apps Script web app
+ * does not answer a preflight: that means POST with `text/plain`, never
+ * `application/json`. Done this way there is no preflight at all and the
+ * response stays readable, which is how the official reference comes back.
+ * (`mode: 'no-cors'` would also avoid the preflight, but makes the response
+ * opaque — we would lose the reference and could not tell success from
+ * failure.)
+ */
+async function postToSheet({ data, clientRef }) {
+  const endpoint = config.admissionEndpoint;
+  if (!endpoint) return { synced: false, syncError: 'not-configured' };
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), config.admissionTimeoutMs || 12000);
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ clientRef, data }),
+      signal: controller.signal,
+    });
+    const out = await response.json();
+    if (!out?.ok || !out.reference) return { synced: false, syncError: 'rejected' };
+    return { synced: true, syncError: null, reference: out.reference };
+  } catch {
+    return { synced: false, syncError: 'unreachable' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Swap the transport — a different backend, or a test double. */
+let submitAdapter = postToSheet;
+export function setSubmitAdapter(next) { submitAdapter = next; }
+
+/**
+ * Send the application. Resolves with a receipt whatever happens: the caller
+ * must still be able to produce the PDF when the network is down.
+ */
+export async function submitApplication({ data, clientRef }) {
+  let result;
+  try {
+    result = await submitAdapter({ data, clientRef });
+  } catch {
+    result = { synced: false, syncError: 'unreachable' };
+  }
+
+  const receipt = {
+    reference: result.reference || localReference(),
+    submittedAt: new Date(),
+    synced: Boolean(result.synced),
+    syncError: result.syncError ?? null,
+    clientRef,
+    data,
+  };
+
+  saveSubmission(receipt);
+  /* Always drop the draft. A retry works from the receipt, so keeping it
+     would only leave a child's Aadhaar in localStorage on what may well be a
+     shared family phone. */
+  clearDraft();
+  return receipt;
+}
+
+/* ── storage ────────────────────────────────────────────────────────────── */
 
 export function loadDraft() {
   try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || null; } catch { return null; }
@@ -106,44 +182,37 @@ export function clearDraft() {
   try { localStorage.removeItem(DRAFT_KEY); } catch { /* private mode */ }
 }
 
-/** A temporary reference shown while the application is still a draft. */
-export function draftReference(draft) {
-  return draft?.ref || `TMP-27-${String(Math.floor(Math.random() * 90000) + 10000)}`;
-}
-
-/* ── submission ─────────────────────────────────────────────────────────── */
-
 /**
- * The submit adapter. Until the office supplies an endpoint this mints a local
- * reference so the confirmation screen can be reached and printed.
+ * The receipt lives in sessionStorage, not localStorage: it holds the whole
+ * answer set including Aadhaar, and it should die with the tab rather than
+ * sit on a shared family phone.
  */
-let submitAdapter = async ({ data }) => {
-  const serial = String(Math.floor(Math.random() * 900) + 100).padStart(5, '0');
-  const klass = (data.class || 'Class V').replace('Class ', '');
-  return {
-    reference: `PBAB/27/${klass}/${serial}`,
-    submittedAt: new Date(),
-    pending: true,      // nothing was sent anywhere yet
-  };
-}
-
-export function setSubmitAdapter(next) { submitAdapter = next; }
-
-export async function submitApplication({ data, documents }) {
-  const receipt = await submitAdapter({ data, documents });
+function saveSubmission(receipt) {
   try {
     sessionStorage.setItem(SUBMISSION_KEY, JSON.stringify({
       ...receipt,
       submittedAt: receipt.submittedAt.toISOString(),
-      name: data.nameEn,
-      class: data.class,
-      mobile: data.mobile,
     }));
-  } catch { /* private mode — the confirmation page falls back to placeholders */ }
-  clearDraft();
-  return receipt;
+  } catch { /* private mode — the confirmation page degrades to its empty state */ }
 }
 
 export function loadSubmission() {
   try { return JSON.parse(sessionStorage.getItem(SUBMISSION_KEY)) || null; } catch { return null; }
+}
+
+/** Re-send an application the office never received, under its original key. */
+export async function retrySubmission(receipt) {
+  const result = await submitAdapter({ data: receipt.data, clientRef: receipt.clientRef });
+  if (!result?.synced) return { ...receipt, syncError: result?.syncError || 'unreachable' };
+
+  const updated = {
+    ...receipt,
+    reference: result.reference || receipt.reference,
+    submittedAt: new Date(receipt.submittedAt),
+    synced: true,
+    syncError: null,
+  };
+  saveSubmission(updated);
+  clearDraft();
+  return updated;
 }

@@ -434,119 +434,107 @@ export const admission = {
     },
   ],
   notes: [
-    { heading: 'How it works', text: 'Fill the online form, upload documents, and download the application PDF. Bring the printout and originals to the office on the verification date.' },
+    { heading: 'How it works', text: 'Fill the online form and download the application PDF it produces. Print it and bring it to the office with the original documents on the verification date.' },
     { heading: 'Fees', text: 'No application fee. Admission fee as per Government of West Bengal norms — payable at the office after selection.' },
     { heading: 'Help', text: 'Office helpline 033 2552 0000, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
   ],
 };
 
 /**
- * The online application, as a schema. Each step lists its fields; the form
- * component renders, validates and reviews entirely from this — adding a
- * question is one entry here, not a change to the wizard.
+ * The online application, as a schema.
  *
- * field: { name, label, labelBn, type, required, half, placeholder, options,
- *          value, readonly, hint, rule }
- * `rule` names a check in services/admission.js.
+ * One flat form in four groups. The form component, the validator and the
+ * printed PDF all read this same list, so adding a question is one object in
+ * one group — nothing else changes, and it appears on the printout and in the
+ * Google Sheet automatically.
+ *
+ * field: { name, label, type, required, half, placeholder, options, value,
+ *          readonly, inputmode, rule, requiredMessage, bengali, pdfSkip }
+ *   rule     — names a check in services/admission.js
+ *   bengali  — renders the input in the Bengali face
+ *   pdfSkip  — kept on screen and in the sheet, left off the printed form
+ *              (the PDF's built-in fonts cannot draw Bengali)
  */
 export const admissionForm = {
   kicker: 'Admission · Session 2027–28',
   title: 'Online Application — Class V',
   titleBn: 'অনলাইন আবেদন',
-  titleShort: 'Online Application · Class V',
+  intro: 'Fill this form, then print the PDF it produces and bring it to the school office with the original documents.',
   requiredNote: 'Fields marked * are required. Write names exactly as on the birth certificate.',
-  steps: [
+  declaration: 'I declare that the information given above is true to the best of my knowledge. আমি ঘোষণা করছি যে উপরে প্রদত্ত তথ্য সত্য।',
+  submitLabel: 'Submit & download form',
+  /* Read by rules.age — the date the applicant's age is measured against. */
+  ageCutoff: '2027-01-01',
+  groups: [
     {
-      id: 'applicant', title: 'Applicant details', titleBn: 'আবেদনকারীর তথ্য', reviewTitle: 'Applicant',
+      id: 'applicant', title: 'Applicant', titleBn: 'আবেদনকারীর তথ্য',
       fields: [
-        { name: 'class', label: 'Class applying for', type: 'select', required: true, half: true,
-          options: ['Class V'] },
-        { name: 'medium', label: 'Medium', type: 'text', half: true, value: 'Bengali', readonly: true },
-        { name: 'nameEn', label: "Applicant's full name (English)", type: 'text', required: true, half: true,
+        { name: 'class', label: 'Class applying for', pdfLabel: 'Class', type: 'select', required: true, half: true,
+          options: ['Class V'], value: 'Class V' },
+        { name: 'nameEn', label: "Applicant's full name (English)", pdfLabel: 'Name of applicant',
+          type: 'text', required: true, half: true,
           placeholder: 'As on birth certificate', requiredMessage: "Enter the applicant's name." },
-        { name: 'nameBn', label: 'নাম (বাংলায়)', type: 'text', required: true, half: true, bengali: true,
-          placeholder: 'জন্ম শংসাপত্র অনুসারে', requiredMessage: 'বাংলায় নাম লিখুন।' },
+        { name: 'nameBn', label: 'নাম (বাংলায়)', type: 'text', half: true, bengali: true, pdfSkip: true,
+          placeholder: 'জন্ম শংসাপত্র অনুসারে' },
         { name: 'dob', label: 'Date of birth', type: 'date', required: true, half: true, rule: 'age',
           requiredMessage: 'Enter the date of birth.' },
         { name: 'gender', label: 'Gender', type: 'radio', required: true, half: true,
           options: ['Male', 'Female', 'Other'], requiredMessage: 'Choose the gender.' },
-        { name: 'aadhaar', label: 'Aadhaar number', type: 'text', required: true, half: true,
-          placeholder: '12 digits', inputmode: 'numeric', rule: 'aadhaar',
-          requiredMessage: 'Enter the 12-digit Aadhaar number.' },
         { name: 'category', label: 'Category', type: 'select', required: true, half: true,
           options: ['General', 'SC', 'ST', 'OBC-A', 'OBC-B'] },
         { name: 'religion', label: 'Religion', type: 'text', half: true },
-        { name: 'motherTongue', label: 'Mother tongue', type: 'text', half: true, value: 'Bengali' },
+        { name: 'bloodGroup', label: 'Blood group', type: 'select', half: true,
+          options: ['Not known', 'A+', 'B+', 'O+', 'AB+', 'A−', 'B−', 'O−', 'AB−'] },
+        { name: 'pen', label: 'PEN (Permanent Education Number)', pdfLabel: 'PEN', type: 'text', half: true,
+          inputmode: 'numeric', placeholder: 'If already issued' },
+        { name: 'aadhaar', label: 'Aadhaar number', type: 'text', required: true, half: true,
+          inputmode: 'numeric', placeholder: '12 digits', rule: 'aadhaar',
+          requiredMessage: 'Enter the 12-digit Aadhaar number.' },
+      ],
+    },
+    {
+      id: 'parents', title: 'Parents and guardian', titleBn: 'অভিভাবকের তথ্য',
+      fields: [
+        { name: 'father', label: "Father's name", type: 'text', required: true, half: true,
+          requiredMessage: "Enter the father's name." },
+        { name: 'mother', label: "Mother's name", type: 'text', required: true, half: true,
+          requiredMessage: "Enter the mother's name." },
+      ],
+    },
+    {
+      id: 'contact', title: 'Contact and address', titleBn: 'যোগাযোগ ও ঠিকানা',
+      fields: [
+        { name: 'phone', label: 'Mobile number', type: 'tel', required: true, half: true,
+          inputmode: 'numeric', placeholder: '10 digits — the office will call this number', rule: 'mobile',
+          requiredMessage: 'Enter a mobile number the office can reach you on.' },
+        { name: 'altPhone', label: 'Alternate mobile', type: 'tel', half: true,
+          inputmode: 'numeric', rule: 'mobile' },
         { name: 'address', label: 'Present address', type: 'textarea', required: true,
           placeholder: 'House no., road, village/ward, P.O., P.S., district, PIN',
           requiredMessage: 'Enter the present address.' },
-        { name: 'pwd', label: 'Physically challenged (PwD)?', type: 'radio', half: true,
-          options: ['No', 'Yes'], value: 'No' },
-        { name: 'bloodGroup', label: 'Blood group', type: 'select', half: true,
-          options: ['Not known', 'A+', 'B+', 'O+', 'AB+', 'A−', 'B−', 'O−', 'AB−'] },
       ],
-      review: [['Name', 'nameEn+nameBn'], ['Class', 'class'], ['DOB', 'dob+gender'], ['Aadhaar', 'aadhaar'], ['Category', 'category']],
     },
     {
-      id: 'guardian', title: 'Guardian details', titleBn: 'অভিভাবকের তথ্য', reviewTitle: 'Guardian',
+      id: 'school', title: 'Previous school', titleBn: 'পূর্ববর্তী বিদ্যালয়',
       fields: [
-        { name: 'father', label: "Father's name", type: 'text', required: true, half: true },
-        { name: 'mother', label: "Mother's name", type: 'text', required: true, half: true },
-        { name: 'guardian', label: 'Guardian (if different)', type: 'text', half: true,
-          placeholder: 'Name and relation' },
-        { name: 'occupation', label: "Guardian's occupation", type: 'text', half: true },
-        { name: 'mobile', label: 'Mobile number', type: 'tel', required: true, half: true,
-          placeholder: '10 digits — OTP and SMS updates', inputmode: 'numeric', rule: 'mobile',
-          requiredMessage: 'Enter a mobile number for SMS updates.' },
-        { name: 'altMobile', label: 'Alternate mobile', type: 'tel', half: true, inputmode: 'numeric' },
-        { name: 'income', label: 'Annual family income (₹)', type: 'select', required: true, half: true,
-          options: ['Below 1,20,000', '1,20,000 – 2,50,000', '2,50,000 – 5,00,000', 'Above 5,00,000'] },
-      ],
-      review: [['Father', 'father'], ['Mother', 'mother'], ['Mobile', 'mobile']],
-    },
-    {
-      id: 'school', title: 'Previous school', titleBn: 'পূর্ববর্তী বিদ্যালয়', reviewTitle: 'Previous school',
-      fields: [
-        { name: 'lastSchool', label: 'Name of last school attended', type: 'text', required: true },
-        { name: 'schoolType', label: 'School type', type: 'seg', half: true,
-          options: ['Government', 'Govt.-aided', 'Private'], value: 'Government' },
+        { name: 'lastSchool', label: 'Name of last school attended', pdfLabel: 'Last school attended',
+          type: 'text', required: true,
+          requiredMessage: 'Enter the last school attended.' },
         { name: 'lastClass', label: 'Last class passed', type: 'select', required: true, half: true,
-          options: ['Class IV'] },
-        { name: 'passYear', label: 'Year of passing', type: 'text', required: true, half: true, inputmode: 'numeric' },
-        { name: 'board', label: 'Board / council', type: 'text', half: true, placeholder: 'e.g. WBBPE' },
-        { name: 'tc', label: 'Transfer certificate (TC) number', type: 'text', half: true,
-          placeholder: 'Leave blank for Class V' },
-        { name: 'banglaShiksha', label: 'Bangla Shiksha / student ID (if any)', type: 'text', half: true },
+          options: ['Class IV'], value: 'Class IV' },
+        { name: 'passYear', label: 'Year of passing', type: 'text', half: true, inputmode: 'numeric' },
       ],
-      review: [['School', 'lastSchool'], ['Passed', 'lastClass+passYear']],
-    },
-    {
-      id: 'documents', title: 'Documents', titleBn: 'নথিপত্র · JPG/PDF up to 2 MB', reviewTitle: 'Documents',
-      hint: 'নথিপত্র · JPG or PDF, up to 2 MB each',
-      documents: [
-        { name: 'birth', label: 'Birth certificate', required: true },
-        { name: 'aadhaarDoc', label: "Applicant's Aadhaar", required: true },
-        { name: 'report', label: 'Previous report card', required: true },
-        { name: 'photo', label: 'Passport photo', required: true, hint: 'Tap to take a photo or choose a file · JPG, under 2 MB' },
-        { name: 'caste', label: 'Caste certificate', note: '(if SC/ST/OBC)', hint: 'Optional' },
-      ],
-    },
-    {
-      id: 'review', title: 'Review & submit', titleBn: 'পর্যালোচনা ও জমা', reviewTitle: 'Review',
-      declaration: 'I declare that the information given is true and that the applicant is eligible under the published notice. আমি ঘোষণা করছি যে প্রদত্ত তথ্য সত্য।',
     },
   ],
-  maxUploadMb: 2,
-  acceptedTypes: ['image/jpeg', 'image/png', 'application/pdf'],
 };
 
 export const admissionConfirmation = {
   title: 'Application submitted',
   titleBn: 'আবেদন জমা হয়েছে · Session 2027–28',
   next: [
-    { title: 'Print', text: 'Download the PDF and print it. Keep the reference number safe.' },
+    { title: 'Print', text: 'Your application form has downloaded. Print it and sign it, and keep the reference number safe.' },
     { title: 'Verify', text: 'Bring the printout and original documents to the office on the verification date, announced on the Notice page by 28 Jan 2027.' },
-    { title: 'Result', text: 'Lottery results (if applicable) are published on Results & Events and sent by SMS.' },
+    { title: 'Result', text: 'Selection results, and the lottery where one is needed, are published on the Notice page and on the school notice board.' },
   ],
 };
 
