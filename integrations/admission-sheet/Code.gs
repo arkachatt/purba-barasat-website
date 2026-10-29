@@ -15,6 +15,9 @@ const SHEET_NAME = 'Applications';
 /** Reference numbers read PBAB/<SESSION>/V/00042. */
 const SESSION = '27';
 
+/** Where the running serial is kept. See nextSerial_ for why. */
+const SERIAL_KEY = 'lastSerial';
+
 /**
  * Columns, in order. These are the `name` keys from the website's form
  * schema (assets/js/data/site.js). To collect a new question: add the field
@@ -45,8 +48,7 @@ function doPost(e) {
     const already = findByClientRef_(sheet, clientRef);
     if (already) return json_({ ok: true, reference: already, duplicate: true });
 
-    const row = sheet.getLastRow() + 1;
-    const reference = 'PBAB/' + SESSION + '/V/' + pad_(row - 1, 5);
+    const reference = 'PBAB/' + SESSION + '/V/' + pad_(nextSerial_(sheet), 5);
 
     sheet.appendRow([
       new Date(),
@@ -73,6 +75,62 @@ function doGet() {
 }
 
 /* ── helpers ─────────────────────────────────────────────────────────────── */
+
+/**
+ * The next reference number.
+ *
+ * Deriving it from the row number looked simpler, but it meant the number
+ * followed the row's POSITION: delete a withdrawn application six months from
+ * now and the next applicant is handed a reference some family already holds a
+ * printed form for — two children, one number, and nothing in the sheet to
+ * show it happened.
+ *
+ * So the serial is stored and only ever counts up. A deleted row leaves a gap
+ * in the numbering, which is the correct outcome: the gap is the record that
+ * something was removed.
+ *
+ * Called only from inside the lock in doPost, so the read-increment-write
+ * cannot interleave with another submission.
+ */
+function nextSerial_(sheet) {
+  const props = PropertiesService.getScriptProperties();
+  let last = Number(props.getProperty(SERIAL_KEY)) || 0;
+
+  /* If the counter is missing or has fallen behind the sheet — a fresh
+     deployment, or someone cleared it — never hand out a number the sheet has
+     already used. */
+  const highest = highestSerialInSheet_(sheet);
+  if (highest > last) last = highest;
+
+  const next = last + 1;
+  props.setProperty(SERIAL_KEY, String(next));
+  return next;
+}
+
+/** The largest serial already written to the Reference column, or 0. */
+function highestSerialInSheet_(sheet) {
+  const rows = sheet.getLastRow() - 1;
+  if (rows < 1) return 0;
+
+  const references = sheet.getRange(2, 2, rows, 1).getValues();
+  let highest = 0;
+  for (let i = 0; i < references.length; i += 1) {
+    const match = /\/(\d+)$/.exec(String(references[i][0]));
+    if (match) highest = Math.max(highest, Number(match[1]));
+  }
+  return highest;
+}
+
+/**
+ * Restart the numbering. Run this by hand from the Apps Script editor — never
+ * from the website — and only when the sheet holds no applications you intend
+ * to keep, such as after clearing out test rows. The next application then
+ * takes the lowest number the sheet allows.
+ */
+function resetSerialNumbering() {
+  PropertiesService.getScriptProperties().deleteProperty(SERIAL_KEY);
+  Logger.log('Serial counter cleared. Next reference will follow the sheet contents.');
+}
 
 function getSheet_() {
   const book = SpreadsheetApp.getActiveSpreadsheet();

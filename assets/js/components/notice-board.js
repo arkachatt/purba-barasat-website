@@ -101,7 +101,7 @@ class NoticeBoard extends SiteComponent {
       this.querySelector('[data-results]').innerHTML = String(html`
         <state-alert tone="error" heading="The notice list could not be loaded" action="Try again">
           The school office's server did not respond. Older notices may still be available from
-          the office on 033 2552 0000.
+          the office on (033) 2552 2928.
         </state-alert>`);
       this.querySelector('state-alert')
         ?.addEventListener('alert-action', () => { this.loadError = null; this.fetch(); });

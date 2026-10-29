@@ -26,7 +26,10 @@ class SiteFooter extends SiteComponent {
 
           <div class="footer-col">
             <span class="footer-kicker">Contact · যোগাযোগ</span>
-            <a class="footer-contact" href="${school.phone.href}">${raw(icon('phone', 16))}${school.phone.label}</a>
+            ${each(school.phones, (line, i) => html`
+              <a class="footer-contact" href="${line.href}">
+                ${raw(i === 0 ? icon('phone', 16) : '<span style="width:16px"></span>')}${line.label}
+              </a>`)}
             <a class="footer-contact" href="${school.email.href}">${raw(icon('mail', 16))}${school.email.label}</a>
             <span class="footer-hours">${school.officeHours}</span>
           </div>

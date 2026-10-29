@@ -146,7 +146,7 @@ export async function buildApplicationPdf({ receipt }) {
   y += 5.5;
   doc.text(latin1(school.address.join(', ')), headCentre, y, { align: 'center' });
   y += 4;
-  doc.text(`Phone ${school.phone.label} · ${school.email.label} · DISE ${school.diseCode}`,
+  doc.text(`Phone ${school.phones.map((p) => p.label).join(' / ')} · ${school.email.label} · DISE ${school.diseCode}`,
     headCentre, y, { align: 'center' });
   y += 4;
   doc.text('Government-aided · Affiliated to WBBSE & WBCHSE', headCentre, y, { align: 'center' });

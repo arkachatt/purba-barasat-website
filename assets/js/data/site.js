@@ -35,8 +35,15 @@ export const school = {
   established: 1963,
   logo: null,                       // path to a crest image; null keeps the LOGO plate
   address: ['Purba Barasat, P.O. Barasat', 'North 24 Parganas, West Bengal 700124'],
-  phone: { label: '033 2552 0000', href: 'tel:+913325520000' },
-  email: { label: 'pbabidyapith@gmail.com', href: 'mailto:pbabidyapith@gmail.com' },
+  /* Two office lines. `phone` is the first of them, so anything showing a
+     single number — the footer, the PDF header, the enquiry fallback — keeps
+     working unchanged. */
+  phones: [
+    { label: '(033) 2552 2928', href: 'tel:+913325522928' },
+    { label: '(033) 2584 4601', href: 'tel:+913325844601' },
+  ],
+  get phone() { return this.phones[0]; },
+  email: { label: 'pbab.1963@gmail.com', href: 'mailto:pbab.1963@gmail.com' },
   officeHours: 'Office hours: 10:30–16:30, Mon–Sat',
   session: 'Session 2026–27',
   diseCode: '19110700000',
@@ -436,7 +443,7 @@ export const admission = {
   notes: [
     { heading: 'How it works', text: 'Fill the online form and download the application PDF it produces. Print it and bring it to the office with the original documents on the verification date.' },
     { heading: 'Fees', text: 'No application fee. Admission fee as per Government of West Bengal norms — payable at the office after selection.' },
-    { heading: 'Help', text: 'Office helpline 033 2552 0000, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
+    { heading: 'Help', text: 'Office helpline (033) 2552 2928 / (033) 2584 4601, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
   ],
 };
 
@@ -757,10 +764,10 @@ export const contact = {
       lines: ['Purba Barasat Adarsha Bidyapith', 'Taki Road, about 1 km east of Champadali Crossing',
               'Purba Barasat, P.O. Barasat, P.S. Barasat', 'North 24 Parganas, West Bengal 700124'] },
     { icon: 'phone', term: 'Phone · ফোন',
-      lines: ['<a href="tel:+913325520000" style="font-size:18px">033 2552 0000</a> <span class="text-muted">(office)</span>',
-              '<a href="tel:+919830000001">98300 00001</a> <span class="text-muted">(Headmaster, Sat 11–13)</span>'] },
+      lines: ['<a href="tel:+913325522928" style="font-size:18px">(033) 2552 2928</a>',
+              '<a href="tel:+913325844601" style="font-size:18px">(033) 2584 4601</a>'] },
     { icon: 'mail', term: 'Email · ইমেল',
-      lines: ['<a href="mailto:pbabidyapith@gmail.com">pbabidyapith@gmail.com</a>'] },
+      lines: ['<a href="mailto:pbab.1963@gmail.com">pbab.1963@gmail.com</a>'] },
     { icon: 'clock', term: 'Office hours',
       lines: ['Monday–Saturday 10:30–16:30 · Closed Sundays and listed holidays',
               '<span class="text-muted">School hours 10:50–16:20 (morning section 6:30–10:30 for Classes V–VI)</span>'] },
