@@ -557,7 +557,7 @@ export const admissionConfirmation = {
    ══════════════════════════════════════════════════════════════════════════ */
 
 export const calendar = {
-  kicker: '06 · Session 2026–27',
+  kicker: '06 · Academic year 2026',
   title: 'Academic Calendar',
   titleBn: 'শিক্ষাবর্ষ পঞ্জিকা',
   tabs: [
@@ -568,20 +568,54 @@ export const calendar = {
 };
 
 export const holidays = {
+  /* West Bengal schools run on the calendar year, so this is the list for
+     academic year 2026 as published by the school. `days` counts school days,
+     not calendar days — Sundays are excluded, which is why the Puja vacation
+     spans 28 dates but counts 24. */
+  year: '2026',
+  totalDays: 65,
   pdf: { label: 'Holiday list PDF', href: '#pdf' },
-  note: 'Holidays follow the WBBSE list for 2026–27 with local additions approved by the Managing Committee. Sundays are not listed. Changes are announced on the Notice page.',
-  /* `date` is the machine-readable start, used to work out the next holiday. */
+  note: 'Holiday list for the academic year 2026, 65 days in all, including 3 at the discretion of the Head Teacher. Days are counted excluding Sundays. Changes are announced on the Notice page.',
+  /* `date` is the machine-readable start, used to work out the next holiday.
+     `end` marks a vacation that runs over several days. */
   list: [
-    { date: '2026-10-02', label: '02 Oct 2026',          day: 'Friday',    name: 'Gandhi Jayanti · গান্ধী জয়ন্তী', days: 1 },
-    { date: '2026-10-14', label: '14 Oct – 02 Nov 2026', day: 'Wed – Mon', name: 'Puja vacation (Durga Puja, Lakshmi Puja, Kali Puja, Bhai Phonta) · পূজাবকাশ', days: 20 },
-    { date: '2026-11-24', label: '24 Nov 2026',          day: 'Tuesday',   name: 'Guru Nanak Jayanti', days: 1 },
-    { date: '2026-12-25', label: '25 Dec 2026',          day: 'Friday',    name: 'Christmas Day · বড়দিন', days: 1 },
-    { date: '2027-01-01', label: '01 Jan 2027',          day: 'Friday',    name: "New Year's Day", days: 1 },
-    { date: '2027-01-12', label: '12 Jan 2027',          day: 'Tuesday',   name: "Swami Vivekananda's Birthday · বিবেকানন্দ জন্মজয়ন্তী", days: 1 },
-    { date: '2027-01-23', label: '23 Jan 2027',          day: 'Saturday',  name: "Netaji's Birthday · নেতাজি জন্মজয়ন্তী", days: 1 },
-    { date: '2027-01-26', label: '26 Jan 2027',          day: 'Tuesday',   name: 'Republic Day · প্রজাতন্ত্র দিবস (flag hoisting 8:30)', days: 1 },
-    { date: '2027-02-11', label: '11 Feb 2027',          day: 'Thursday',  name: 'Saraswati Puja · সরস্বতী পূজা', days: 1 },
-    { date: '2027-03-22', label: '22 Mar 2027',          day: 'Monday',    name: 'Dol Jatra / Holi · দোলযাত্রা', days: 1 },
+    { date: '2026-01-01', label: '01 Jan 2026', day: 'Thursday',  name: 'English New Year', days: 1 },
+    { date: '2026-01-12', label: '12 Jan 2026', day: 'Monday',    name: 'Swami Vivekananda Jayanti', days: 1 },
+    { date: '2026-01-23', label: '23 Jan 2026', day: 'Friday',    name: 'Saraswati Puja & Netaji Subhas birth anniversary', days: 1, observed: true },
+    { date: '2026-01-26', label: '26 Jan 2026', day: 'Monday',    name: 'Republic Day', days: 1, observed: true },
+    { date: '2026-02-04', label: '04 Feb 2026', day: 'Wednesday', name: 'Shab-e-Barat', days: 1 },
+    { date: '2026-02-14', label: '14 Feb 2026', day: 'Saturday',  name: "Thakur Panchanan Barma's birthday", days: 1 },
+    { date: '2026-02-15', label: '15 Feb 2026', day: 'Sunday',    name: 'Shivratri', days: 0 },
+    { date: '2026-03-03', label: '03 Mar 2026', day: 'Tuesday',   name: 'Dolyatra (Holi)', days: 1 },
+    { date: '2026-03-17', label: '17 Mar 2026', day: 'Tuesday',   name: "Sri Sri Harichand Thakur's birthday", days: 1 },
+    { date: '2026-03-20', label: '20 Mar 2026', day: 'Friday',    name: 'Day before Eid-ul-Fitr', days: 1 },
+    { date: '2026-03-21', label: '21 Mar 2026', day: 'Saturday',  name: 'Eid-ul-Fitr', days: 1 },
+    { date: '2026-03-26', label: '26 Mar 2026', day: 'Thursday',  name: 'Ram Navami', days: 1 },
+    { date: '2026-03-31', label: '31 Mar 2026', day: 'Tuesday',   name: 'Mahavir Jayanti', days: 1 },
+    { date: '2026-04-03', label: '03 Apr 2026', day: 'Friday',    name: 'Good Friday', days: 1 },
+    { date: '2026-04-14', label: '14 Apr 2026', day: 'Tuesday',   name: "Dr. B. R. Ambedkar's birthday", days: 1 },
+    { date: '2026-04-15', label: '15 Apr 2026', day: 'Wednesday', name: 'Bengali New Year (Poila Boishakh)', days: 1 },
+    { date: '2026-05-01', label: '01 May 2026', day: 'Friday',    name: "May Day, Buddha Purnima & Raghunath Murmu's birthday", days: 1 },
+    { date: '2026-05-09', label: '09 May 2026', day: 'Saturday',  name: 'Rabindra Jayanti', days: 1 },
+    { date: '2026-05-11', end: '2026-05-16', label: '11 – 16 May 2026', day: 'Mon – Sat', name: 'Summer vacation', days: 6 },
+    { date: '2026-05-26', label: '26 May 2026', day: 'Tuesday',   name: 'Day before Eid-ul-Adha (Bakrid)', days: 1 },
+    { date: '2026-05-27', label: '27 May 2026', day: 'Wednesday', name: 'Eid-ul-Adha (Bakrid)', days: 1 },
+    { date: '2026-06-26', label: '26 Jun 2026', day: 'Friday',    name: 'Muharram', days: 1 },
+    { date: '2026-07-16', label: '16 Jul 2026', day: 'Thursday',  name: 'Rath Yatra', days: 1 },
+    { date: '2026-08-15', label: '15 Aug 2026', day: 'Saturday',  name: 'Independence Day', days: 1, observed: true },
+    { date: '2026-08-26', label: '26 Aug 2026', day: 'Wednesday', name: 'Fateha-i-Yajdaham', days: 1 },
+    { date: '2026-09-04', label: '04 Sep 2026', day: 'Friday',    name: 'Janmashtami', days: 1 },
+    { date: '2026-10-02', label: '02 Oct 2026', day: 'Friday',    name: 'Gandhi Jayanti', days: 1 },
+    { date: '2026-10-10', label: '10 Oct 2026', day: 'Saturday',  name: 'Mahalaya', days: 1 },
+    { date: '2026-10-16', end: '2026-11-12', label: '16 Oct – 12 Nov 2026', day: 'Fri – Thu',
+      name: 'Puja vacation (Panchami to the day after Bhratridwitiya)', days: 24 },
+    { date: '2026-11-15', label: '15 Nov 2026', day: 'Sunday',    name: "Birsa Munda's birthday & Chhath Puja", days: 0 },
+    { date: '2026-11-24', label: '24 Nov 2026', day: 'Tuesday',   name: "Guru Nanak's birthday & Parshvanatha Rathayatra", days: 1 },
+    { date: '2026-12-25', label: '25 Dec 2026', day: 'Friday',    name: 'Christmas', days: 1 },
+    { date: '2026-12-28', end: '2026-12-31', label: '28 – 31 Dec 2026', day: 'Mon – Thu', name: 'Winter vacation', days: 4 },
+    /* No fixed date: the Head Teacher sets these during the year. */
+    { date: null, label: 'To be announced', day: '—',
+      name: 'At the discretion of the Head Teacher', days: 3 },
   ],
 };
 

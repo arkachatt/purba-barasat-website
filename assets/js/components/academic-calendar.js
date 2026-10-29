@@ -20,9 +20,32 @@ function daysUntil(iso) {
   return Math.round((new Date(iso) - today) / day);
 }
 
-function nextHoliday() {
-  const upcoming = holidays.list.find((h) => daysUntil(h.date) >= 0);
-  return upcoming || holidays.list[0];
+/**
+ * What the panel should say about closures.
+ *
+ * A vacation that has already started still matters — more, in fact, than the
+ * one after it: during the Puja vacation a guardian wants to know when school
+ * reopens, not which holiday is next. So a run that covers today wins.
+ *
+ * Entries with no fixed date, and those falling on a Sunday (counted as 0
+ * days, because school is shut anyway), are not closures and are skipped.
+ */
+function closureNow() {
+  const closures = holidays.list.filter((holiday) => holiday.date && holiday.days > 0);
+
+  const ongoing = closures.find((holiday) =>
+    holiday.end && daysUntil(holiday.date) <= 0 && daysUntil(holiday.end) >= 0);
+  if (ongoing) return { holiday: ongoing, ongoing: true };
+
+  const next = closures.find((holiday) => daysUntil(holiday.date) >= 0);
+  return { holiday: next || null, ongoing: false };
+}
+
+/** The first school day after a vacation ends. */
+function reopensOn(holiday) {
+  const day = new Date(holiday.end);
+  do { day.setDate(day.getDate() + 1); } while (day.getDay() === 0);   // skip Sunday
+  return day.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 class AcademicCalendar extends SiteComponent {
@@ -66,10 +89,12 @@ class AcademicCalendar extends SiteComponent {
   }
 
   renderHolidays() {
-    const next = nextHoliday();
-    const away = daysUntil(next.date);
-    const when_ = away === 0 ? 'today' : away === 1 ? 'tomorrow'
-      : away > 0 ? `in ${away} days` : 'passed';
+    const { holiday: next, ongoing } = closureNow();
+    const away = next && !ongoing ? daysUntil(next.date) : null;
+    const when_ = ongoing
+      ? `School reopens ${reopensOn(next)}`
+      : away === 0 ? 'today' : away === 1 ? 'tomorrow'
+      : away > 0 ? `in ${away} days` : 'the last of this year';
 
     return html`
       <div class="calendar-split">
@@ -81,22 +106,32 @@ class AcademicCalendar extends SiteComponent {
             </tr></thead>
             <tbody>
               ${each(holidays.list, (holiday) => html`
-                <tr>
+                <tr ${raw(holiday.days === 0 ? 'class="is-nil"' : '')}>
                   <td class="is-date">${holiday.label}</td>
                   <td class="is-day">${holiday.day}</td>
-                  <td>${holiday.name}</td>
-                  <td class="is-days">${holiday.days}</td>
+                  <td>${holiday.name}${when(holiday.observed,
+                    () => html` <span class="text-muted">· to be observed</span>`)}</td>
+                  <td class="is-days">
+                    ${holiday.days === 0
+                      ? html`<span class="text-muted" title="Falls on a Sunday">—</span>`
+                      : html`${holiday.days}`}
+                  </td>
                 </tr>`)}
             </tbody>
+            <tfoot>
+              <tr><td colspan="3">Total</td><td class="is-days">${holidays.totalDays} days</td></tr>
+            </tfoot>
           </table>
         </div>
 
         <aside class="calendar-aside" style="display:flex;flex-direction:column;gap:20px">
-          <div class="blueprint next-holiday">
-            <div class="kicker kicker-sm">Next holiday</div>
-            <div class="next-holiday-name">${next.name.split(' · ')[0]}</div>
-            <div class="next-holiday-when">${next.day}, ${next.label} · ${when_}</div>
-          </div>
+          ${when(next, () => html`
+            <div class="blueprint next-holiday">
+              <div class="kicker kicker-sm">${ongoing ? 'School is closed' : 'Next holiday'}</div>
+              <div class="next-holiday-name">${next.name.split(' (')[0]}</div>
+              <div class="next-holiday-when">${next.label}${ongoing ? '' : ' · '}${ongoing ? '' : when_}</div>
+              ${when(ongoing, () => html`<div class="next-holiday-when">${when_}</div>`)}
+            </div>`)}
           <div class="blueprint calendar-note">
             <div class="kicker kicker-sm" style="margin-bottom:6px">Note</div>
             ${holidays.note}

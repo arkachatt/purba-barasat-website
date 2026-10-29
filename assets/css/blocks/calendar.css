@@ -32,6 +32,13 @@
 .holiday-table th { padding: 14px 20px; }
 .holiday-table .is-date { font-variant-numeric: tabular-nums; }
 .holiday-table .is-days { text-align: right; }
+/* A date that falls on a Sunday is listed for completeness but is not a day
+   off, so it should not read with the same weight as one. */
+.holiday-table tr.is-nil td { color: var(--color-neutral-600); }
+.holiday-table tfoot td {
+  padding: 14px 20px; font-weight: 500;
+  background: var(--color-accent-100);
+}
 
 .next-holiday { padding: 20px; }
 .next-holiday-name {
