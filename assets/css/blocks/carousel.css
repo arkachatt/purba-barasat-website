@@ -6,7 +6,7 @@
 
 .carousel {
   position: relative;
-  height: 552px;        /* the design's 460, 20% taller */
+  height: 600px;        /* the design's 460, raised for the staff photograph */
   display: grid; place-items: center;
   overflow: hidden;
 }
