@@ -1,0 +1,102 @@
+/* ==========================================================================
+   admission.css — <admission-page> and <admission-confirmation>.
+   The landing page has two states, open and closed, and must read correctly
+   in both: closed keeps the eligibility published and disables the apply
+   buttons rather than hiding the blocks.
+   ========================================================================== */
+
+.admission-status { font-size: 14px; padding: 8px 14px; font-weight: 500; flex: none; }
+
+/* — the off-season banner — */
+.admission-closed {
+  padding: 28px 32px; display: flex; align-items: center; gap: 24px;
+}
+.admission-closed svg { flex: none; color: var(--color-accent-700); }
+.admission-closed h2 { font-size: 28px; margin: 0 0 4px; }
+.admission-closed-body { font-size: 16px; color: var(--color-neutral-800); }
+.admission-closed-body strong { font-weight: 500; }
+.admission-closed .btn { margin-left: auto; flex: none; }
+
+.admission-blocks { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+.admission-block { padding: 32px; display: flex; flex-direction: column; gap: 18px; }
+.admission-block h2 { font-size: 34px; margin: 4px 0; }
+.admission-block-sub { font-size: 15px; color: var(--color-neutral-700); }
+.admission-block ul {
+  margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.55;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.admission-block .btn-apply { min-height: 52px; font-size: 17px; margin-top: auto; }
+
+/* A block that is shut says so plainly, in the display face, where its
+   eligibility list would otherwise be — not in small print underneath. */
+.admission-block-shut { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.admission-block-shut-line {
+  margin: 0;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 30px; line-height: 1.15;
+  color: var(--color-accent-800);
+}
+
+/* — the downloadable notice — */
+.doc-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px 16px; border: 1px solid var(--color-divider);
+}
+.doc-row-main { display: flex; align-items: center; gap: 12px; }
+.doc-row-main svg { color: var(--color-accent-700); flex: none; }
+.doc-row-title { font-size: 16px; font-weight: 500; }
+.doc-row-meta { font-size: 13px; color: var(--color-neutral-700); }
+
+.admission-notes {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  font-size: 15px; line-height: 1.5; color: var(--color-neutral-800);
+}
+.admission-notes .kicker { margin-bottom: 6px; }
+
+/* — confirmation — */
+.confirmation { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 64px; align-items: start; }
+.confirmation-head { display: flex; align-items: center; gap: 18px; }
+.confirmation-mark {
+  width: 64px; height: 64px; flex: none;
+  display: grid; place-items: center; color: var(--color-accent-700);
+}
+.confirmation-head h1 { font-size: 40px; margin: 0; }
+.confirmation-head-bn { font-family: "Noto Sans Bengali", sans-serif; font-size: 18px; color: var(--color-neutral-700); }
+.confirmation-lede { font-size: 17px; line-height: 1.6; max-width: 62ch; margin: 0; }
+.confirmation-lede strong { font-weight: 500; }
+.confirmation-next {
+  margin: 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  font-size: 15px; line-height: 1.5;
+}
+.confirmation-next li { border-top: 2px solid var(--color-accent); padding-top: 12px; }
+.confirmation-next-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px;
+}
+.confirmation-aside {
+  padding: 28px; display: flex; flex-direction: column; gap: 16px; text-align: center;
+}
+.confirmation-ref {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 44px; letter-spacing: .04em; line-height: 1;
+}
+.confirmation-ref-meta { font-size: 14px; color: var(--color-neutral-700); }
+
+@media (max-width: 1023px) {
+  .admission-blocks, .admission-notes { grid-template-columns: 1fr; gap: 20px; }
+  .admission-block { padding: 20px; gap: 14px; }
+  .admission-block h2 { font-size: 28px; }
+  .admission-block-shut-line { font-size: 24px; }
+  .admission-closed { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; }
+  .admission-closed .btn { margin-left: 0; width: 100%; }
+  .doc-row { flex-direction: column; align-items: stretch; gap: 12px; }
+  .doc-row .btn { width: 100%; }
+
+  .confirmation { grid-template-columns: 1fr; gap: 28px; }
+  .confirmation-head h1 { font-size: 30px; }
+  .confirmation-mark { width: 48px; height: 48px; }
+  .confirmation-next { grid-template-columns: 1fr; gap: 16px; }
+  .confirmation-ref { font-size: 32px; }
+  .confirmation-aside { padding: 20px; }
+}

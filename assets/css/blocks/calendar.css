@@ -1,0 +1,133 @@
+/* ==========================================================================
+   calendar.css — <academic-calendar>. Three views of one session: holidays,
+   exam schedule and syllabus. The tab bar becomes a segmented control on a
+   phone, where three underlined tabs would not fit.
+   ========================================================================== */
+
+.tabs { display: flex; border-bottom: 1px solid var(--color-divider); }
+.tab {
+  padding: 12px 20px; min-height: 48px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 17px; text-decoration: none; color: var(--color-text);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+}
+.tab:hover { color: var(--color-accent-700); }
+.tab[aria-selected="true"] { color: var(--color-accent-800); border-bottom-color: var(--color-accent); }
+.tab .bn { font-size: 14px; font-weight: 400; }
+
+.tabs-seg { display: none; }
+.tabs-seg.seg { grid-template-columns: 1fr 1fr 1fr; width: 100%; }
+.tabs-seg .seg-opt {
+  justify-content: center; min-height: 48px; font-size: 14px; text-decoration: none;
+  color: var(--color-text);
+}
+.tabs-seg .seg-opt[aria-selected="true"] { background: var(--color-accent); color: var(--color-bg); }
+
+.calendar-panel[hidden] { display: none; }
+.calendar-split { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; align-items: start; }
+
+/* — holidays — */
+.holiday-table { font-size: 16px; }
+.holiday-table th, .holiday-table td { padding: 12px 20px; }
+.holiday-table th { padding: 14px 20px; }
+.holiday-table .is-date { font-variant-numeric: tabular-nums; }
+.holiday-table .is-days { text-align: right; }
+
+.next-holiday { padding: 20px; }
+.next-holiday-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 30px; line-height: 1.1; margin: 6px 0 2px;
+}
+.next-holiday-when { font-size: 15px; color: var(--color-neutral-700); }
+.calendar-note { padding: 20px; font-size: 15px; line-height: 1.5; color: var(--color-neutral-800); }
+
+/* — exams — */
+.exam-legend {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+  font-size: 15px; color: var(--color-neutral-800);
+}
+.exam-legend strong { font-weight: 500; }
+.exam-legend-short { display: none; }
+.exam-legend > div { flex: 1 1 520px; }
+.exam-legend .btn { flex: none; }
+.exam-table { font-size: 15px; table-layout: fixed; }
+.exam-table th, .exam-table td { padding: 14px 16px; }
+.exam-table th:first-child, .exam-table td:first-child { padding-inline: 20px; width: 140px; }
+.exam-table td:first-child { font-weight: 500; }
+.exam-table th span {
+  font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--color-neutral-600);
+}
+.exam-table .tag { margin-left: 6px; }
+
+/* Phone: one card per class, the column heads becoming row labels. */
+.exam-cards { display: none; flex-direction: column; gap: 14px; }
+.exam-card-head {
+  padding: 12px 16px; border-bottom: 1px solid var(--color-divider);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px;
+}
+.exam-card-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 10px 16px; font-size: 15px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.exam-card-row:last-child { border-bottom: 0; }
+.exam-card-row dt { color: var(--color-neutral-700); flex: none; }
+.exam-card-row dd { margin: 0; text-align: right; }
+
+/* — syllabus — */
+.syllabus-list { max-width: 900px; display: flex; flex-direction: column; gap: 12px; }
+.syllabus-item summary {
+  list-style: none;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px 20px; min-height: 56px; cursor: pointer;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px;
+}
+.syllabus-item summary::-webkit-details-marker { display: none; }
+.syllabus-item[open] summary { border-bottom: 1px solid var(--color-divider); color: var(--color-accent-800); }
+.syllabus-item[open] summary svg { transform: rotate(180deg); }
+.syllabus-meta {
+  font-family: var(--font-body); font-weight: 400; font-size: 14px;
+  color: var(--color-neutral-700); margin-left: 8px;
+}
+.syllabus-table { font-size: 16px; }
+.syllabus-table th { padding: 10px 16px; }
+.syllabus-table th:first-child, .syllabus-table td:first-child { padding-inline: 20px; }
+.syllabus-table td { padding: 10px 16px; }
+.syllabus-table td:first-child { font-weight: 500; }
+.syllabus-table .is-book { color: var(--color-neutral-800); }
+.syllabus-table .is-updated { color: var(--color-neutral-700); }
+.syllabus-table .is-pdf { text-align: right; padding: 6px 20px; }
+.syllabus-empty { padding: 16px 20px; font-size: 15px; color: var(--color-neutral-700); }
+
+@media (max-width: 1023px) {
+  .tabs { display: none; }
+  .tabs-seg.seg { display: grid; }
+  .calendar-split { grid-template-columns: 1fr; gap: 18px; }
+  .calendar-split .calendar-aside { order: -1; }   /* next holiday leads on a phone */
+  .next-holiday { padding: 14px 16px; }
+  .next-holiday-name { font-size: 24px; margin: 4px 0 2px; }
+  .next-holiday-when { font-size: 14px; }
+
+  .holiday-table { font-size: 15px; }
+  .holiday-table th, .holiday-table td { padding: 10px 12px; }
+  .holiday-table .is-day { display: none; }        /* the date already names the day */
+
+  .exam-table-wrap { display: none; }
+  .exam-cards { display: flex; }
+  .exam-legend { font-size: 13px; }
+  .exam-legend-long { display: none; }
+  .exam-legend-short { display: inline; }
+
+  .syllabus-item summary { font-size: 20px; padding: 12px 14px; }
+  .syllabus-table { font-size: 15px; }
+  .syllabus-table thead { display: none; }
+  .syllabus-table tr { display: grid; grid-template-columns: 1fr auto; padding: 8px 14px; }
+  .syllabus-table td { padding: 2px 0; border: 0; }
+  .syllabus-table td:first-child { grid-column: 1; padding-inline: 0; }
+  .syllabus-table .is-book { grid-column: 1; font-size: 14px; }
+  .syllabus-table .is-updated { display: none; }
+  .syllabus-table .is-pdf { grid-row: 1 / span 2; grid-column: 2; align-self: center; padding: 0; }
+  .syllabus-table tbody tr {
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+  }
+}

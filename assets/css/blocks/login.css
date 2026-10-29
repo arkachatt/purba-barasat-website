@@ -1,0 +1,75 @@
+/* ==========================================================================
+   login.css — <login-gateway>. The public site does not hold attendance,
+   marks or fees; this screen is a doorway into the management software, so it
+   reads as a role chooser first and a form second.
+
+   Desktop shows all three role forms side by side. Mobile shows a segmented
+   role picker and the chosen form only — same markup, driven by
+   [data-role] on the wrapper.
+   ========================================================================== */
+
+.login-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+.login-head h1 { font-size: 40px; margin: 6px 0 8px; }
+.login-head p { font-size: 16px; color: var(--color-neutral-700); max-width: 640px; margin: 0; }
+.login-note { max-width: 320px; flex: none; }
+/* The same caveat repeats under the mobile form, where the aside has no room. */
+.login-note--mobile { display: none; }
+
+.login-roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+
+/* The heading and the intro both have a short form for the phone layout,
+   where the full sentence would push the form below the fold. */
+.login-title-short, .login-intro-short { display: none; }
+
+.login-picker { display: none; }
+.login-picker.seg { display: none; grid-template-columns: 1fr 1fr 1fr; width: 100%; }
+.login-picker .seg-opt { justify-content: center; min-height: 48px; font-size: 15px; }
+
+.login-card { padding: 28px; display: flex; flex-direction: column; gap: 14px; }
+.login-card-head { display: flex; align-items: center; gap: 12px; }
+.login-card-icon {
+  width: 44px; height: 44px; flex: none;
+  display: grid; place-items: center;
+  color: var(--color-accent-700);
+}
+.login-card-head h3 { font-size: 24px; margin: 0; }
+.login-card-sub { font-size: 13px; color: var(--color-neutral-700); }
+.login-card .btn-primary { margin-top: 4px; }
+.login-forgot {
+  font-size: 14px; text-align: center;
+  min-height: 32px; display: flex; align-items: center; justify-content: center;
+}
+
+/* Result line for the stubbed submit — the real system reports here. */
+.login-status { font-size: 14px; line-height: 1.45; margin: 0; }
+.login-status:empty { display: none; }
+.login-status[data-tone="error"] { color: var(--color-accent-800); }
+.login-status[data-tone="ok"] { color: var(--color-accent-700); }
+
+@media (max-width: 1023px) {
+  .login-head { flex-direction: column; gap: 0; margin-bottom: 20px; }
+  .login-picker.seg { margin-bottom: 20px; }
+  .login-note--mobile { margin-top: 20px; }
+  .login-head h1 { font-size: 30px; margin: 6px 0 6px; }
+  .login-head p { font-size: 15px; }
+  .login-title-long, .login-intro-long { display: none; }
+  .login-title-short, .login-intro-short { display: inline; }
+  .login-note { display: none; }        /* repeats below the form on mobile */
+
+  .login-picker.seg { display: grid; }
+  .login-roles { grid-template-columns: 1fr; gap: 20px; }
+  /* Only the picked role's form is on screen. */
+  .login-roles[data-role] > .login-card { display: none; }
+  .login-roles[data-role="admin"]   > .login-card[data-role="admin"],
+  .login-roles[data-role="teacher"] > .login-card[data-role="teacher"],
+  .login-roles[data-role="student"] > .login-card[data-role="student"] { display: flex; }
+
+  .login-card { padding: 22px 18px; }
+  .login-card-head h3 { font-size: 22px; }
+  .login-forgot { font-size: 15px; min-height: var(--tap); }
+  .login-note--mobile { display: flex; max-width: none; }
+}

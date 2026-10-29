@@ -1,0 +1,53 @@
+/* ==========================================================================
+   hm-letter.css — <hm-letter>. The Headmaster's full message: a sticky
+   identity column beside a single column of running text.
+   ========================================================================== */
+
+.hm-letter { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start; }
+
+.hm-letter-aside { display: flex; flex-direction: column; gap: 18px; position: sticky; top: 24px; }
+.hm-letter-photo {
+  width: 300px; height: 360px;
+  display: grid; place-items: center; overflow: hidden;
+}
+.hm-letter-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hm-letter-photo figcaption {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-800); background: var(--color-bg);
+  padding: 4px 10px; border: 1px solid var(--color-divider); margin: 0;
+}
+.hm-letter-name { font-size: 30px; margin: 0; }
+.hm-letter-post { font-size: 16px; color: var(--color-neutral-800); }
+.hm-letter-cred { font-size: 15px; color: var(--color-neutral-700); }
+.hm-letter-details {
+  margin: 0; font-size: 14px;
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 12px;
+  color: var(--color-neutral-800);
+}
+.hm-letter-details dt { color: var(--color-neutral-600); }
+.hm-letter-details dd { margin: 0; }
+
+.hm-letter-body { font-size: 18px; line-height: 1.65; max-width: 66ch; }
+.hm-letter-meta {
+  font-size: 13px; color: var(--color-neutral-700);
+  margin-bottom: 16px; display: flex; gap: 16px;
+}
+.hm-letter-salutation {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 28px; line-height: 1.25; margin: 0 0 20px;
+}
+.hm-letter-sign { margin-top: 24px; }
+.hm-letter-sign-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 24px; display: block;
+}
+.hm-letter-sign-post { font-size: 15px; color: var(--color-neutral-700); }
+
+@media (max-width: 1023px) {
+  .hm-letter { grid-template-columns: 1fr; gap: 24px; }
+  .hm-letter-aside { position: static; gap: 14px; }
+  .hm-letter-photo { width: 100%; height: 280px; }
+  .hm-letter-name { font-size: 26px; }
+  .hm-letter-body { font-size: 17px; }
+  .hm-letter-salutation { font-size: 24px; }
+}

@@ -1,0 +1,41 @@
+/* ==========================================================================
+   notices.css — <notice-list>. Date, subject and category per row. One markup
+   tree: desktop lays it out in three columns, mobile reflows to date+tag over
+   the subject rather than shrinking the type.
+   ========================================================================== */
+
+.notice-list { display: flex; flex-direction: column; }
+
+.notice {
+  display: grid;
+  grid-template-columns: 96px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 8px;
+  min-height: 56px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+  text-decoration: none;
+  color: var(--color-text);
+}
+.notice:hover { background: var(--color-accent-100); color: var(--color-text); }
+
+.notice-date {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 18px; color: var(--color-accent-700); line-height: 1.1;
+}
+.notice-year { display: block; font-weight: 400; font-size: 13px; color: var(--color-neutral-600); }
+.notice-text { font-size: 16px; line-height: 1.35; }
+
+@media (max-width: 1023px) {
+  .notice {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "date tag" "text text";
+    gap: 6px;
+    padding: 14px 4px;
+  }
+  .notice-date  { grid-area: date; font-size: 15px; }
+  .notice-text  { grid-area: text; line-height: 1.4; }
+  .notice .tag  { grid-area: tag; justify-self: end; }
+  .notice-year { display: inline; font-size: 15px; font-weight: var(--font-heading-weight); color: inherit; }
+  .notice-year::before { content: " "; }
+}

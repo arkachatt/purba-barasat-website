@@ -1,0 +1,51 @@
+/* ==========================================================================
+   contact.css — <contact-page>. Where the school is and how to reach it, with
+   an enquiry form beside it. The address column comes first on a phone: most
+   people arriving here want the phone number, not the form.
+   ========================================================================== */
+
+.contact-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: start; }
+.contact-info { display: flex; flex-direction: column; gap: 24px; }
+.contact-list { margin: 0; display: flex; flex-direction: column; gap: 18px; font-size: 16px; line-height: 1.5; }
+.contact-item { display: grid; grid-template-columns: 28px 1fr; gap: 14px; }
+.contact-item svg { color: var(--color-accent-700); }
+.contact-item dt {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-neutral-700);
+}
+.contact-item dd { margin: 2px 0 0; }
+.contact-item a { text-decoration: none; }
+
+/* The map placeholder is drawn as graph paper until a real embed is set. */
+.contact-map {
+  aspect-ratio: 16 / 10; display: grid; place-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 23px, var(--color-accent-200) 23px 24px),
+    repeating-linear-gradient(90deg, transparent 0 23px, var(--color-accent-200) 23px 24px);
+}
+.contact-map iframe { width: 100%; height: 100%; border: 0; }
+.contact-map-plate {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: var(--color-bg); border: 1px solid var(--color-divider); padding: 12px 16px;
+}
+.contact-map-plate span {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent-800);
+}
+
+.enquiry-form { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+.enquiry-form h2 { font-size: 30px; margin: 0; }
+.enquiry-form h2 .bn { font-size: 18px; }
+.enquiry-intro { margin: 6px 0 0; font-size: 15px; color: var(--color-neutral-700); }
+.enquiry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; }
+.enquiry-grid .field-full { grid-column: 1 / -1; }
+.enquiry-grid textarea.input { min-height: 130px; }
+.enquiry-foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.enquiry-privacy { font-size: 13px; color: var(--color-neutral-700); }
+
+@media (max-width: 1023px) {
+  .contact-split { grid-template-columns: 1fr; gap: 24px; }
+  .enquiry-form { padding: 20px; }
+  .enquiry-form h2 { font-size: 24px; }
+  .enquiry-grid { grid-template-columns: 1fr; gap: 14px; }
+  .enquiry-foot { flex-direction: column; align-items: stretch; gap: 12px; }
+  .enquiry-foot .btn { width: 100%; }
+}

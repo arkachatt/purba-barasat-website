@@ -1,0 +1,78 @@
+/* ==========================================================================
+   notice-board.css — <notice-board>. Every circular the school has published,
+   with search, year and category filters. A notice is a PDF, so each row's
+   real destination is the download button.
+   ========================================================================== */
+
+.notice-filters { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; }
+.notice-filters .field-search { flex: 1; min-width: 280px; max-width: 480px; }
+.notice-filters .field-search .input-wrap { position: relative; }
+.notice-filters .field-search .input { padding-left: 38px; }
+.notice-filters .field-search svg { position: absolute; left: 12px; top: 13px; color: var(--color-neutral-600); }
+.notice-filters .field-year { width: 160px; }
+.notice-filters .field-category { width: 200px; }
+.notice-count { font-size: 14px; color: var(--color-neutral-700); margin-left: auto; padding-bottom: 12px; }
+
+.notice-row {
+  display: grid; grid-template-columns: 130px 1fr 130px 180px;
+  gap: 16px; align-items: center;
+  padding: 16px 20px; min-height: 64px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.notice-row:last-of-type { border-bottom: 0; }
+.notice-row-date {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 18px; color: var(--color-accent-700); line-height: 1.1;
+}
+.notice-row-title { font-size: 16px; line-height: 1.4; }
+.notice-row-title strong { font-weight: 500; display: block; }
+.notice-row-ref { display: block; font-size: 14px; color: var(--color-neutral-700); }
+/* The file size rides with the title on a phone, where the button is icon-only. */
+.notice-row-size { display: none; font-size: 13px; color: var(--color-neutral-700); }
+.notice-row .btn { justify-content: flex-start; }
+
+.notice-pager {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px; border-top: 1px solid var(--color-divider);
+  font-size: 14px; color: var(--color-neutral-700);
+}
+.notice-pager .btn { min-height: 40px; }
+.notice-pager-actions { display: flex; gap: 8px; }
+
+/* — empty state — */
+.notice-empty {
+  padding: 36px 20px; display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 12px;
+}
+.notice-empty svg { color: var(--color-accent-700); }
+.notice-empty h2 { font-size: 24px; margin: 0; }
+.notice-empty p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--color-neutral-800); max-width: 48ch; }
+.notice-empty .btn { margin-top: 6px; }
+
+@media (max-width: 1023px) {
+  .notice-filters { flex-direction: column; align-items: stretch; gap: 10px; }
+  .notice-filters .field-search,
+  .notice-filters .field-year,
+  .notice-filters .field-category { width: auto; max-width: none; min-width: 0; }
+  /* Year and category share a row on a phone. */
+  .notice-filters .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .notice-count { margin-left: 0; padding-bottom: 0; }
+
+  /* Phone: date and tag on one line, the title beneath, and a 48px download
+     target beside them — the row's real destination is the PDF. */
+  .notice-row {
+    grid-template-columns: 1fr 48px;
+    grid-template-areas: "date pdf" "title pdf" "size pdf";
+    gap: 6px 12px; align-items: center; padding: 14px;
+  }
+  .notice-row-date { grid-area: date; font-size: 15px; }
+  .notice-row-title { grid-area: title; font-weight: 500; display: flex; flex-direction: column; gap: 6px; }
+  .notice-row-ref { display: none; }
+  .notice-row-size { display: block; }
+  .notice-row-tag { grid-area: date; justify-self: end; align-self: center; }
+  .notice-row-pdf {
+    grid-area: pdf; width: 48px; height: 48px; min-height: 48px;
+    padding: 0; justify-content: center; align-self: center;
+  }
+  .notice-row-pdf-label { display: none; }
+}

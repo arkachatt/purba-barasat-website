@@ -1,0 +1,137 @@
+/* ==========================================================================
+   admission-form.css — <admission-form>. A five-step wizard.
+
+   Wide layout: a sticky stepper beside the current step's panel.
+   Phone layout: the stepper collapses to a five-segment progress bar, because
+   a guardian filling this on a phone needs the field in front of them, not a
+   map of the whole form.
+   ========================================================================== */
+
+.form-shell { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 56px; align-items: start; }
+
+/* — stepper — */
+.stepper { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; position: sticky; top: 24px; }
+.step-item { display: flex; gap: 14px; padding: 12px 0; align-items: flex-start; }
+.step-mark {
+  width: 32px; height: 32px; flex: none;
+  display: grid; place-items: center;
+  border: 1px solid var(--color-divider);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 16px; color: var(--color-neutral-700);
+}
+.step-item[data-state="current"] .step-mark,
+.step-item[data-state="done"] .step-mark {
+  background: var(--color-accent); border-color: var(--color-accent); color: #fff;
+}
+.step-name { font-size: 16px; }
+.step-item[data-state="current"] .step-name { font-weight: 500; color: var(--color-accent-800); }
+.step-sub { font-size: 13px; color: var(--color-neutral-700); }
+.stepper-note {
+  margin-top: 20px; padding: 14px 16px; border: 1px solid var(--color-divider);
+  font-size: 14px; line-height: 1.5; color: var(--color-neutral-800);
+}
+
+/* The phone progress bar: one segment per step, filled up to the current one. */
+.progress { display: none; grid-template-columns: repeat(var(--steps, 5), 1fr); gap: 4px; margin-top: 12px; }
+.progress span { height: 4px; background: var(--color-neutral-300); }
+.progress span[data-done] { background: var(--color-accent); }
+
+/* — the step panel — */
+.form-panel { padding: 36px; display: flex; flex-direction: column; gap: 28px; }
+.form-panel-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--color-divider); padding-bottom: 12px; gap: 16px;
+}
+.form-panel-head h2 { font-size: 30px; margin: 0; }
+.form-panel-head h2 .bn { font-size: 18px; }
+.form-step-count { font-size: 14px; color: var(--color-neutral-700); white-space: nowrap; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
+.form-grid .field-full { grid-column: 1 / -1; }
+.req { color: var(--color-accent-700); }
+.field-hint { font-size: 13px; color: var(--color-neutral-700); margin-top: 4px; }
+.radio-row { display: flex; gap: 20px; min-height: 48px; align-items: center; }
+.radio-row .radio { font-size: 16px; }
+.field .seg { width: 100%; }
+.field .seg-opt { flex: 1; justify-content: center; min-height: 48px; font-size: 14px; }
+.input-bn { font-family: "Noto Sans Bengali", sans-serif; }
+.input[readonly] { color: var(--color-neutral-700); }
+
+/* An invalid field takes a heavier ink border — colour alone is not the signal. */
+.field[data-invalid] .input { border-color: var(--color-text); border-width: 2px; }
+.field[data-invalid] > label { color: var(--color-text); }
+.field-error {
+  font-size: 14px; margin-top: 6px; display: flex; gap: 6px; align-items: center;
+  color: var(--color-text);
+}
+.field-error svg { flex: none; }
+
+.form-actions {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  border-top: 1px solid var(--color-divider); padding-top: 24px;
+}
+.form-actions-main { display: flex; gap: 12px; }
+.form-actions .btn { min-height: 48px; font-size: 15px; }
+.form-actions .btn-primary { font-size: 16px; padding-inline: 24px; }
+
+/* — documents — */
+.doc-list { display: flex; flex-direction: column; gap: 14px; }
+.doc-item { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.doc-item-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.doc-item-name { font-size: 16px; font-weight: 500; }
+.doc-item-meta { font-size: 13px; color: var(--color-neutral-700); }
+.doc-item-actions { display: flex; gap: 8px; }
+.doc-item-actions .btn { min-height: var(--tap); font-size: 14px; }
+.doc-progress { height: 4px; background: var(--color-neutral-300); }
+.doc-progress > span { display: block; height: 4px; background: var(--color-accent); }
+.doc-item[data-state="error"] { border-color: var(--color-text); border-width: 2px; }
+.doc-error { font-size: 14px; display: flex; gap: 6px; align-items: center; margin-top: 2px; }
+/* An empty slot is a dashed drop target that is also the file input's label. */
+.doc-slot {
+  position: relative;
+  padding: 22px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  text-align: center; cursor: pointer; border-style: dashed;
+}
+.doc-slot svg { color: var(--color-accent-700); }
+.doc-slot input[type="file"] { position: absolute; opacity: 0; width: 0; height: 0; }
+.doc-slot-note { font-size: 13px; font-weight: 400; color: var(--color-neutral-700); }
+
+/* — review — */
+.review-list { display: flex; flex-direction: column; gap: 20px; }
+.review-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px; border-bottom: 1px solid var(--color-divider);
+}
+.review-title { font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 20px; }
+.review-head a { font-size: 14px; min-height: var(--tap); display: flex; align-items: center; }
+.review-list dl {
+  margin: 0; padding: 8px 14px;
+  display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 15px;
+}
+.review-list dt { color: var(--color-neutral-700); }
+.review-list dd { margin: 0; }
+.review-docs { padding: 10px 14px; font-size: 15px; display: flex; flex-direction: column; gap: 6px; }
+.declaration { align-items: flex-start; font-size: 15px; line-height: 1.45; gap: 12px; }
+.declaration .dot { border-radius: 0; margin-top: 3px; }
+
+.form-foot-note { font-size: 13px; color: var(--color-neutral-700); text-align: center; }
+
+@media (max-width: 1023px) {
+  .form-shell { grid-template-columns: 1fr; gap: 20px; }
+  .stepper { display: none; }
+  .progress { display: grid; }
+  /* On a phone the panel is the page: no frame, no inner padding to fight. */
+  .form-panel { padding: 0; border: 0; gap: 20px; }
+  .form-panel-head { border-bottom: 0; padding-bottom: 0; }
+  .form-panel-head h2 { font-size: 28px; }
+  .form-panel-head h2 .bn { display: none; }
+  .form-grid { grid-template-columns: 1fr; gap: 16px; }
+  .form-grid .field-half { grid-column: auto; }
+  .form-actions {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 10px;
+    border-top: 0; padding-top: 4px;
+  }
+  .form-actions .btn { min-height: 52px; }
+  .form-actions-save { grid-column: 1 / -1; order: 2; }
+  .form-actions-main { display: contents; }
+}

@@ -1,0 +1,92 @@
+/* ==========================================================================
+   carousel.css — <photo-carousel>. A hatched placeholder frame until the
+   office supplies photographs; a real <img> drops straight in behind the
+   caption without touching the layout.
+   ========================================================================== */
+
+.carousel {
+  position: relative;
+  height: 460px;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.carousel-slide {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+}
+.carousel-slide[hidden] { display: none; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+
+/* The "Photo n of N · subject" chip that labels an unset placeholder. */
+.carousel-plate {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-800);
+  background: var(--color-bg);
+  padding: 6px 12px;
+  border: 1px solid var(--color-divider);
+  position: relative;
+}
+
+.carousel-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: var(--tap); height: var(--tap); padding: 0;
+  background: var(--color-bg);
+  z-index: 2;
+}
+.carousel-nav--prev { left: 16px; }
+.carousel-nav--next { right: 16px; }
+
+.carousel-caption {
+  position: absolute; left: 24px; bottom: 24px; z-index: 2;
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  padding: 12px 16px;
+  max-width: 520px;
+}
+.carousel-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 28px; line-height: 1.1; margin-top: 4px;
+}
+.carousel-sub { font-size: 15px; color: var(--color-neutral-700); margin-top: 2px; }
+
+.carousel-dots {
+  position: absolute; right: 24px; bottom: 28px; z-index: 2;
+  display: flex; gap: 6px;
+}
+.carousel-dot {
+  width: 28px; height: var(--tap); padding: 0;
+  display: grid; place-items: center;
+  background: none; border: 0; cursor: pointer;
+}
+.carousel-dot::after {
+  content: ""; width: 28px; height: 4px;
+  background: var(--color-bg); border: 1px solid var(--color-accent-700);
+}
+.carousel-dot[aria-selected="true"]::after {
+  background: var(--color-accent-700); border-color: var(--color-accent-700);
+}
+
+/* Mobile swaps the floating caption for a solid bar pinned to the frame. */
+.carousel-bar {
+  display: none;
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-divider);
+  padding: 10px 12px;
+  justify-content: space-between; align-items: center; gap: 12px;
+}
+.carousel-bar-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 17px; line-height: 1.1;
+}
+.carousel-bar-sub { font-size: 12px; color: var(--color-neutral-700); }
+.carousel-bar-dots { display: flex; gap: 5px; flex: none; }
+.carousel-bar-dots .carousel-dot { width: 16px; height: 28px; }
+.carousel-bar-dots .carousel-dot::after { width: 16px; }
+
+@media (max-width: 1023px) {
+  .carousel { height: 220px; }
+  .carousel-plate { font-size: 11px; padding: 5px 10px; }
+  .carousel-nav, .carousel-caption, .carousel-dots { display: none; }
+  .carousel-bar { display: flex; }
+}

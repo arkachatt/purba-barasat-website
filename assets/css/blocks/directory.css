@@ -1,0 +1,60 @@
+/* ==========================================================================
+   directory.css — <staff-directory>. The staff list, in two presentations of
+   the same rows: a table on the wide layout and a card per person on a phone,
+   where a seven-column table would be unreadable and calling matters more.
+   ========================================================================== */
+
+.directory-controls { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; }
+.directory-search { flex: 1; min-width: 280px; max-width: 420px; }
+.directory-search .input-wrap { position: relative; }
+.directory-search .input { padding-left: 38px; }
+.directory-search svg { position: absolute; left: 12px; top: 13px; color: var(--color-neutral-600); }
+.directory-post { width: 260px; }
+.directory-seg { height: var(--tap); }
+.directory-seg .seg-opt { min-height: var(--tap); font-size: 15px; padding-inline: 16px; }
+.directory-count {
+  font-size: 14px; color: var(--color-neutral-700);
+  margin-left: auto; padding-bottom: 12px;
+}
+
+.directory-table-wrap { overflow: hidden; }
+.directory-table { font-size: 16px; }
+.directory-table th { padding: 14px 16px; }
+.directory-table td { padding: 12px 16px; }
+.directory-table td.is-sl { color: var(--color-neutral-600); }
+.directory-table td.is-photo { padding: 8px 16px; }
+.directory-table td.is-name { font-weight: 500; }
+.directory-table a { text-decoration: none; }
+.directory-thumb { width: 44px; height: 52px; display: block; overflow: hidden; }
+.directory-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* — phone cards — */
+.directory-cards { display: none; flex-direction: column; gap: 16px; }
+.directory-card { padding: 14px; display: grid; grid-template-columns: 64px 1fr; gap: 12px 14px; }
+.directory-card .directory-thumb { width: 64px; height: 76px; }
+.directory-card-sl { font-size: 12px; color: var(--color-neutral-600); }
+.directory-card-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 22px; line-height: 1.1;
+}
+.directory-card-post { font-size: 15px; }
+.directory-card-qual { font-size: 14px; color: var(--color-neutral-700); }
+.directory-card-actions { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* A vacancy is a real row — it says the post exists and is unfilled — but it
+   should not read with the same weight as a person. */
+.directory-table tr.is-vacant td { color: var(--color-neutral-600); }
+.directory-table tr.is-vacant .is-name { font-weight: 400; }
+.directory-card.is-vacant { border-style: dashed; }
+.directory-card.is-vacant .directory-thumb { background: none; }
+
+.directory-empty { padding: 32px 16px; text-align: center; color: var(--color-neutral-700); font-size: 15px; }
+
+@media (max-width: 1023px) {
+  .directory-controls { flex-direction: column; align-items: stretch; gap: 12px; }
+  .directory-search, .directory-post { max-width: none; width: auto; min-width: 0; }
+  .directory-seg { display: none; }       /* the post select already covers it */
+  .directory-count { margin-left: 0; padding-bottom: 0; font-size: 13px; }
+  .directory-table-wrap { display: none; }
+  .directory-cards { display: flex; }
+}

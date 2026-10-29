@@ -1,0 +1,29 @@
+/* ==========================================================================
+   gallery.css — <photo-gallery>. A grid of 4:3 frames. Each is a hatched
+   placeholder naming its subject until a real image is set.
+   ========================================================================== */
+
+.gallery { display: grid; grid-template-columns: repeat(var(--gallery-cols, 3), 1fr); gap: 28px; }
+
+.gallery figure {
+  aspect-ratio: 4 / 3;
+  display: grid; place-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.gallery img { width: 100%; height: 100%; object-fit: cover; }
+.gallery figcaption {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-800);
+  background: var(--color-bg);
+  padding: 4px 10px;
+  border: 1px solid var(--color-divider);
+  margin: 0;
+}
+/* Once there is a photograph the caption sits over it rather than in it. */
+.gallery figure:has(img) figcaption { position: absolute; left: 8px; bottom: 8px; }
+
+@media (max-width: 1023px) {
+  .gallery { grid-template-columns: repeat(var(--gallery-cols-sm, 2), 1fr); gap: 14px; }
+  .gallery figcaption { font-size: 10px; padding: 3px 8px; }
+}

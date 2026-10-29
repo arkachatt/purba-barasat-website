@@ -1,0 +1,60 @@
+/* ==========================================================================
+   hm-desk.css — <hm-desk>. The Headmaster's standing note: portrait, name and
+   post, and an excerpt that links through to the full letter.
+   ========================================================================== */
+
+.hm-desk {
+  padding: 24px;
+  display: grid; grid-template-columns: 132px 1fr;
+  column-gap: 20px; row-gap: 0;   /* the excerpt continues the name block, so no row gap */
+  align-items: start;
+}
+/* Desktop dissolves the head wrapper so the portrait and the text become grid
+   columns: the portrait spans both rows, and the excerpt continues straight on
+   from the name rather than starting a new band below the photo. */
+.hm-head { display: contents; }
+.hm-photo { grid-row: 1 / span 2; }
+.hm-id, .hm-body { grid-column: 2; }
+
+.hm-photo {
+  width: 132px; height: 160px;
+  display: grid; place-items: center;
+  overflow: hidden;
+}
+.hm-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hm-photo-label {
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-800); text-align: center;
+}
+.hm-name { font-size: 24px; margin: 6px 0 4px; }
+.hm-post { font-size: 14px; color: var(--color-neutral-700); margin-bottom: 10px; }
+.hm-excerpt { font-size: 16px; line-height: 1.5; margin: 0 0 12px; }
+.hm-more { min-height: var(--tap); padding-inline: 8px; font-size: 15px; }
+
+/* Long form on the wide layout, short form where the column is 72px of photo. */
+.hm-kicker-short, .hm-post-short { display: none; }
+
+@media (max-width: 1023px) {
+  .hm-desk { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
+  .hm-photo { grid-row: auto; }
+  .hm-head { display: flex; gap: 14px; align-items: center; }
+  .hm-body { display: flex; flex-direction: column; gap: 12px; }
+  .hm-photo { width: 72px; height: 88px; flex: none; }
+  .hm-photo-label { font-size: 9px; }
+  .hm-name { font-size: 22px; margin: 4px 0 2px; }
+  .hm-post { font-size: 13px; margin-bottom: 0; }
+  .hm-excerpt { margin: 0; }
+
+  .hm-kicker-long, .hm-post-long { display: none; }
+  .hm-kicker-short, .hm-post-short { display: inline; }
+
+  /* On a phone the note ends in a full-width secondary button, not a text link. */
+  .hm-more {
+    border-color: var(--color-divider);
+    color: var(--color-text);
+    width: 100%;
+    padding-inline: 16px;
+  }
+  .hm-more:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+  .hm-more-arrow { display: none; }
+}

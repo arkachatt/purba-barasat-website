@@ -1,0 +1,74 @@
+/* ==========================================================================
+   prose.css — long-form editorial: the About body, the "at a glance" panel and
+   the milestone rail. Anything the office writes as rich text lands in .prose.
+   ========================================================================== */
+
+.prose { font-size: 17px; line-height: 1.6; max-width: 68ch; }
+.prose h2 { font-size: 28px; margin: 0 0 10px; }
+.prose h2 + * { margin-top: 0; }
+.prose section + section h2 { margin-top: 28px; }
+.prose ul { padding-left: 20px; margin: 0 0 12px; display: flex; flex-direction: column; gap: 6px; }
+
+/* The account is published over the Headmaster's signature — set like one,
+   not like another paragraph. */
+.prose-signature {
+  margin: 24px 0 28px;   /* the signature closes the account; Milestones starts fresh */
+  padding-top: 16px;
+  border-top: 1px solid var(--color-divider);
+}
+.prose-signature-name {
+  display: block;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 22px; line-height: 1.1;
+}
+.prose-signature-post { font-size: 15px; color: var(--color-neutral-700); }
+
+/* Body + sidebar: the sidebar is a fixed 340px so the measure stays readable. */
+.with-aside {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 56px; align-items: start;
+}
+
+/* — at a glance — */
+.glance { padding: 24px; }
+.glance-head {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-700);
+  border-bottom: 1px solid var(--color-divider);
+  padding-bottom: 10px; margin-bottom: 6px;
+}
+.glance dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0 16px; font-size: 15px; }
+.glance dt, .glance dd {
+  padding: 10px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.glance dt { color: var(--color-neutral-700); }
+.glance dd { margin: 0; text-align: right; }
+.glance dt:last-of-type, .glance dd:last-of-type { border-bottom: 0; }
+
+/* — milestone rail — a horizontal timeline, one tick per entry — */
+.milestones {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+}
+.milestone { padding: 18px 12px 0 0; border-top: 2px solid var(--color-accent); position: relative; }
+.milestone::before {
+  content: ""; position: absolute; top: -6px; left: 0; width: 10px; height: 10px;
+  background: var(--color-bg); border: 2px solid var(--color-accent);
+}
+.milestone-year {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 26px; color: var(--color-accent-700); line-height: 1;
+}
+.milestone-text { font-size: 14px; line-height: 1.4; margin-top: 4px; }
+
+@media (max-width: 1023px) {
+  .prose { font-size: 16px; }
+  .prose h2 { font-size: 24px; }
+  .with-aside { grid-template-columns: 1fr; gap: 28px; }
+  .glance { padding: 18px; }
+  /* The rail turns vertical: a tick per row, read top to bottom. */
+  .milestones { grid-auto-flow: row; grid-auto-columns: auto; }
+  .milestone { padding: 14px 0 0 18px; border-top: 0; border-left: 2px solid var(--color-accent); }
+  .milestone::before { top: 14px; left: -6px; }
+  .milestone + .milestone { padding-top: 20px; }
+}

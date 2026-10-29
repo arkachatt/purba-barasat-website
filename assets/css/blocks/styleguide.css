@@ -1,0 +1,44 @@
+/* ==========================================================================
+   styleguide.css — the component sheet's own scaffolding.
+   Nothing here belongs to the site itself; it only arranges the specimens.
+   ========================================================================== */
+
+.sg { max-width: 1100px; margin: 0 auto; padding: 48px var(--page-pad-x) 80px; }
+.sg-lede { font-size: 15px; color: var(--color-neutral-700); margin: 0 0 32px; max-width: 76ch; }
+
+.sg-section { margin-bottom: 48px; }
+.sg-head {
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-700);
+  border-bottom: 1px solid var(--color-divider);
+  padding-bottom: 8px; margin-bottom: 16px;
+}
+.sg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 48px; }
+.sg-span { grid-column: 1 / -1; }
+.sg-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.sg-stack { display: flex; flex-direction: column; gap: 16px; max-width: 420px; }
+.sg-note { font-size: 12px; color: var(--color-neutral-700); width: 100%; }
+.sg-code {
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--color-neutral-200); padding: 2px 6px;
+}
+
+/* — token specimens — */
+.sg-ramp { display: grid; grid-template-columns: repeat(9, 1fr); gap: 0; }
+.sg-swatch { height: 56px; display: grid; align-content: end; padding: 4px; }
+.sg-swatch span { font-family: var(--font-mono); font-size: 10px; }
+.sg-type-row { display: flex; align-items: baseline; gap: 16px; padding: 6px 0; }
+.sg-type-row .sg-code { flex: none; width: 92px; }
+.sg-space { display: flex; align-items: flex-end; gap: 12px; }
+.sg-space span { display: block; background: var(--color-accent-400); width: 24px; }
+.sg-elev { display: flex; gap: 24px; flex-wrap: wrap; }
+.sg-elev > div {
+  width: 150px; height: 84px; display: grid; place-items: center;
+  background: var(--color-bg); font-size: 12px;
+}
+
+@media (max-width: 1023px) {
+  .sg { padding: 24px var(--page-pad-x-sm) 48px; }
+  .sg-grid { grid-template-columns: 1fr; gap: 32px; }
+  .sg-ramp { grid-template-columns: repeat(5, 1fr); }
+}

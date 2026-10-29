@@ -1,0 +1,62 @@
+/* ==========================================================================
+   strength.css — <student-strength>. Class-wise enrolment. Counts only: no
+   personal data is published, and the layout is built so none can creep in.
+   ========================================================================== */
+
+.strength { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 48px; align-items: start; }
+
+.strength-table { font-size: 16px; }
+.strength-table th, .strength-table td { padding: 12px 20px; }
+.strength-table th { padding: 14px 20px; }
+.strength-table .is-class { font-weight: 500; }
+.strength-table .is-count { text-align: right; font-variant-numeric: tabular-nums; }
+.strength-table tfoot tr { background: var(--color-accent-100); }
+.strength-table tfoot td { padding: 14px 20px; font-weight: 500; }
+.strength-table tfoot .is-count {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px;
+}
+
+.strength-aside { display: flex; flex-direction: column; gap: 20px; }
+.strength-total { padding: 20px; }
+.strength-total-figure {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 56px; line-height: 1; margin: 6px 0 2px;
+}
+.strength-total-sub { font-size: 14px; color: var(--color-neutral-700); }
+.strength-streams { padding: 20px; font-size: 15px; line-height: 1.5; }
+.strength-streams .kicker { margin-bottom: 8px; }
+.strength-streams p { margin: 0 0 6px; }
+
+/* — phone: a summary bar, then one panel per class — */
+.strength-cards { display: none; flex-direction: column; gap: 18px; }
+.strength-bar {
+  padding: 16px; display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.strength-bar-figure {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 40px; line-height: 1;
+}
+.strength-group-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-divider);
+}
+.strength-group-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 22px;
+}
+.strength-group-total { font-size: 14px; color: var(--color-neutral-700); }
+.strength-row {
+  display: flex; justify-content: space-between;
+  padding: 11px 16px; font-size: 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.strength-row:last-child { border-bottom: 0; }
+.strength-row span:last-child { font-variant-numeric: tabular-nums; }
+.strength-note { font-size: 13px; color: var(--color-neutral-700); text-align: center; }
+
+@media (max-width: 1023px) {
+  .strength { grid-template-columns: 1fr; gap: 18px; }
+  .strength-table-wrap, .strength-aside .strength-total { display: none; }
+  .strength-cards { display: flex; }
+  .strength-aside { gap: 18px; }
+}

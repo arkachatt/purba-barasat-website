@@ -1,0 +1,92 @@
+/* ==========================================================================
+   states.css — the states an admin-updated site actually hits: nothing
+   published yet, content still loading, and something that failed.
+
+   The palette is mono, so weight carries the alarm: an error is drawn in
+   full-strength ink with a doubled hairline, never a red fill.
+   ========================================================================== */
+
+/* — empty state — */
+.empty-state {
+  padding: 40px 28px;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; gap: 12px;
+}
+.empty-state svg { color: var(--color-accent-700); }
+.empty-state h2 { font-size: 26px; margin: 0; }
+.empty-state p {
+  margin: 0; font-size: 16px; line-height: 1.5;
+  color: var(--color-neutral-800); max-width: 42ch;
+}
+.empty-state .btn { margin-top: 4px; }
+
+/* The wide variant: an inline notice rather than a centred panel, for when a
+   table below it still has older data worth reading. */
+.empty-state--inline {
+  flex-direction: row; align-items: center; text-align: left;
+  gap: 20px; padding: 32px 28px;
+}
+.empty-state--inline svg { flex: none; }
+.empty-state--inline h2 { font-size: 24px; margin: 0 0 2px; }
+.empty-state--inline p { font-size: 16px; max-width: none; }
+
+/* — alerts — */
+.alert { padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; }
+.alert-body { flex: 1; }
+.alert h2 { font-size: 24px; margin: 0 0 4px; }
+.alert p { margin: 0 0 12px; font-size: 16px; line-height: 1.5; color: var(--color-neutral-800); }
+.alert p:last-child { margin-bottom: 0; }
+.alert-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.alert-actions .btn { min-height: var(--tap); font-size: 15px; }
+.alert > svg { flex: none; margin-top: 2px; }
+
+/* An error doubles the frame's hairline and takes full-strength ink. */
+.alert--error { border-color: var(--color-text); border-width: 2px; }
+.alert--error > svg { color: var(--color-text); }
+
+/* A compact row: one line of cause, one of advice, one action on the right. */
+.alert--row { padding: 18px 22px; align-items: center; }
+.alert--row > svg { margin-top: 0; }
+.alert--row .alert-title { font-size: 17px; font-weight: 500; }
+.alert--row .alert-text { font-size: 15px; color: var(--color-neutral-800); }
+.alert--row .btn { flex: none; }
+
+/* A status (not an error) keeps the single hairline and the accent icon. */
+.alert--status > svg { color: var(--color-accent-700); }
+
+/* The offline banner pins itself above the page once the browser goes offline. */
+.offline-bar {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--color-bg);
+  margin-bottom: 16px;
+}
+.offline-bar[hidden] { display: none; }
+
+/* — loading skeletons —
+   Flat grey blocks in the row's real geometry. No shimmer animation, so a
+   low-end phone spends nothing on repaint. */
+.skeleton-rows > * + * { border-top: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
+.skeleton-row {
+  display: grid; grid-template-columns: 130px 1fr 130px 180px;
+  gap: 16px; align-items: center; padding: 18px 20px;
+}
+/* The last row fades, so the list reads as continuing past the fold. */
+.skeleton-row:last-child { opacity: .55; }
+.skeleton-block { display: block; background: var(--color-neutral-300); height: 16px; }
+.skeleton-block--soft { background: var(--color-neutral-200); }
+.skeleton-lines { display: flex; flex-direction: column; gap: 8px; }
+.skeleton-tag { height: 20px; background: var(--color-neutral-200); }
+.skeleton-btn { height: 36px; width: 140px; border: 1px solid var(--color-neutral-300); }
+.skeleton-note { font-size: 14px; color: var(--color-neutral-700); margin-top: 12px; }
+
+@media (max-width: 1023px) {
+  .empty-state { padding: 28px 20px; }
+  .empty-state h2 { font-size: 22px; }
+  .empty-state--inline { flex-direction: column; align-items: flex-start; text-align: left; }
+  .alert { flex-direction: column; padding: 16px 18px; }
+  .alert--row { align-items: flex-start; }
+  .alert h2 { font-size: 20px; }
+  .alert-actions .btn { flex: 1; }
+  .skeleton-row { grid-template-columns: 1fr auto; gap: 10px; padding: 14px; }
+  .skeleton-btn { width: 100%; grid-column: 1 / -1; }
+}

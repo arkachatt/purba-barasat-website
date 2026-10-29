@@ -1,0 +1,34 @@
+/* ==========================================================================
+   site.css — the single stylesheet a page links. Order matters: tokens define
+   the values, base sets element defaults, components is the design-system kit,
+   layout is the page shell, and blocks/ holds one file per site component.
+   Adding a component means adding one file here and one JS module.
+   ========================================================================== */
+
+@import url("tokens.css");
+@import url("base.css");
+@import url("components.css");
+@import url("layout.css");
+
+@import url("blocks/header.css");
+@import url("blocks/footer.css");
+@import url("blocks/carousel.css");
+@import url("blocks/admission-banner.css");
+@import url("blocks/notices.css");
+@import url("blocks/hm-desk.css");
+@import url("blocks/quick-links.css");
+@import url("blocks/login.css");
+
+@import url("blocks/page-header.css");
+@import url("blocks/prose.css");
+@import url("blocks/gallery.css");
+@import url("blocks/hm-letter.css");
+@import url("blocks/directory.css");
+@import url("blocks/strength.css");
+@import url("blocks/admission.css");
+@import url("blocks/admission-form.css");
+@import url("blocks/calendar.css");
+@import url("blocks/results.css");
+@import url("blocks/notice-board.css");
+@import url("blocks/contact.css");
+@import url("blocks/states.css");

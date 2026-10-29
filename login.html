@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log In — Purba Barasat Adarsha Bidyapith</title>
+  <meta name="description" content="Sign in to the PBAB School Management Software as admin, teacher or student. Attendance, marks and fees are held in the management software, not on the public website.">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script type="module" src="assets/js/main.js"></script>
+  <script type="module">
+    import { gate } from './assets/js/core/gate.js';
+    gate('login');
+  </script>
+
+</head>
+<body class="page gated">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <offline-bar></offline-bar>
+
+  <site-header></site-header>
+
+  <main class="page-main page-main--narrow" id="main">
+    <login-gateway></login-gateway>
+  </main>
+
+  <site-footer></site-footer>
+</body>
+</html>

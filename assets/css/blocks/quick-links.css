@@ -1,0 +1,40 @@
+/* ==========================================================================
+   quick-links.css — <quick-links>. Four equal doors to the sections parents
+   actually arrive looking for.
+   ========================================================================== */
+
+/* auto-fit, not a fixed four, so a tile hidden by a feature switch closes the
+   row up instead of leaving a hole. */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.quick-link {
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-height: 140px;
+  text-decoration: none; color: var(--color-text);
+}
+.quick-link:hover { background: var(--color-accent-100); color: var(--color-text); }
+.quick-link svg { color: var(--color-accent-700); }
+.quick-link-title {
+  display: block;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 24px; line-height: 1.1;
+}
+.quick-link-sub { font-size: 14px; color: var(--color-neutral-700); }
+
+/* The tile keeps its full label on the wide grid and drops to the short one
+   when two tiles share a phone's width. */
+.ql-title-short { display: none; }
+
+@media (max-width: 1023px) {
+  .quick-links { grid-template-columns: 1fr 1fr; gap: 20px 18px; }
+  .quick-link { padding: 16px; gap: 10px; min-height: 100px; }
+  .quick-link-title { font-size: 20px; }
+  .quick-link-sub { font-size: 13px; }
+  .ql-title-long, .ql-sub-long { display: none; }
+  .ql-title-short { display: inline; }
+}

@@ -1,0 +1,101 @@
+/* ==========================================================================
+   layout.css — the page shell shared by every screen: the centred measure,
+   the vertical rhythm between sections, and the section heading rule.
+   ========================================================================== */
+
+/* A page behind a feature switch paints nothing until core/gate.js decides:
+   either it removes this class, or it has already redirected. */
+body.gated { visibility: hidden; }
+
+/* Custom elements are inline until told otherwise; every site component is a
+   block in the page flow. A banner that renders nothing takes no space. */
+site-header, site-footer, photo-carousel, admission-banner,
+notice-list, hm-desk, quick-links, login-gateway,
+page-header, photo-gallery, about-page, hm-letter,
+staff-directory, student-strength, admission-page,
+admission-form, admission-confirmation, academic-calendar,
+board-results, event-list, event-detail, notice-board, contact-page,
+empty-state, state-alert, skeleton-rows, offline-bar, page-header { display: block; }
+
+/* A component that is several stacked sections lays them out itself. */
+about-page, staff-directory, admission-page,
+academic-calendar, notice-board, event-detail { display: flex; flex-direction: column; gap: 28px; }
+notice-board { gap: 24px; }
+event-detail { gap: 32px; }
+admission-page { gap: 36px; }
+about-page { gap: 48px; }
+admission-banner:empty { display: none; }
+
+.page { display: flex; flex-direction: column; min-height: 100vh; }
+.page > .page-main { flex: 1; }
+
+.page-main {
+  max-width: var(--page-max);
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px var(--page-pad-x) 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+/* The log-in gateway runs to a narrower measure than the home page. */
+.page-main--narrow { max-width: 1200px; padding-top: 40px; padding-bottom: 72px; gap: 32px; }
+
+/* Home's asymmetric body: notices carry the weight, the HM's note sits beside. */
+.split-7-5 {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 40px;
+  align-items: start;
+}
+
+/* A kicker is the small uppercase accent line above a heading. */
+.kicker {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--color-accent-700);
+}
+.kicker-sm { font-size: 11px; }
+
+/* Bengali gloss beside an English heading — set in the Bengali face at a
+   smaller optical size so the two scripts read as one line. */
+.bn {
+  font-family: "Noto Sans Bengali", sans-serif;
+  font-weight: 500;
+  color: var(--color-neutral-700);
+}
+
+.section-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px solid var(--color-divider);
+  padding-bottom: 10px;
+  margin-bottom: 6px;
+}
+.section-head h2 { font-size: 28px; margin: 0; }
+.section-head h2 .bn { font-size: 18px; }
+.section-head a { font-size: 15px; }
+/* More air under the rule when a grid rather than a list follows. */
+.section-head--roomy { margin-bottom: 28px; }
+
+/* Bordered aside used for procedural notes ("this opens another system"). */
+.note {
+  display: flex; gap: 10px;
+  padding: 14px 18px;
+  font-size: 14px; line-height: 1.45;
+  color: var(--color-neutral-800);
+}
+.note svg { flex: none; margin-top: 2px; color: var(--color-accent-700); }
+.note strong { font-weight: 500; }
+
+@media (max-width: 1023px) {
+  .page-main {
+    padding: 16px var(--page-pad-x-sm) 40px;
+    gap: 28px;
+  }
+  .page-main--narrow { padding-top: 24px; padding-bottom: 48px; gap: 20px; }
+  .split-7-5 { grid-template-columns: 1fr; gap: 28px; }
+  .section-head { padding-bottom: 8px; }
+  .section-head h2 { font-size: 24px; }
+  .section-head h2 .bn { font-size: 15px; }
+  .note { padding: 12px 14px; }
+}

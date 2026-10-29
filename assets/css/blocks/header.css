@@ -1,0 +1,146 @@
+/* ==========================================================================
+   header.css — <site-header>. One markup tree serves both the desktop bar
+   (utility strip + wordmark + primary nav + actions) and the mobile bar
+   (hamburger + wordmark + icon actions); the breakpoint swaps which is shown.
+   ========================================================================== */
+
+.site-header {
+  position: relative;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+/* — utility strip — the government / session line above the masthead — */
+.header-strip {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 6px var(--page-pad-x);
+  font-size: 12px;
+  color: var(--color-accent-800);
+  border-bottom: 1px solid var(--color-divider);
+}
+.header-strip-meta { display: flex; gap: 16px; }
+
+/* — masthead — */
+.header-bar { display: flex; align-items: center; gap: 20px; padding: 14px 28px; }
+
+.brand {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; color: var(--color-text);
+  flex: 0 1 auto; min-width: 0;
+}
+.brand:hover { color: var(--color-text); }
+.brand-mark {
+  width: 48px; height: 48px; flex: none;
+  display: grid; place-items: center;
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 11px; letter-spacing: .08em;
+  color: var(--color-accent-700);
+  overflow: hidden;
+}
+.brand-mark img { width: 100%; height: 100%; object-fit: contain; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+.brand-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 22px; letter-spacing: -.01em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.brand-sub {
+  font-size: 12px; color: var(--color-neutral-700); margin-top: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* — primary navigation — */
+.primary-nav { display: flex; align-items: center; margin: 0 auto; flex: none; }
+.nav-item { position: relative; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 10px 7px; min-height: var(--tap);
+  font-size: 14px; text-decoration: none;
+  color: var(--color-text);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+}
+.nav-link:hover { color: var(--color-accent-700); }
+.nav-link[aria-current="page"] {
+  color: var(--color-accent-700);
+  border-bottom-color: var(--color-accent);
+}
+
+.header-actions { display: flex; align-items: center; gap: 10px; flex: none; }
+
+/* — dropdown — a section's children, opened from the nav item — */
+.nav-dropdown {
+  position: absolute; left: 50%; top: 100%;
+  transform: translateX(-50%);
+  margin-top: 1px;
+  background: var(--color-bg);
+  min-width: 260px; padding: 8px; z-index: 5;
+}
+.nav-dropdown[hidden] { display: none; }
+.dropdown-kicker {
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--color-accent-700); padding: 8px 12px 4px;
+}
+.dropdown-link {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 11px 12px; min-height: var(--tap);
+  text-decoration: none; color: var(--color-text); font-size: 15px;
+}
+.dropdown-link:hover, .dropdown-link[aria-current="page"] {
+  background: var(--color-accent-100); color: var(--color-text);
+}
+.dropdown-link .bn { font-size: 13px; color: var(--color-neutral-600); font-weight: 400; }
+
+/* — mobile bar — */
+.header-mobile { display: none; align-items: center; gap: 8px; padding: 8px 10px; }
+.header-mobile .brand { flex: 1; }
+.header-mobile .brand-mark { width: 38px; height: 38px; font-size: 9px; }
+.header-mobile .brand-name { font-size: 17px; }
+.header-mobile .brand-sub { font-size: 11px; margin-top: 2px; }
+
+/* — mobile drawer — */
+.drawer {
+  position: absolute; left: 0; right: 0; top: 100%; z-index: 5;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+  box-shadow: var(--shadow-lg);
+  max-height: calc(100vh - 62px);
+  overflow-y: auto;
+}
+.drawer[hidden] { display: none; }
+.drawer-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 10px 8px 16px;
+  border-bottom: 1px solid var(--color-divider);
+}
+.drawer-title {
+  font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--color-accent-700);
+}
+.drawer-group { border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent); }
+.drawer-link {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  min-height: 52px; padding: 12px 16px;
+  text-decoration: none; font-size: 17px; color: var(--color-text);
+  background: none; border: 0; width: 100%; text-align: left;
+  font-family: inherit; cursor: pointer;
+}
+.drawer-link[aria-current="page"] { color: var(--color-accent-700); }
+.drawer-link-text { display: flex; flex-direction: column; line-height: 1.15; }
+.drawer-link-text .bn { font-size: 12px; color: var(--color-neutral-600); font-weight: 400; }
+.drawer-link svg { transition: transform .15s ease; flex: none; }
+.drawer-link[aria-expanded="true"] svg { transform: rotate(180deg); }
+.drawer-children { padding: 0 16px 8px; display: flex; flex-direction: column; }
+.drawer-children[hidden] { display: none; }
+.drawer-child {
+  display: block; padding: 11px 16px; min-height: var(--tap);
+  text-decoration: none; color: var(--color-text); font-size: 15px;
+  border-left: 1px solid var(--color-divider);
+}
+.drawer-child:hover { background: var(--color-accent-100); color: var(--color-text); }
+.drawer-foot { padding: 16px; font-size: 13px; color: var(--color-neutral-700); }
+
+@media (max-width: 1023px) {
+  .header-strip, .header-bar { display: none; }
+  .header-mobile { display: flex; }
+}
