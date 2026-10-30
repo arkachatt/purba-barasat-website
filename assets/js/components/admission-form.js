@@ -88,11 +88,9 @@ class AdmissionForm extends SiteComponent {
             Fields marked <span class="req">*</span> are required. Write names exactly as on
             the birth certificate.
           </p>
-          ${when(errorCount, () => html`
-            <p class="form-aside-errors">
-              ${raw(icon('alert-circle', 14))}
-              ${errorCount} ${errorCount === 1 ? 'field needs' : 'fields need'} attention.
-            </p>`)}
+          <p class="form-aside-errors" data-error-count ${raw(errorCount ? '' : 'hidden')}>
+            ${raw(icon('alert-circle', 14))}<span></span>
+          </p>
         </aside>
 
         <form class="form-panel blueprint" novalidate>
@@ -220,11 +218,28 @@ class AdmissionForm extends SiteComponent {
           field.querySelector('.field-error')?.remove();
           input.removeAttribute('aria-invalid');
         }
+        this.paintErrorCount();
       }
       this.persist();
     });
     form.addEventListener('change', (event) => {
-      if (event.target.name) { this.data[event.target.name] = event.target.value; this.persist(); }
+      const input = event.target;
+      if (!input.name) return;
+      this.data[input.name] = input.value;
+      /* A select or radio never fires `input` in every browser, so its error
+         has to be cleared here too — otherwise correcting the class, or the
+         last class passed, leaves its message sitting under a right answer. */
+      if (this.errors[input.name]) {
+        delete this.errors[input.name];
+        const field = input.closest('.field');
+        if (field) {
+          delete field.dataset.invalid;
+          field.querySelector('.field-error')?.remove();
+          input.removeAttribute('aria-invalid');
+        }
+        this.paintErrorCount();
+      }
+      this.persist();
     });
     form.addEventListener('submit', (event) => { event.preventDefault(); this.submit(); });
 
@@ -252,6 +267,7 @@ class AdmissionForm extends SiteComponent {
     });
     submit.disabled = !this.declared;
 
+    this.paintErrorCount();
     this.paintDraftNote();
   }
 
@@ -302,6 +318,18 @@ class AdmissionForm extends SiteComponent {
     this.savedAt = Date.now();
     saveDraft(this.medium, { data: this.data, ref: this.ref, clientRef: this.clientRef });
     this.paintDraftNote();
+  }
+
+  /* The count lives beside the fields rather than in them, so clearing an
+     error in place has to move it too: an applicant who has just fixed the
+     last one should not still be told something needs attention. */
+  paintErrorCount() {
+    const note = this.querySelector('[data-error-count]');
+    if (!note) return;
+    const count = Object.keys(this.errors).length;
+    note.hidden = !count;
+    note.querySelector('span').textContent =
+      ` ${count} ${count === 1 ? 'field needs' : 'fields need'} attention.`;
   }
 
   paintDraftNote() {
