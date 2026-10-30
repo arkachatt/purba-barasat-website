@@ -44,7 +44,7 @@ Deploying gives you a **Web app URL** ending in `/exec`. Copy it.
 Paste that URL into a browser tab. You should see:
 
 ```json
-{"ok":true,"service":"pbab-admission","columns":18}
+{"ok":true,"service":"pbab-admission","columns":31}
 ```
 
 If you are asked to sign in instead, the access setting in step 3 is wrong.
@@ -70,8 +70,12 @@ its `name` to the **end** of the `COLUMNS` list in `Code.gs` and deploy a new
 version (**Deploy → Manage deployments → ✎ → New version**, which keeps the
 same URL).
 
-Never reorder `COLUMNS` — rows already written are positional, and reordering
-would misalign every past application.
+Never reorder `COLUMNS` once applications have been received — rows already
+written are positional, and reordering would misalign every past application.
+While the sheet still holds no applications the script notices a changed
+question list and rewrites the header row itself, so reordering during setup is
+safe; once there is data it leaves the header alone on purpose, because a
+visible mismatch is better than silently renaming somebody's answers.
 
 ## What to expect
 
@@ -86,10 +90,14 @@ would misalign every past application.
 
 ## Privacy
 
-The sheet will hold Aadhaar and PEN numbers for children. Keep it inside the
+The sheet holds, for each child, an Aadhaar number, a PEN, an APAAR ID and a
+full bank account — number, bank, branch, IFSC and MICR. That is enough to be
+worth stealing, and it arrives through an endpoint that is public by necessity. Keep it inside the
 school's Google account, do not enable link sharing, and give edit access only
 to the staff who process admissions.
 
-If you would rather those numbers were never stored online, tell the developer:
-they can be marked so they print on the PDF the guardian brings in, without
-being written to the sheet.
+If you would rather the most sensitive of those were never stored online, tell
+the developer: any field can be marked so that it prints on the PDF the
+guardian brings in, without ever being written to the sheet. The bank details
+in particular are only needed once a child is admitted, not to decide an
+application.

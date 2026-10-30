@@ -25,9 +25,14 @@ const SERIAL_KEY = 'lastSerial';
  * Never reorder — existing rows are positional.
  */
 const COLUMNS = [
-  'class', 'nameEn', 'nameBn', 'dob', 'gender', 'category', 'religion',
-  'bloodGroup', 'pen', 'aadhaar', 'father', 'mother',
-  'phone', 'altPhone', 'address', 'lastSchool', 'lastClass', 'passYear',
+  'class', 'nameEn', 'nameBn', 'dob',
+  'gender', 'category', 'religion', 'bloodGroup',
+  'bpl', 'aadhaar', 'pen', 'apaar',
+  'father', 'fatherOccupation', 'mother', 'motherOccupation',
+  'guardian', 'guardianOccupation', 'phone', 'village',
+  'postOffice', 'policeStation', 'district', 'pin',
+  'lastSchool', 'lastClass', 'bankAccount', 'bankName',
+  'branchName', 'ifsc', 'micr',
 ];
 
 function doPost(e) {
@@ -137,13 +142,34 @@ function getSheet_() {
   let sheet = book.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = book.insertSheet(SHEET_NAME);
 
+  const header = ['Received at', 'Reference', 'Submission key'].concat(COLUMNS);
+
   if (sheet.getLastRow() === 0) {
-    const header = ['Received at', 'Reference', 'Submission key'].concat(COLUMNS);
-    sheet.appendRow(header);
-    sheet.getRange(1, 1, 1, header.length).setFontWeight('bold');
-    sheet.setFrozenRows(1);
+    writeHeader_(sheet, header);
+  } else if (sheet.getLastRow() === 1 && !sameRow_(headerOf_(sheet), header)) {
+    /* The question list changed while the sheet still held no applications —
+       a redeploy during setup. Rewrite the header so the first real row lands
+       under the right names. With data present we leave it alone: existing
+       rows are positional, and silently renaming their columns would be worse
+       than a visible mismatch. */
+    sheet.getRange(1, 1, 1, sheet.getLastColumn()).clearContent();
+    writeHeader_(sheet, header);
   }
   return sheet;
+}
+
+function writeHeader_(sheet, header) {
+  sheet.getRange(1, 1, 1, header.length).setValues([header]).setFontWeight('bold');
+  sheet.setFrozenRows(1);
+}
+
+function headerOf_(sheet) {
+  return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map(function (cell) { return String(cell); });
+}
+
+function sameRow_(a, b) {
+  return a.length === b.length && a.every(function (cell, i) { return cell === b[i]; });
 }
 
 /** Column 3 holds the submission key. Returns the stored reference, or null. */

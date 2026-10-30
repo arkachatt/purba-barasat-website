@@ -112,9 +112,9 @@ const CONTENT = PAGE.w - PAGE.margin * 2;
 const COL_W = CONTENT / 2;    // two field columns, so a short form stays one page
 const LABEL_W = 34;           // label cell inside a half-width column
 const LABEL_W_FULL = 58;      // label cell when the value spans the page
-const ROW_H = 6.6;
-const SIG_SPACE = 11;         // signature rules and their captions
-const OFFICE_SPACE = 34;      // the "for office use only" box
+const ROW_H = 5.6;
+const SIG_SPACE = 10;         // signature rules and their captions
+const OFFICE_SPACE = 30;      // the "for office use only" box
 
 /**
  * @param {{ receipt: { reference, submittedAt, synced, data } }} args
@@ -130,11 +130,11 @@ export async function buildApplicationPdf({ receipt }) {
   let y = PAGE.margin;
 
   /* — masthead, with the photograph box the office expects — */
-  const photo = { w: 32, h: 40, x: PAGE.w - PAGE.margin - 32, y: PAGE.margin };
+  const photo = { w: 32, h: 34, x: PAGE.w - PAGE.margin - 32, y: PAGE.margin };
   doc.setDrawColor(120); doc.setLineWidth(0.3);
   doc.rect(photo.x, photo.y, photo.w, photo.h);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(110);
-  doc.text(['Affix a recent', 'passport', 'photograph'], photo.x + photo.w / 2, photo.y + 17,
+  doc.text(['Affix a recent', 'passport', 'photograph'], photo.x + photo.w / 2, photo.y + 14,
     { align: 'center', lineHeightFactor: 1.5 });
 
   const headCentre = (PAGE.margin + photo.x - 4) / 2;
@@ -151,16 +151,16 @@ export async function buildApplicationPdf({ receipt }) {
   y += 4;
   doc.text('Government-sponsored · Affiliated to WBBSE & WBCHSE', headCentre, y, { align: 'center' });
 
-  y = photo.y + photo.h + 6;
+  y = photo.y + photo.h + 5;
   doc.setDrawColor(40); doc.setLineWidth(0.5);
   doc.line(PAGE.margin, y, PAGE.w - PAGE.margin, y);
 
   /* — title band — */
-  y += 6;
+  y += 5;
   doc.setFillColor(35); doc.rect(PAGE.margin, y, CONTENT, 8, 'F');
   doc.setTextColor(255); doc.setFont('helvetica', 'bold'); doc.setFontSize(10.5);
   doc.text('APPLICATION FOR ADMISSION', PAGE.w / 2, y + 5.4, { align: 'center' });
-  y += 12;
+  y += 11;
   doc.setTextColor(40); doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
   doc.text(`${latin1(data.class || 'Class V')} · Session ${config.admissionSession}`,
     PAGE.w / 2, y, { align: 'center' });
@@ -196,16 +196,16 @@ export async function buildApplicationPdf({ receipt }) {
     doc.setFontSize(7);
     const labelLines = doc.splitTextToSize(latin1(field.pdfLabel || field.label), labelWidth - 4);
     /* The row has to clear whichever of the two wraps further. */
-    const height = Math.max(ROW_H, lines.length * 4.1 + 2.5, labelLines.length * 3.6 + 2.5);
+    const height = Math.max(ROW_H, lines.length * 3.6 + 2.0, labelLines.length * 3.3 + 2.3);
 
     doc.setDrawColor(190); doc.setLineWidth(0.2);
     doc.rect(x, top, labelWidth, height);
     doc.rect(x + labelWidth, top, width - labelWidth, height);
 
     doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(90);
-    doc.text(labelLines, x + 2, top + 4.2);
+    doc.text(labelLines, x + 2, top + 3.9);
     doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5); doc.setTextColor(20);
-    doc.text(lines, x + labelWidth + 2.5, top + 4.4);
+    doc.text(lines, x + labelWidth + 2.5, top + 4.0);
     return height;
   };
 
@@ -214,10 +214,10 @@ export async function buildApplicationPdf({ receipt }) {
     if (!printable.length) continue;
 
     newPageIfNeeded(14);
-    doc.setFillColor(238); doc.rect(PAGE.margin, y, CONTENT, 5.5, 'F');
+    doc.setFillColor(238); doc.rect(PAGE.margin, y, CONTENT, 4.8, 'F');
     doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(40);
-    doc.text(latin1(group.title).toUpperCase(), PAGE.margin + 2.5, y + 3.8);
-    y += 5.5;
+    doc.text(latin1(group.title).toUpperCase(), PAGE.margin + 2.5, y + 3.4);
+    y += 4.8;
 
     /* Short answers pair up two to a row; anything full-width takes its own. */
     for (let i = 0; i < printable.length; i += 1) {
@@ -244,7 +244,7 @@ export async function buildApplicationPdf({ receipt }) {
       y += height;
       if (partner) i += 1;
     }
-    y += 3;
+    y += 2;
   }
 
   /* — declaration, signatures and the office block always travel together — */
@@ -253,8 +253,8 @@ export async function buildApplicationPdf({ receipt }) {
      sit closer to the foot than a table row should, so it gets its own bound. */
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
   const declLines = doc.splitTextToSize(latin1(admissionForm.declaration), CONTENT - 8);
-  const declHeight = declLines.length * 4 + 10;
-  const tailHeight = 2 + declHeight + 14 + SIG_SPACE + OFFICE_SPACE;
+  const declHeight = declLines.length * 4 + 9;
+  const tailHeight = 2 + declHeight + 12 + SIG_SPACE + OFFICE_SPACE;
   if (y + tailHeight > PAGE.h - 11) { doc.addPage(); y = PAGE.margin; }
   y += 2;
   doc.setDrawColor(120); doc.setLineWidth(0.3);
@@ -263,7 +263,7 @@ export async function buildApplicationPdf({ receipt }) {
   doc.text('DECLARATION', PAGE.margin + 4, y + 5);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(30);
   doc.text(declLines, PAGE.margin + 4, y + 10);
-  y += declHeight + 14;
+  y += declHeight + 12;
 
   const sigWidth = 52;
   [['Signature of applicant', PAGE.margin],
@@ -285,10 +285,10 @@ export async function buildApplicationPdf({ receipt }) {
   doc.text('FOR OFFICE USE ONLY', PAGE.margin + 3, y + 4.1);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(60);
   doc.text('Documents verified:    [  ] Birth certificate    [  ] Aadhaar    [  ] Report card    [  ] Caste certificate',
-    PAGE.margin + 3, y + 12);
+    PAGE.margin + 3, y + 11);
   doc.text('Received by ______________________     Date ______________     Remarks ______________________',
-    PAGE.margin + 3, y + 20);
-  doc.text('Signature of Head Master with seal', PAGE.w - PAGE.margin - 3, y + 29, { align: 'right' });
+    PAGE.margin + 3, y + 18);
+  doc.text('Signature of Head Master with seal', PAGE.w - PAGE.margin - 3, y + 26, { align: 'right' });
 
   /* — footer on every page — */
   const pages = doc.getNumberOfPages();

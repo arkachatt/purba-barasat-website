@@ -31,6 +31,36 @@ export const rules = {
     if (digits.length !== 10) return `Mobile number has 10 digits — you entered ${digits.length}.`;
     return null;
   },
+  pin(value) {
+    const digits = String(value).replace(/\D/g, '');
+    if (digits.length !== 6) return `A PIN code has 6 digits — you entered ${digits.length}.`;
+    return null;
+  },
+  /** An IFSC is four letters, a zero, then six characters. */
+  ifsc(value) {
+    const code = String(value).toUpperCase().replace(/\s/g, '');
+    if (!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(code)) {
+      return 'An IFSC looks like SBIN0001234 — four letters, a zero, then six characters.';
+    }
+    return null;
+  },
+  micr(value) {
+    const digits = String(value).replace(/\D/g, '');
+    if (digits.length !== 9) return `A MICR code has 9 digits — you entered ${digits.length}.`;
+    return null;
+  },
+  /** Account numbers vary by bank, so only the plausible range is checked. */
+  bankAccount(value) {
+    const digits = String(value).replace(/\s/g, '');
+    if (!/^\d{9,18}$/.test(digits)) return 'A bank account number is between 9 and 18 digits.';
+    return null;
+  },
+  apaar(value) {
+    const digits = String(value).replace(/\D/g, '');
+    if (digits.length !== 12) return `An APAAR ID has 12 digits — you entered ${digits.length}.`;
+    return null;
+  },
+
   /** Class V needs the applicant to be 10+ on 1 January of the session year. */
   age(value, data) {
     if (!value) return null;

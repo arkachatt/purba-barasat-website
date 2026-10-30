@@ -83,6 +83,7 @@ class AdmissionForm extends SiteComponent {
           ${each(admissionForm.groups, (group) => html`
             <fieldset class="form-group">
               <legend>${group.title} <span class="bn">/ ${group.titleBn}</span></legend>
+              ${when(group.note, () => html`<p class="form-group-note">${group.note}</p>`)}
               <div class="form-grid">
                 ${each(group.fields, (field) => this.renderField(field))}
               </div>

@@ -35,6 +35,10 @@
 }
 .form-group > legend .bn { font-size: 15px; }
 
+.form-group-note {
+  margin: -8px 0 16px; font-size: 14px; color: var(--color-neutral-700);
+}
+
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
 .form-grid .field-full { grid-column: 1 / -1; }
 .req { color: var(--color-accent-700); }
