@@ -75,7 +75,7 @@ with Call/Email buttons, an exam grid becoming per-class panels, three log-in
 forms becoming a role picker — both structures are rendered from the same data
 and CSS picks at `max-width: 1023px`.
 
-**Forms are schema-driven.** The five-step admission wizard and the contact
+**Forms are schema-driven.** The admission form and the contact
 form both render, validate and summarise themselves from field definitions in
 `data/site.js`. Adding a question is one entry there.
 
@@ -109,8 +109,18 @@ Three states every admin-updated site hits are real components, not decoration:
 ## The admission form
 
 `admission-form.html` is a single page of questions built from
-`admissionForm.groups` in `data/site.js`. Submitting does three things, in
-this order:
+`admissionForm.groups` in `data/site.js`.
+
+It serves **two streams**, Bengali and English medium, chosen by `?medium=` on
+the URL. They share all thirty-one questions and differ only in the classes on
+offer — Bengali admits to Class V, English to Classes V–IX — which `formFor()`
+patches in. Each writes to its **own spreadsheet with its own serial
+numbering**, so both run their own 00001, and references carry the medium and
+the class: `PBAB/27/B/V/00001`, `PBAB/27/E/VII/00002`. With no usable
+`?medium=` the page offers a choice rather than guessing, because a child
+filed in the wrong register cannot be taken back out of it.
+
+Submitting does three things, in this order:
 
 1. **Posts to a Google Sheet** through a Google Apps Script web app, which
    returns the official reference number. Set the endpoint in
@@ -126,8 +136,13 @@ at a glance that it was never registered online, and the confirmation page
 offers to retry sending.
 
 **Adding a question** is one object in one group in `data/site.js`, plus its
-`name` appended to `COLUMNS` in `Code.gs`. It then appears on screen, in the
-sheet and on the PDF automatically.
+`name` appended to `COLUMNS` in `Code.gs`. It then appears on screen, in both
+sheets and on the PDF automatically.
+
+**Adding a class** is a row in `admissionAgeRanges` and an entry in that
+stream's `classes` / `lastClasses` in `data/site.js`. The Apps Script needs no
+change: it takes the numeral off the submitted class name rather than keeping
+a table of its own.
 
 **The one dependency.** jsPDF is fetched from a CDN *only when someone
 submits*, so ordinary visitors never download it. `config.pdfSources` lists

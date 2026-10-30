@@ -112,3 +112,12 @@
   .blueprint { border-color: #999; }
   a[href]::after { content: ""; }
 }
+
+/* The medium chooser, shown when the URL names no medium. It is a dead end by
+   design — two ways out, no form to fill in by mistake. */
+.form-chooser {
+  padding: 36px; display: flex; flex-direction: column; gap: 18px;
+  max-width: 560px;
+}
+.form-chooser p { margin: 0; font-size: 16px; line-height: 1.55; }
+.form-chooser .btn-apply { min-height: 52px; font-size: 17px; }

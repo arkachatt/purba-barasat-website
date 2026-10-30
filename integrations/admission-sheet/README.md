@@ -5,13 +5,22 @@ produces the printable PDF, and it tells the applicant the reference number
 came from the website rather than the office. Only the spreadsheet row is
 missing.
 
-## 1. Make the spreadsheet
+## 1. Make the spreadsheets
 
-Create a new Google Sheet in the school's own Google account — not a personal
-one. Name it something like **PBAB Admission Applications 2027–28**.
+**One per medium** — each keeps its own applications and its own serial
+numbering, so both start at 00001 and neither depends on the other. Create
+them in the school's own Google account, not a personal one:
 
-Do **not** share it with "anyone with the link". The web app writes to it
-through your account; nobody else needs access.
+- **PBAB Admission Applications 2027–28 — Bengali Medium**
+- **PBAB Admission Applications 2027–28 — English Medium**
+
+Do **not** share either with "anyone with the link". The web app writes to
+them through your account; nobody else needs access.
+
+Copy each spreadsheet's id out of its URL — the long string between
+`/spreadsheets/d/` and `/edit` — and paste them into `STREAMS` at the top of
+`Code.gs`. Leave the `Applications` tab to the script; it creates it, with the
+right header, on the first submission.
 
 ## 2. Add the script
 
@@ -20,7 +29,13 @@ and paste the whole of `Code.gs` from this folder. Save.
 
 ## 3. Deploy it
 
-**Deploy → New deployment → ⚙ → Web app**, then:
+First run **`checkStreams`** from the editor's Run menu. It opens both books,
+which is what makes Google ask for the wider permission the script needs —
+without it the permission is only asked for on the first real application,
+where it fails where nobody is watching. The log should name both
+spreadsheets.
+
+Then **Deploy → New deployment → ⚙ → Web app**:
 
 | Setting | Value |
 |---|---|
@@ -44,7 +59,7 @@ Deploying gives you a **Web app URL** ending in `/exec`. Copy it.
 Paste that URL into a browser tab. You should see:
 
 ```json
-{"ok":true,"service":"pbab-admission","columns":31}
+{"ok":true,"service":"pbab-admission","columns":31,"streams":{"bengali":"B","english":"E"}}
 ```
 
 If you are asked to sign in instead, the access setting in step 3 is wrong.
@@ -58,8 +73,14 @@ Open `assets/js/config.js` and paste the URL:
 admissionEndpoint: 'https://script.google.com/macros/s/AKfy..../exec',
 ```
 
-Submit a test application. A row appears in the **Applications** tab, and the
-reference on the downloaded PDF matches the one in the sheet.
+Submit a test application in each medium. A row appears in that medium's
+**Applications** tab and nowhere else, the reference on the downloaded PDF
+matches the one in the sheet, and both mediums' first application is numbered
+00001.
+
+References read `PBAB/27/B/V/00001` for Bengali medium and
+`PBAB/27/E/VII/00002` for English — session, medium, class, then a serial that
+counts per medium.
 
 ---
 
@@ -69,6 +90,9 @@ Add the field to `admissionForm.groups` in `assets/js/data/site.js`, then add
 its `name` to the **end** of the `COLUMNS` list in `Code.gs` and deploy a new
 version (**Deploy → Manage deployments → ✎ → New version**, which keeps the
 same URL).
+
+`COLUMNS` is the same for both mediums, and so is the deployment: one script
+writes to both books. There is nothing to paste twice.
 
 Never reorder `COLUMNS` once applications have been received — rows already
 written are positional, and reordering would misalign every past application.
@@ -87,6 +111,9 @@ visible mismatch is better than silently renaming somebody's answers.
   numbers and the printed forms brought to the office are the real record.
 - **Quota.** Apps Script allows far more executions per day than an admission
   window will ever use.
+- **Restarting the numbering.** `resetBengaliNumbering` and
+  `resetEnglishNumbering` in the Run menu, one per medium. Only ever when that
+  medium's sheet holds no application you intend to keep.
 
 ## Privacy
 

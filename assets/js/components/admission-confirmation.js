@@ -8,7 +8,7 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { admissionConfirmation } from '../data/site.js';
+import { admissionConfirmation, admissionStreams } from '../data/site.js';
 import { loadSubmission, retrySubmission } from '../services/admission.js';
 import { downloadApplicationPdf } from '../services/pdf.js';
 
@@ -19,6 +19,11 @@ const formatWhen = (iso) => {
     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false,
   }).replace(',', '');
 };
+
+/* The receipt carries its own medium, so this page needs no URL parameter to
+   know which register the application went into. A receipt from before the
+   two streams existed has none — hence the empty string rather than a guess. */
+const mediumLabel = (receipt) => admissionStreams[receipt?.medium]?.label || '';
 
 class AdmissionConfirmation extends SiteComponent {
   render() {
@@ -39,7 +44,7 @@ class AdmissionConfirmation extends SiteComponent {
           <p class="confirmation-lede">
             ${receipt
               ? html`Thank you. The application for
-                     <strong>${receipt.data?.nameEn || '—'}, ${receipt.data?.class || 'Class V'}</strong>
+                     <strong>${receipt.data?.nameEn || '—'}, ${receipt.data?.class || '—'}</strong>
                      was completed on ${when_}. Keep the reference number below — the office will
                      ask for it.`
               : html`This page shows the receipt for an application submitted from this device.
@@ -75,7 +80,7 @@ class AdmissionConfirmation extends SiteComponent {
           <div class="kicker">Application reference</div>
           <div class="confirmation-ref">${receipt ? receipt.reference : '—'}</div>
           <div class="confirmation-ref-meta">
-            ${receipt ? `${receipt.data?.nameEn || '—'} · ${receipt.data?.class || 'Class V'} · ${when_}` : 'No application found on this device'}
+            ${receipt ? [receipt.data?.nameEn || '—', receipt.data?.class, mediumLabel(receipt), when_].filter(Boolean).join(' · ') : 'No application found on this device'}
           </div>
           <button type="button" class="btn btn-primary btn-lg" data-download
                   ${raw(receipt ? '' : 'disabled')}>

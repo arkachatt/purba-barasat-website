@@ -11,9 +11,9 @@
  * Fields marked `pdfSkip` are left out, and anything else non-Latin is
  * flagged rather than silently turned into mojibake.
  */
+import { admissionStreams } from '../data/site.js';
 import { config } from '../config.js';
 import { school, admissionForm } from '../data/site.js';
-import { allFields } from './admission.js';
 
 export class PdfUnavailableError extends Error {}
 
@@ -126,7 +126,6 @@ export async function buildApplicationPdf({ receipt }) {
   dropped.count = 0;
 
   const data = receipt.data || {};
-  const fields = allFields();
   let y = PAGE.margin;
 
   /* — masthead, with the photograph box the office expects — */
@@ -162,8 +161,13 @@ export async function buildApplicationPdf({ receipt }) {
   doc.text('APPLICATION FOR ADMISSION', PAGE.w / 2, y + 5.4, { align: 'center' });
   y += 11;
   doc.setTextColor(40); doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
-  doc.text(`${latin1(data.class || 'Class V')} · Session ${config.admissionSession}`,
-    PAGE.w / 2, y, { align: 'center' });
+  /* The masthead is the school's identity and never varies; the medium is a
+     property of this one application, so it belongs on this band beside the
+     class. It costs no vertical space, which matters — the form fits one page
+     with about 25mm to spare and that slack is for values that wrap. */
+  const stream = admissionStreams[receipt.medium];
+  doc.text([latin1(data.class), stream?.label, `Session ${config.admissionSession}`]
+    .filter(Boolean).join(' · '), PAGE.w / 2, y, { align: 'center' });
 
   /* — reference line — */
   y += 7;
@@ -192,8 +196,15 @@ export async function buildApplicationPdf({ receipt }) {
     const labelWidth = width === CONTENT ? LABEL_W_FULL : LABEL_W;
     const raw = field.type === 'date' ? formatDate(data[field.name]) : data[field.name];
     const value = latin1Value(raw) || '—';
+
+    /* Measure each string at the size it will actually be drawn at.
+       splitTextToSize uses whatever size is current, so measuring the value
+       before setting 8.5 wrapped it against the 7pt label size left over from
+       the previous cell — a long school name then wrapped a word too late and
+       ran over the top of the next cell's label. */
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(8.5);
     const lines = doc.splitTextToSize(value, width - labelWidth - 6);
-    doc.setFontSize(7);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(7);
     const labelLines = doc.splitTextToSize(latin1(field.pdfLabel || field.label), labelWidth - 4);
     /* The row has to clear whichever of the two wraps further. */
     const height = Math.max(ROW_H, lines.length * 3.6 + 2.0, labelLines.length * 3.3 + 2.3);
@@ -209,6 +220,10 @@ export async function buildApplicationPdf({ receipt }) {
     return height;
   };
 
+  /* The shared schema, not the stream's. That is correct only while no
+     label, order or pdfSkip flag varies by medium — the streams differ in a
+     field's `options`, and what gets printed is the answer from `data`. The
+     day a label varies, this needs formFor(receipt.medium). */
   for (const group of admissionForm.groups) {
     const printable = group.fields.filter((field) => !field.pdfSkip);
     if (!printable.length) continue;

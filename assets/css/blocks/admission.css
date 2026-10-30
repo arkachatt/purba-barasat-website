@@ -26,7 +26,17 @@
   margin: 0; padding-left: 20px; font-size: 16px; line-height: 1.55;
   display: flex; flex-direction: column; gap: 4px;
 }
-.admission-block .btn-apply { min-height: 52px; font-size: 17px; margin-top: auto; }
+.admission-block .btn-apply { min-height: 52px; font-size: 17px; }
+
+/* A block may offer more than one medium. The whole group is pushed to the
+   foot of the card — the buttons used to carry `margin-top: auto` themselves,
+   which only works while there is exactly one of them. */
+.admission-streams { margin-top: auto; display: flex; flex-direction: column; gap: 22px; }
+.admission-stream { display: flex; flex-direction: column; gap: 12px; }
+.admission-stream-title {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 20px; line-height: 1.2;
+}
 
 /* A block that is shut says so plainly, in the display face, where its
    eligibility list would otherwise be — not in small print underneath. */
@@ -77,9 +87,13 @@
 .confirmation-aside {
   padding: 28px; display: flex; flex-direction: column; gap: 16px; text-align: center;
 }
+/* A reference now carries the medium and the class — PBAB/27/E/VIII/00042 is
+   twenty characters where the old PBAB/27/V/00001 was fifteen, and overflowed
+   the aside at 44px. It is a number to be read aloud over the phone, so it
+   must not be allowed to wrap mid-way. */
 .confirmation-ref {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);
-  font-size: 44px; letter-spacing: .04em; line-height: 1;
+  font-size: 34px; letter-spacing: .02em; line-height: 1.1;
 }
 .confirmation-ref-meta { font-size: 14px; color: var(--color-neutral-700); }
 
@@ -90,6 +104,8 @@
   .admission-block-shut-line { font-size: 24px; }
   .admission-closed { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px; }
   .admission-closed .btn { margin-left: 0; width: 100%; }
+  .admission-streams { gap: 18px; }
+  .admission-stream-title { font-size: 18px; }
   .doc-row { flex-direction: column; align-items: stretch; gap: 12px; }
   .doc-row .btn { width: 100%; }
 
@@ -97,6 +113,6 @@
   .confirmation-head h1 { font-size: 30px; }
   .confirmation-mark { width: 48px; height: 48px; }
   .confirmation-next { grid-template-columns: 1fr; gap: 16px; }
-  .confirmation-ref { font-size: 32px; }
+  .confirmation-ref { font-size: 26px; }
   .confirmation-aside { padding: 20px; }
 }

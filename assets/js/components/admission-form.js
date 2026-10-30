@@ -1,10 +1,15 @@
 /**
  * <admission-form>
  *
- * One page, four groups of questions, one submit. Everything it renders —
+ * One page, five groups of questions, one submit. Everything it renders —
  * fields, options, validation, the printed PDF and the spreadsheet columns —
  * comes from `admissionForm.groups` in data/site.js, so adding a question is
  * one object there and nothing else.
+ *
+ * Which medium it is collecting for comes from `?medium=` on the URL. The two
+ * mediums write to different registers with different serial numbers, so this
+ * is never guessed: with no usable medium the page offers a choice instead of
+ * a form, because filing a child in the wrong register cannot be undone.
  *
  * Submitting does three things in order: send the answers to the school's
  * sheet, build the PDF, then hand over to the confirmation page. The PDF is
@@ -14,10 +19,10 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { admissionForm } from '../data/site.js';
+import { admissionStreams, formFor } from '../data/site.js';
 import {
   validateAll, allFields, loadDraft, saveDraft, clearDraft, draftReference,
-  newClientRef, submitApplication,
+  newClientRef, submitApplication, saveSubmission,
 } from '../services/admission.js';
 import { downloadApplicationPdf, loadJsPdf } from '../services/pdf.js';
 
@@ -29,7 +34,12 @@ class AdmissionForm extends SiteComponent {
   submitting = false;
 
   connectedCallback() {
-    const draft = loadDraft();
+    const asked = this.prop('medium') || new URLSearchParams(location.search).get('medium');
+    this.medium = admissionStreams[asked] ? asked : null;
+    if (!this.medium) { super.connectedCallback(); return; }
+    this.form = formFor(this.medium);
+
+    const draft = loadDraft(this.medium);
     if (draft) {
       this.data = draft.data || {};
       this.savedAt = draft.savedAt || null;
@@ -37,12 +47,15 @@ class AdmissionForm extends SiteComponent {
     /* Seed defaults so what the browser shows and what we hold agree: a
        <select> already displays its first option, so an untouched select is
        answered, not empty. */
-    allFields().forEach((field) => {
+    allFields(this.form).forEach((field) => {
       if (this.data[field.name] !== undefined) return;
       if (field.value !== undefined) this.data[field.name] = field.value;
       else if (field.type === 'select' && field.options) this.data[field.name] = field.options[0];
     });
-    this.ref = draftReference(draft);
+    /* Carried with the answers so the receipt, and therefore the PDF and the
+       confirmation page, know their own medium without being told again. */
+    this.data.medium = this.medium;
+    this.ref = draftReference(draft, this.medium);
     this.clientRef = draft?.clientRef || newClientRef();
     super.connectedCallback();
   }
@@ -50,14 +63,17 @@ class AdmissionForm extends SiteComponent {
   /* ── markup ───────────────────────────────────────────────────────────── */
 
   render() {
+    if (!this.medium) return this.renderChooser();
+
+    const form = this.form;
     const errorCount = Object.keys(this.errors).length;
 
     return html`
       <div class="page-header" style="margin-bottom:28px">
         <div>
-          <div class="kicker">${admissionForm.kicker}</div>
-          <h1 style="font-size:40px">${admissionForm.title}
-            <span class="bn" style="font-size:22px">/ ${admissionForm.titleBn}</span></h1>
+          <div class="kicker">${form.kicker}</div>
+          <h1 style="font-size:40px">${form.title}
+            <span class="bn" style="font-size:22px">/ ${form.titleBn}</span></h1>
         </div>
         <div class="page-header-meta">
           <span data-draft-note></span>
@@ -67,7 +83,7 @@ class AdmissionForm extends SiteComponent {
 
       <div class="form-shell">
         <aside class="form-aside">
-          <p class="form-aside-intro">${admissionForm.intro}</p>
+          <p class="form-aside-intro">${form.intro}</p>
           <p class="form-aside-note">
             Fields marked <span class="req">*</span> are required. Write names exactly as on
             the birth certificate.
@@ -80,7 +96,7 @@ class AdmissionForm extends SiteComponent {
         </aside>
 
         <form class="form-panel blueprint" novalidate>
-          ${each(admissionForm.groups, (group) => html`
+          ${each(form.groups, (group) => html`
             <fieldset class="form-group">
               <legend>${group.title} <span class="bn">/ ${group.titleBn}</span></legend>
               ${when(group.note, () => html`<p class="form-group-note">${group.note}</p>`)}
@@ -91,7 +107,7 @@ class AdmissionForm extends SiteComponent {
 
           <label class="radio declaration">
             <input type="checkbox" data-declare ${raw(this.declared ? 'checked' : '')}>
-            <span class="dot"></span>${admissionForm.declaration}
+            <span class="dot"></span>${form.declaration}
           </label>
 
           <div data-submit-error></div>
@@ -100,7 +116,7 @@ class AdmissionForm extends SiteComponent {
             <button type="button" class="btn btn-ghost form-actions-save" data-save>Save draft &amp; exit</button>
             <div class="form-actions-main">
               <button type="submit" class="btn btn-primary" data-submit>
-                ${raw(icon('download', 16))}${admissionForm.submitLabel}
+                ${raw(icon('download', 16))}${form.submitLabel}
               </button>
             </div>
           </div>
@@ -111,6 +127,33 @@ class AdmissionForm extends SiteComponent {
           </p>
         </form>
       </div>`;
+  }
+
+  /**
+   * Shown when the URL names no medium, or names one we do not run.
+   *
+   * Picking one for them would mean a child's application landing in the
+   * wrong register and taking a serial number out of the wrong sequence —
+   * neither of which the office can undo from the printout. Two buttons are
+   * cheaper than that.
+   */
+  renderChooser() {
+    return html`
+      <div class="page-header" style="margin-bottom:28px">
+        <div>
+          <div class="kicker">Admission · Session 2027–28</div>
+          <h1 style="font-size:40px">Which medium are you applying for?
+            <span class="bn" style="font-size:22px">/ কোন মাধ্যম?</span></h1>
+        </div>
+      </div>
+      <section class="blueprint form-chooser">
+        <p>The two mediums are admitted separately, each with its own
+           application form and its own register. Choose the one you want.</p>
+        ${each(Object.values(admissionStreams), (stream) => html`
+          <a class="btn btn-primary btn-apply" href="admission-form.html?medium=${stream.id}">
+            ${stream.label} <span class="bn">/ ${stream.labelBn}</span>
+          </a>`)}
+      </section>`;
   }
 
   renderField(field) {
@@ -161,6 +204,7 @@ class AdmissionForm extends SiteComponent {
 
   hydrate() {
     const form = this.querySelector('form');
+    if (!form) return;                       /* the chooser has nothing to wire */
 
     /* Clear a field's error where it stands rather than re-rendering, so the
        caret and focus survive typing. */
@@ -192,8 +236,8 @@ class AdmissionForm extends SiteComponent {
     /* An abandoned draft holds a child's Aadhaar on what may be a shared
        phone, so there is always a way to wipe it. */
     this.querySelector('[data-discard]').addEventListener('click', () => {
-      clearDraft();
-      this.data = {};
+      clearDraft(this.medium);
+      this.data = { medium: this.medium };
       this.errors = {};
       this.declared = false;
       this.savedAt = null;
@@ -221,7 +265,7 @@ class AdmissionForm extends SiteComponent {
   async submit() {
     if (this.submitting || !this.declared) return;
 
-    this.errors = validateAll(this.data);
+    this.errors = validateAll(this.data, this.form);
     if (Object.keys(this.errors).length) {
       this.update();
       this.querySelector('[data-invalid] .input, [data-invalid] input')?.focus();
@@ -236,7 +280,9 @@ class AdmissionForm extends SiteComponent {
     const pdfReady = loadJsPdf().catch(() => null);
 
     this.setBusy('Sending your details to the school…');
-    const receipt = await submitApplication({ data: this.data, clientRef: this.clientRef });
+    const receipt = await submitApplication({
+      data: this.data, clientRef: this.clientRef, medium: this.medium,
+    });
 
     this.setBusy('Building your application form…');
     try {
@@ -246,11 +292,7 @@ class AdmissionForm extends SiteComponent {
       /* The answers are already stored, so the confirmation page can offer
          the download again — carry on rather than losing the submission. */
       receipt.pdfFailed = true;
-      try {
-        sessionStorage.setItem('pbab.admission.submitted', JSON.stringify({
-          ...receipt, submittedAt: new Date(receipt.submittedAt).toISOString(),
-        }));
-      } catch { /* private mode */ }
+      saveSubmission(receipt);
     }
 
     window.location.href = 'admission-submitted.html';
@@ -258,7 +300,7 @@ class AdmissionForm extends SiteComponent {
 
   persist() {
     this.savedAt = Date.now();
-    saveDraft({ data: this.data, ref: this.ref, clientRef: this.clientRef });
+    saveDraft(this.medium, { data: this.data, ref: this.ref, clientRef: this.clientRef });
     this.paintDraftNote();
   }
 

@@ -114,8 +114,8 @@ export const carouselIntro = {
 export const admissionBanner = {
   active: true,
   chip: 'Open now',
-  title: 'Admission open for Class V — Session 2027–28',
-  sub: 'ভর্তি চলছে: পঞ্চম শ্রেণি · Forms accepted 5–25 January 2027',
+  title: 'Admission open for Classes V–IX — Session 2027–28',
+  sub: 'ভর্তি চলছে · Bengali and English medium · Forms accepted 5–25 January 2027',
   cta: { label: 'Go to Admission', href: 'admission.html' },
 };
 
@@ -403,6 +403,33 @@ export const students = {
    03 — Admission
    ══════════════════════════════════════════════════════════════════════════ */
 
+/**
+ * Age on `admissionForm.ageCutoff`, per class, each a year above the one
+ * below it. The upper bound is tolerance rather than a rule — a child who
+ * repeated a year is still eligible and the office decides — so it is
+ * deliberately generous.
+ *
+ * These are the numbers to edit when the session moves. The validator reads
+ * them and computes nothing, and the eligibility line published on the
+ * admission page is built from them below, so the page cannot drift out of
+ * step with what the form actually accepts.
+ */
+export const admissionAgeRanges = {
+  'Class V':    { min: 10, max: 14 },
+  'Class VI':   { min: 11, max: 15 },
+  'Class VII':  { min: 12, max: 16 },
+  'Class VIII': { min: 13, max: 17 },
+  'Class IX':   { min: 14, max: 18 },
+};
+
+const ageEligibilityLine = (() => {
+  const names = Object.keys(admissionAgeRanges);
+  const first = names[0];
+  const last = names[names.length - 1];
+  return `Age as on 1 January 2027: ${admissionAgeRanges[first].min}+ for ${first}, ` +
+    `a year more for each class above — ${admissionAgeRanges[last].min}+ for ${last}`;
+})();
+
 export const admission = {
   /* The single switch that turns the whole page between its two states. */
   open: true,
@@ -420,17 +447,32 @@ export const admission = {
   },
   blocks: [
     {
-      id: 'A', kicker: 'Block A', title: 'Class V', open: true,
-      sub: 'পঞ্চম শ্রেণি · Bengali medium · Age as on 1 Jan 2027',
+      /* Two mediums share one block: the eligibility, the documents and the
+         lottery are the same for both, so saying them twice would only be two
+         places to keep in step. What differs — the classes on offer, the
+         notice and the form it opens — hangs off `streams`. */
+      id: 'A', kicker: 'Block A', title: 'Classes V–IX', open: true,
+      sub: 'পঞ্চম থেকে নবম শ্রেণি · Bengali and English medium · Age as on 1 Jan 2027',
       subClosed: 'Eligibility and documents stay published for reference',
       rules: [
-        'Applicant must be 10 years or above as on 1 January 2027',
+        ageEligibilityLine,
         'Selection by lottery where applications exceed seats (per state rules)',
         'Documents: birth certificate, Aadhaar, previous report card, 2 photos',
       ],
-      notice: { title: 'Admission Notice — Class V', titleClosed: 'Admission Notice 2026–27 (archived)',
-                meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
-      apply: { label: 'Apply Online — Class V →', href: 'admission-form.html?block=A' },
+      streams: [
+        {
+          id: 'bengali', title: 'Bengali Medium · Class V',
+          notice: { title: 'Admission Notice — Bengali Medium', titleClosed: 'Bengali Medium Notice 2026–27 (archived)',
+                    meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
+          apply: { label: 'Apply Online — Bengali Medium →', href: 'admission-form.html?medium=bengali' },
+        },
+        {
+          id: 'english', title: 'English Medium · Classes V–IX',
+          notice: { title: 'Admission Notice — English Medium', titleClosed: 'English Medium Notice 2026–27 (archived)',
+                    meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
+          apply: { label: 'Apply Online — English Medium →', href: 'admission-form.html?medium=english' },
+        },
+      ],
     },
     {
       /* A block can be closed on its own while the page as a whole is open:
@@ -448,7 +490,7 @@ export const admission = {
       ],
       notice: { title: 'Admission Notice — Class XI', titleClosed: 'Admission Notice 2026–27 (archived)',
                 meta: 'PDF · 310 KB · Published 20 Dec 2026', metaClosed: 'PDF · 310 KB', href: '#pdf' },
-      apply: { label: 'Apply Online — Class XI →', href: 'admission-form.html?block=B' },
+      apply: { label: 'Apply Online — Class XI →', href: 'admission-form.html?medium=bengali' },
     },
   ],
   notes: [
@@ -456,6 +498,38 @@ export const admission = {
     { heading: 'Fees', text: 'No application fee. Admission fee as per Government of West Bengal norms — payable at the office after selection.' },
     { heading: 'Help', text: 'Office helpline (033) 2552 2928 / (033) 2584 4601, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
   ],
+};
+
+/**
+ * The two admission streams.
+ *
+ * Bengali and English medium differ in three things and no more: the classes
+ * on offer, the classes that can precede them, and the words at the top of
+ * the form. Everything else — all thirty-one questions, the declaration, the
+ * printed layout — is shared, so the schema below stays single and `formFor`
+ * specialises it.
+ *
+ * `letter` is the segment the reference number carries — the B in
+ * PBAB/27/B/V/00001 —
+ * and must match the same field in integrations/admission-sheet/Code.gs.
+ */
+export const admissionStreams = {
+  bengali: {
+    id: 'bengali', letter: 'B',
+    label: 'Bengali Medium', labelBn: 'বাংলা মাধ্যম',
+    kicker: 'Admission · Bengali medium · Session 2027–28',
+    title: 'Online Application — Bengali Medium',
+    classes: ['Class V'],
+    lastClasses: ['Class IV'],
+  },
+  english: {
+    id: 'english', letter: 'E',
+    label: 'English Medium', labelBn: 'ইংরেজি মাধ্যম',
+    kicker: 'Admission · English medium · Session 2027–28',
+    title: 'Online Application — English Medium',
+    classes: ['Class V', 'Class VI', 'Class VII', 'Class VIII', 'Class IX'],
+    lastClasses: ['Class IV', 'Class V', 'Class VI', 'Class VII', 'Class VIII'],
+  },
 };
 
 /**
@@ -483,12 +557,14 @@ export const admissionForm = {
   submitLabel: 'Submit & download form',
   /* Read by rules.age — the date the applicant's age is measured against. */
   ageCutoff: '2027-01-01',
+  ageRanges: admissionAgeRanges,
   groups: [
     {
       id: 'applicant', title: 'Applicant', titleBn: 'আবেদনকারীর তথ্য',
       fields: [
-        { name: 'class', label: 'Class applying for', pdfLabel: 'Class', type: 'select', required: true, half: true,
-          options: ['Class V'], value: 'Class V' },
+        /* `options` for this field and for lastClass are filled in by
+           formFor() — they are the only part of the schema a stream changes. */
+        { name: 'class', label: 'Class applying for', pdfLabel: 'Class', type: 'select', required: true, half: true },
         { name: 'nameEn', label: 'Name of student (English)', pdfLabel: 'Name of student',
           type: 'text', required: true, half: true,
           placeholder: 'As on birth certificate', requiredMessage: "Enter the student's name." },
@@ -560,7 +636,7 @@ export const admissionForm = {
           type: 'text', required: true, half: true,
           requiredMessage: 'Enter the last school attended.' },
         { name: 'lastClass', label: 'Last class passed', type: 'select', required: true, half: true,
-          options: ['Class IV'], value: 'Class IV' },
+          rule: 'lastClass' },
       ],
     },
     {
@@ -585,6 +661,35 @@ export const admissionForm = {
     },
   ],
 };
+
+/**
+ * The schema as one stream sees it.
+ *
+ * Duplicating thirty-one fields to vary two option lists would mean every
+ * future question had to be added twice; this keeps one copy and patches the
+ * two fields that differ. An unknown stream falls back to Bengali so a
+ * mistyped URL cannot produce a form with an empty class list — though the
+ * form component refuses to render at all in that case, and should.
+ */
+export function formFor(streamId) {
+  const stream = admissionStreams[streamId] || admissionStreams.bengali;
+  return {
+    ...admissionForm,
+    stream,
+    kicker: stream.kicker,
+    title: stream.title,
+    groups: admissionForm.groups.map((group) => ({
+      ...group,
+      fields: group.fields.map((field) => {
+        if (field.name === 'class') {
+          return { ...field, options: stream.classes, value: stream.classes[0] };
+        }
+        if (field.name === 'lastClass') return { ...field, options: stream.lastClasses };
+        return field;
+      }),
+    })),
+  };
+}
 
 export const admissionConfirmation = {
   title: 'Application submitted',

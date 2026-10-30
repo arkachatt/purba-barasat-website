@@ -12,11 +12,39 @@
 /** The tab the applications are written to. Created on first use. */
 const SHEET_NAME = 'Applications';
 
-/** Reference numbers read PBAB/<SESSION>/V/00042. */
+/** Reference numbers read PBAB/<SESSION>/<stream code>/<class>/00042. */
 const SESSION = '27';
 
-/** Where the running serial is kept. See nextSerial_ for why. */
-const SERIAL_KEY = 'lastSerial';
+/**
+ * Two registers, one script.
+ *
+ * Each medium has its own spreadsheet and its own serial counter, so the
+ * numbering in one is untouched by the other: the counters are script
+ * properties rather than sheet rows, and the scan that heals a lost counter
+ * only ever reads the one book this request opened.
+ *
+ * `code` is the letter in the reference number and must match
+ * `admissionStreams` in assets/js/data/site.js. A new medium is an entry
+ * here, an entry there, and a new spreadsheet.
+ *
+ * NOTE: opening a book by id needs the full Spreadsheets scope. A bound
+ * script that only ever called getActiveSpreadsheet() may be authorised for
+ * `spreadsheets.currentonly`, under which every openById below throws — and
+ * it throws on the first live submission, not at deploy time. Run
+ * checkStreams() from the editor before deploying; that is what it is for.
+ */
+const STREAMS = {
+  bengali: {
+    code: 'B',
+    bookId: '14e2mlrLIKFV4-YwmBNu9AvVhAqT6FHzA_qrYgWyceGg',
+    serialKey: 'lastSerial.bengali',
+  },
+  english: {
+    code: 'E',
+    bookId: '18dN2jNYg7EOlBBgUL71LsifBxzFERZjm7x4ZwmqPzZ8',
+    serialKey: 'lastSerial.english',
+  },
+};
 
 /**
  * Columns, in order. These are the `name` keys from the website's form
@@ -46,19 +74,31 @@ function doPost(e) {
     const data = body.data || {};
     const clientRef = String(body.clientRef || '');
 
-    const sheet = getSheet_();
+    /* A missing medium is an old cached copy of the website, which only ever
+       collected Bengali-medium Class V — route it there. An unrecognised one
+       is refused rather than guessed: a child written into the wrong register
+       cannot be taken back out of it, and the website already handles a
+       refusal by issuing its own reference and telling the applicant the
+       office has not registered it yet. */
+    const mediumId = String(body.medium || 'bengali');
+    const stream = STREAMS[mediumId];
+    if (!stream) return json_({ ok: false, error: 'unknown medium: ' + mediumId });
+
+    const sheet = getSheet_(stream);
 
     /* A retry after a dropped connection carries the same clientRef — update
        nothing, just hand back the reference the first attempt was given. */
     const already = findByClientRef_(sheet, clientRef);
     if (already) return json_({ ok: true, reference: already, duplicate: true });
 
-    const reference = 'PBAB/' + SESSION + '/V/' + pad_(nextSerial_(sheet), 5);
+    const reference = 'PBAB/' + SESSION + '/' + stream.code + '/' +
+      classNumeral_(data['class']) + '/' + pad_(nextSerial_(sheet, stream), 5);
 
     sheet.appendRow([
       new Date(),
       reference,
       clientRef,
+      mediumId,
       ...COLUMNS.map(function (key) { return String(data[key] == null ? '' : data[key]); }),
     ]);
 
@@ -76,7 +116,39 @@ function doPost(e) {
  * is wrong — see step 5 of the README.
  */
 function doGet() {
-  return json_({ ok: true, service: 'pbab-admission', columns: COLUMNS.length });
+  const streams = {};
+  for (const id in STREAMS) streams[id] = STREAMS[id].code;
+  return json_({ ok: true, service: 'pbab-admission', columns: COLUMNS.length, streams: streams });
+}
+
+/**
+ * Run this from the editor before deploying, and after changing STREAMS.
+ *
+ * It opens both books, which is what forces the authorisation dialog for the
+ * wider Spreadsheets scope. Without it the scope is only asked for on the
+ * first real submission, where it fails silently as far as the applicant is
+ * concerned. The log should name both spreadsheets.
+ */
+function checkStreams() {
+  for (const id in STREAMS) {
+    const stream = STREAMS[id];
+    const book = SpreadsheetApp.openById(stream.bookId);
+    Logger.log(id + ' (' + stream.code + ') -> ' + book.getName());
+  }
+}
+
+/**
+ * The class segment of a reference: `Class VII` -> `VII`.
+ *
+ * Not a lookup table. Classes are written `Class <numeral>` everywhere in the
+ * website's data, so both sides can do the same trivial thing to the same
+ * string without sharing code — which is the only reason it stays honest.
+ * Anything that is not a numeral becomes `?`, which is visibly wrong in the
+ * reference but never a reason to lose the application.
+ */
+function classNumeral_(klass) {
+  const text = String(klass == null ? '' : klass).replace(/^Class\s+/i, '').trim().toUpperCase();
+  return /^[IVX]+$/.test(text) ? text : '?';
 }
 
 /* ── helpers ─────────────────────────────────────────────────────────────── */
@@ -97,9 +169,9 @@ function doGet() {
  * Called only from inside the lock in doPost, so the read-increment-write
  * cannot interleave with another submission.
  */
-function nextSerial_(sheet) {
+function nextSerial_(sheet, stream) {
   const props = PropertiesService.getScriptProperties();
-  let last = Number(props.getProperty(SERIAL_KEY)) || 0;
+  let last = Number(props.getProperty(stream.serialKey)) || 0;
 
   /* If the counter is missing or has fallen behind the sheet — a fresh
      deployment, or someone cleared it — never hand out a number the sheet has
@@ -108,11 +180,19 @@ function nextSerial_(sheet) {
   if (highest > last) last = highest;
 
   const next = last + 1;
-  props.setProperty(SERIAL_KEY, String(next));
+  props.setProperty(stream.serialKey, String(next));
   return next;
 }
 
-/** The largest serial already written to the Reference column, or 0. */
+/**
+ * The largest serial already written to the Reference column, or 0.
+ *
+ * Reads only the book it was handed, which is the property the whole
+ * per-medium numbering rests on: one medium's references are never visible
+ * here while healing the other's counter. The pattern is anchored to the end
+ * of the string, so it matches `PBAB/27/B/V/00001` and skips a `W-` reference
+ * — which was issued by the website and never registered anyway.
+ */
 function highestSerialInSheet_(sheet) {
   const rows = sheet.getLastRow() - 1;
   if (rows < 1) return 0;
@@ -132,17 +212,30 @@ function highestSerialInSheet_(sheet) {
  * to keep, such as after clearing out test rows. The next application then
  * takes the lowest number the sheet allows.
  */
-function resetSerialNumbering() {
-  PropertiesService.getScriptProperties().deleteProperty(SERIAL_KEY);
-  Logger.log('Serial counter cleared. Next reference will follow the sheet contents.');
+function resetSerialNumbering_(mediumId) {
+  const stream = STREAMS[mediumId];
+  if (!stream) throw new Error('unknown medium: ' + mediumId);
+  PropertiesService.getScriptProperties().deleteProperty(stream.serialKey);
+  Logger.log(mediumId + ' serial counter cleared. Next reference follows that sheet.');
 }
 
-function getSheet_() {
-  const book = SpreadsheetApp.getActiveSpreadsheet();
+/* The editor's Run button can only start a function that takes no arguments,
+   so each medium gets its own way in. */
+function resetBengaliNumbering() { resetSerialNumbering_('bengali'); }
+function resetEnglishNumbering() { resetSerialNumbering_('english'); }
+
+function getSheet_(stream) {
+  const book = SpreadsheetApp.openById(stream.bookId);
   let sheet = book.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = book.insertSheet(SHEET_NAME);
 
-  const header = ['Received at', 'Reference', 'Submission key'].concat(COLUMNS);
+  /* `Medium` is bookkeeping, not an answer, so it sits with the other three
+     rather than in COLUMNS — which is defined as the form schema's field
+     names. It goes fourth, leaving the Reference and Submission key columns
+     where findByClientRef_ and highestSerialInSheet_ expect them. Keeping it
+     makes a mis-routed row visible, and survives the two books being read
+     side by side. */
+  const header = ['Received at', 'Reference', 'Submission key', 'Medium'].concat(COLUMNS);
 
   if (sheet.getLastRow() === 0) {
     writeHeader_(sheet, header);

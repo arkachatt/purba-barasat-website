@@ -9,13 +9,34 @@
  * school, so it must never depend on a server answering.
  */
 import { config } from '../config.js';
-import { admissionForm } from '../data/site.js';
+import { admissionForm, admissionStreams } from '../data/site.js';
 
-const DRAFT_KEY = 'pbab.admission.draft';
+/* Drafts are per medium: one family applying for two children, one in each
+   medium, is an ordinary case, and a shared key would have the second
+   overwrite the first.
+
+   The receipt is not. It means "the last thing submitted in this tab",
+   sessionStorage is already per tab, and the medium is recorded inside the
+   receipt — so the confirmation page needs no URL parameter to find it. */
+const draftKey = (medium) => `pbab.admission.draft.${medium}`;
 const SUBMISSION_KEY = 'pbab.admission.submitted';
 
-/** Every field, in order, flattened out of the form's visual groups. */
-export const allFields = () => admissionForm.groups.flatMap((group) => group.fields);
+/**
+ * Every field, in order, flattened out of the form's visual groups.
+ * Takes a stream's form from formFor(); defaults to the shared schema, whose
+ * two class fields have no options of their own.
+ */
+export const allFields = (form = admissionForm) =>
+  form.groups.flatMap((group) => group.fields);
+
+/**
+ * The class segment of a reference: `Class VII` → `VII`.
+ *
+ * Not a lookup table, because classes are written `Class <roman>` everywhere
+ * in the data already. Code.gs does the same thing to the same strings — it
+ * cannot import this, so the two have to stay honest by being trivial.
+ */
+const roman = (klass) => String(klass || '').replace('Class ', '').trim() || '?';
 
 /* ── validation ─────────────────────────────────────────────────────────── */
 
@@ -61,18 +82,48 @@ export const rules = {
     return null;
   },
 
-  /** Class V needs the applicant to be 10+ on 1 January of the session year. */
+  /**
+   * Each class has its own age window, listed in admissionForm.ageRanges.
+   * Nothing is computed from the class here — the bounds are a policy the
+   * office changes, not arithmetic.
+   *
+   * The cutoff is split by hand rather than handed to `new Date`, because
+   * `new Date('2027-01-01')` is UTC midnight while the getters below are
+   * local: anywhere west of Greenwich the comparison slips a day. India is
+   * east of it, so this has never shown — which is exactly why it would not
+   * be found later.
+   */
   age(value, data) {
     if (!value) return null;
-    const cutoff = new Date(admissionForm.ageCutoff || '2027-01-01');
+    const [cy, cm, cd] = String(admissionForm.ageCutoff || '2027-01-01').split('-').map(Number);
+    const cutoff = new Date(cy, cm - 1, cd);
     const dob = new Date(value);
     if (Number.isNaN(dob.getTime())) return 'Enter a valid date of birth.';
     let age = cutoff.getFullYear() - dob.getFullYear();
     const before = cutoff.getMonth() < dob.getMonth() ||
       (cutoff.getMonth() === dob.getMonth() && cutoff.getDate() < dob.getDate());
     if (before) age -= 1;
-    if (age < 10) return 'Applicant must be 10+ on 1 Jan 2027 for Class V.';
-    if (age > 14) return 'Please check the date of birth — the applicant is over 14.';
+    const range = admissionForm.ageRanges[data.class];
+    if (!range) return null;            /* a class with no rule written for it */
+    if (age < range.min) return `Applicant must be ${range.min}+ on 1 Jan 2027 for ${data.class}.`;
+    if (age > range.max) return `Please check the date of birth — the applicant is over ${range.max}.`;
+    return null;
+  },
+  /**
+   * The class passed has to be the one below the class applied for.
+   *
+   * It is a plain list rather than a select that follows the class above it,
+   * because narrowing it live would mean re-rendering mid-form and taking the
+   * focus with it. Checking on submit costs nothing and reads the same.
+   */
+  lastClass(value, data) {
+    const stream = admissionStreams[data.medium] || admissionStreams.bengali;
+    const index = stream.classes.indexOf(data.class);
+    if (index < 0) return null;
+    const expected = stream.lastClasses[index];
+    if (expected && value !== expected) {
+      return `For ${data.class} the last class passed should be ${expected}.`;
+    }
     return null;
   },
 };
@@ -99,8 +150,8 @@ export function validateStep(step, data) {
 }
 
 /** The whole form at once, across every group. */
-export function validateAll(data) {
-  return validateStep({ fields: allFields() }, data);
+export function validateAll(data, form = admissionForm) {
+  return validateStep({ fields: allFields(form) }, data);
 }
 
 /* ── references ─────────────────────────────────────────────────────────── */
@@ -119,14 +170,16 @@ export function newClientRef() {
  * marks it as issued by the website, so the office can tell at a glance that
  * this printout was never registered online.
  */
-export function localReference() {
+export function localReference({ medium, klass } = {}) {
+  const stream = admissionStreams[medium] || admissionStreams.bengali;
   const serial = String(Math.floor(Math.random() * 9000) + 1000);
-  return `PBAB/27/V/W-${serial}`;
+  return `PBAB/27/${stream.letter}/${roman(klass)}/W-${serial}`;
 }
 
 /** A temporary reference shown while the application is still a draft. */
-export function draftReference(draft) {
-  return draft?.ref || `TMP-27-${String(Math.floor(Math.random() * 90000) + 10000)}`;
+export function draftReference(draft, medium) {
+  const stream = admissionStreams[medium] || admissionStreams.bengali;
+  return draft?.ref || `TMP-27-${stream.letter}-${String(Math.floor(Math.random() * 90000) + 10000)}`;
 }
 
 /* ── the sheet ──────────────────────────────────────────────────────────── */
@@ -142,7 +195,7 @@ export function draftReference(draft) {
  * opaque — we would lose the reference and could not tell success from
  * failure.)
  */
-async function postToSheet({ data, clientRef }) {
+async function postToSheet({ data, clientRef, medium }) {
   const endpoint = config.admissionEndpoint;
   if (!endpoint) return { synced: false, syncError: 'not-configured' };
 
@@ -152,7 +205,10 @@ async function postToSheet({ data, clientRef }) {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ clientRef, data }),
+      /* `medium` travels beside `data`, not inside it: `data` is exactly the
+         form schema's field set, which is what COLUMNS in Code.gs is defined
+         against. Which register to write to is not an answer to a question. */
+      body: JSON.stringify({ clientRef, medium, data }),
       signal: controller.signal,
     });
     const out = await response.json();
@@ -173,19 +229,20 @@ export function setSubmitAdapter(next) { submitAdapter = next; }
  * Send the application. Resolves with a receipt whatever happens: the caller
  * must still be able to produce the PDF when the network is down.
  */
-export async function submitApplication({ data, clientRef }) {
+export async function submitApplication({ data, clientRef, medium }) {
   let result;
   try {
-    result = await submitAdapter({ data, clientRef });
+    result = await submitAdapter({ data, clientRef, medium });
   } catch {
     result = { synced: false, syncError: 'unreachable' };
   }
 
   const receipt = {
-    reference: result.reference || localReference(),
+    reference: result.reference || localReference({ medium, klass: data.class }),
     submittedAt: new Date(),
     synced: Boolean(result.synced),
     syncError: result.syncError ?? null,
+    medium,
     clientRef,
     data,
   };
@@ -194,22 +251,24 @@ export async function submitApplication({ data, clientRef }) {
   /* Always drop the draft. A retry works from the receipt, so keeping it
      would only leave a child's Aadhaar in localStorage on what may well be a
      shared family phone. */
-  clearDraft();
+  clearDraft(medium);
   return receipt;
 }
 
 /* ── storage ────────────────────────────────────────────────────────────── */
 
-export function loadDraft() {
-  try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || null; } catch { return null; }
+export function loadDraft(medium) {
+  try { return JSON.parse(localStorage.getItem(draftKey(medium))) || null; } catch { return null; }
 }
 
-export function saveDraft(draft) {
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, savedAt: Date.now() })); } catch { /* private mode */ }
+export function saveDraft(medium, draft) {
+  try {
+    localStorage.setItem(draftKey(medium), JSON.stringify({ ...draft, savedAt: Date.now() }));
+  } catch { /* private mode */ }
 }
 
-export function clearDraft() {
-  try { localStorage.removeItem(DRAFT_KEY); } catch { /* private mode */ }
+export function clearDraft(medium) {
+  try { localStorage.removeItem(draftKey(medium)); } catch { /* private mode */ }
 }
 
 /**
@@ -217,11 +276,11 @@ export function clearDraft() {
  * answer set including Aadhaar, and it should die with the tab rather than
  * sit on a shared family phone.
  */
-function saveSubmission(receipt) {
+export function saveSubmission(receipt) {
   try {
     sessionStorage.setItem(SUBMISSION_KEY, JSON.stringify({
       ...receipt,
-      submittedAt: receipt.submittedAt.toISOString(),
+      submittedAt: new Date(receipt.submittedAt).toISOString(),
     }));
   } catch { /* private mode — the confirmation page degrades to its empty state */ }
 }
@@ -232,7 +291,12 @@ export function loadSubmission() {
 
 /** Re-send an application the office never received, under its original key. */
 export async function retrySubmission(receipt) {
-  const result = await submitAdapter({ data: receipt.data, clientRef: receipt.clientRef });
+  /* The medium has to travel with the retry. Without it the script falls back
+     to Bengali, and an English application that failed the first time would
+     quietly land in the wrong register on the second. */
+  const result = await submitAdapter({
+    data: receipt.data, clientRef: receipt.clientRef, medium: receipt.medium,
+  });
   if (!result?.synced) return { ...receipt, syncError: result?.syncError || 'unreachable' };
 
   const updated = {
@@ -243,6 +307,6 @@ export async function retrySubmission(receipt) {
     syncError: null,
   };
   saveSubmission(updated);
-  clearDraft();
+  clearDraft(receipt.medium);
   return updated;
 }

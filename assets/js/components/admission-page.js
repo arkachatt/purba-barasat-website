@@ -11,6 +11,17 @@ import { html, raw, each, when } from '../core/dom.js';
 import { icon } from '../core/icons.js';
 import { admission } from '../data/site.js';
 
+/**
+ * The notice-and-button pairs a block offers.
+ *
+ * Block A runs two mediums and names them; Block B runs one and does not, so
+ * it keeps its plain `notice` / `apply` pair and needs no data of its own
+ * here. The untitled single stream renders exactly the markup it always did.
+ */
+function streamsOf(block) {
+  return block.streams || [{ notice: block.notice, apply: block.apply }];
+}
+
 class AdmissionPage extends SiteComponent {
   get isOpen() {
     if (this.boolProp('force-closed')) return false;
@@ -50,24 +61,32 @@ class AdmissionPage extends SiteComponent {
                 <p class="admission-block-shut-line">${block.closedLine}</p>
               </div>`)}
 
-            <div class="doc-row">
-              <div class="doc-row-main">
-                ${raw(icon('file-text', 22))}
-                <div>
-                  <div class="doc-row-title">${open ? block.notice.title : block.notice.titleClosed}</div>
-                  <div class="doc-row-meta">${open ? block.notice.meta : block.notice.metaClosed}</div>
-                </div>
-              </div>
-              <a class="btn btn-secondary btn-md" href="${block.notice.href}">
-                ${raw(icon('download', 16))}Download
-              </a>
-            </div>
+            <div class="admission-streams">
+              ${each(streamsOf(block), (stream) => html`
+                <div class="admission-stream">
+                  ${when(stream.title, () => html`
+                    <div class="admission-stream-title">${stream.title}</div>`)}
 
-            ${open && block.open !== false
-              ? html`<a class="btn btn-primary btn-apply" href="${block.apply.href}">${block.apply.label}</a>`
-              : html`<button type="button" class="btn btn-primary btn-apply" disabled>
-                       ${open ? block.closedApply : admission.closed.applyLabel}
-                     </button>`}
+                  <div class="doc-row">
+                    <div class="doc-row-main">
+                      ${raw(icon('file-text', 22))}
+                      <div>
+                        <div class="doc-row-title">${open ? stream.notice.title : stream.notice.titleClosed}</div>
+                        <div class="doc-row-meta">${open ? stream.notice.meta : stream.notice.metaClosed}</div>
+                      </div>
+                    </div>
+                    <a class="btn btn-secondary btn-md" href="${stream.notice.href}">
+                      ${raw(icon('download', 16))}Download
+                    </a>
+                  </div>
+
+                  ${open && block.open !== false
+                    ? html`<a class="btn btn-primary btn-apply" href="${stream.apply.href}">${stream.apply.label}</a>`
+                    : html`<button type="button" class="btn btn-primary btn-apply" disabled>
+                             ${open ? block.closedApply : admission.closed.applyLabel}
+                           </button>`}
+                </div>`)}
+            </div>
           </section>`)}
       </div>
 
