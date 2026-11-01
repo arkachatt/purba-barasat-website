@@ -428,28 +428,28 @@ export const students = {
 export const admissionClosedClasses = ['Class IX'];
 
 /**
- * The window of birth dates each class accepts.
+ * The window of birth dates each class accepts, as the school's two notices
+ * publish them. Both ends are inclusive.
  *
- * Class V comes straight off the school's notice — "০২/০১/২০১৬ থেকে
- * ০১/০১/২০১৭ (উভয় দিন অন্তর্ভুক্ত)" — and both ends are inclusive. It is a
- * twelve-month window, not an age in years: a child who repeated a year
- * falls outside it, and that is the office's call to make on paper, not the
- * form's to wave through.
+ * It is a twelve-month window, not an age in years: a child who repeated a
+ * year falls outside it, and that is the office's call to make on paper, not
+ * the form's to wave through.
  *
- * Only Class V has been published. Classes VI–VIII are the same window
- * shifted back a year each, which is the pattern the notice sets — but they
- * are a guess until the English-medium notice arrives, and `provisional`
- * marks them so nobody mistakes them for the school's own numbers. Check
- * them against that notice before the English form opens.
+ * Classes V–VII are printed in the English-medium notice (and Class V again
+ * in the Bengali one, identically). Class VIII continues the step both
+ * notices set — each class one year earlier, 02/01 to 01/01 — and is printed
+ * in the published English notice too. Class IX is not admitted this
+ * session; its row is only here so the window is ready when it is, which is
+ * what `provisional` marks.
  *
  * Dates are ISO so the validator can compare them as plain strings; that
  * also keeps time zones out of it entirely.
  */
 export const admissionDobRanges = {
   'Class V':    { from: '2016-01-02', to: '2017-01-01' },
-  'Class VI':   { from: '2015-01-02', to: '2016-01-01', provisional: true },
-  'Class VII':  { from: '2014-01-02', to: '2015-01-01', provisional: true },
-  'Class VIII': { from: '2013-01-02', to: '2014-01-01', provisional: true },
+  'Class VI':   { from: '2015-01-02', to: '2016-01-01' },
+  'Class VII':  { from: '2014-01-02', to: '2015-01-01' },
+  'Class VIII': { from: '2013-01-02', to: '2014-01-01' },
   'Class IX':   { from: '2012-01-02', to: '2013-01-01', provisional: true },
 };
 
@@ -514,7 +514,8 @@ export const admission = {
         {
           id: 'english', title: 'English Medium · Classes V–VIII',
           notice: { title: 'Admission Notice — English Medium', titleClosed: 'English Medium Notice 2026–27 (archived)',
-                    meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
+                    meta: 'PDF · 211 KB · Published 1 Nov 2026', metaClosed: 'PDF · 211 KB',
+                    href: 'assets/pdf/admission-notice-2027-english-medium.pdf' },
           apply: { label: 'Apply Online — English Medium →', href: 'admission-form.html?medium=english' },
         },
       ],

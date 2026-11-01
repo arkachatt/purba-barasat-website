@@ -1,6 +1,6 @@
 """Render the office's .docx admission notice as an A4 HTML page.
 
-    python3 tools/notice-docx-to-html.py notice.docx notice.html
+    python3 tools/notice-docx-to-html.py notice.docx notice.html [letterhead.jpg]
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
       --headless --no-pdf-header-footer --print-to-pdf=notice.pdf \
       "file://$PWD/notice.html"
@@ -15,11 +15,17 @@ they should be identical once whitespace is removed.
 Expects the shape the office's notices have so far: a letterhead image, a
 memo/date line, headings, two-column tables, and a signature table at the
 foot. A notice built differently will need the CSS below looked at.
+
+The optional third argument replaces the letterhead with an image file. The
+notices arrive with the same letterhead scanned to different standards —
+some crops carry a pen mark or a neighbouring stamp — so the cleanest scan
+can be used for all of them.
 """
 import base64, html as H, sys, zipfile
 from xml.etree import ElementTree as ET
 
 DOCX, OUT = sys.argv[1], sys.argv[2]
+LETTERHEAD = sys.argv[3] if len(sys.argv) > 3 else None
 W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 NS = {'w': W}
 book = zipfile.ZipFile(DOCX)
@@ -44,7 +50,7 @@ def inline(p):
         for node in r:
             tag = node.tag.split('}')[1]
             if tag == 't':
-                txt = H.escape(node.text or '')
+                txt = H.escape(node.text or '', quote=False)   # text node: an apostrophe is itself
                 out.append(f'<b>{txt}</b>' if bold else txt)
             elif tag == 'br':
                 out.append('<br>')
@@ -55,8 +61,12 @@ def inline(p):
 def cell_html(tc):
     return '<br>'.join(inline(p) for p in tc.findall('w:p', NS))
 
-media = [n for n in book.namelist() if n.startswith('word/media/')]
-logo = base64.b64encode(book.read(media[0])).decode() if media else ''
+if LETTERHEAD:
+    head_bytes = open(LETTERHEAD, 'rb').read()
+else:
+    media = [n for n in book.namelist() if n.startswith('word/media/')]
+    head_bytes = book.read(media[0]) if media else b''
+logo = base64.b64encode(head_bytes).decode()
 parts = []
 for child in body:
     tag = child.tag.split('}')[1]
@@ -90,22 +100,23 @@ for child in body:
 
 open(OUT, 'w', encoding='utf-8').write("""<!DOCTYPE html>
 <html lang="bn"><head><meta charset="utf-8"><title>notice</title><style>
-  @page { size: A4; margin: 14mm 15mm; }
+  /* Sized so the longest notice so far — English medium, four classes in the
+     date-of-birth table — still lands on one page. */
+  @page { size: A4; margin: 12mm 14mm; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Kohinoor Bangla", "Noto Sans Bengali", sans-serif;
-         font-size: 10.5pt; line-height: 1.55; color: #000; }
-  .letterhead { display: block; width: 100%; margin: 0 0 10px; }
-  p { margin: 0 0 8px; text-align: justify; }
+         font-size: 10pt; line-height: 1.45; color: #000; }
+  .letterhead { display: block; width: 100%; margin: 0 0 8px; }
+  p { margin: 0 0 6px; text-align: justify; }
   p.center { text-align: center; }
-  p.center:nth-of-type(1) { }
-  .memo { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 14px;
-          border-bottom: 1px solid #000; padding-bottom: 6px; text-align: left; }
-  table { width: 100%; border-collapse: collapse; margin: 6px 0 14px; }
-  table.grid th, table.grid td { border: 1px solid #000; padding: 6px 9px; vertical-align: top;
+  .memo { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 11px;
+          border-bottom: 1px solid #000; padding-bottom: 5px; text-align: left; }
+  table { width: 100%; border-collapse: collapse; margin: 5px 0 11px; }
+  table.grid th, table.grid td { border: 1px solid #000; padding: 4px 8px; vertical-align: top;
                                  text-align: left; }
   table.grid th { background: #ececec; }
   table.grid tr td:first-child, table.grid tr th:first-child { width: 38%; }
-  table.sign { margin-top: 30px; }
+  table.sign { margin-top: 24px; }
   table.sign td { vertical-align: top; width: 50%; }
   table.sign td:last-child { text-align: right; font-weight: 700; }
 </style></head><body>
