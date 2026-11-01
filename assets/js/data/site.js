@@ -339,9 +339,9 @@ export const hmLetter = {
  *
  * Photographs, telephone numbers and email addresses come from the school's
  * own consent form, and only where that person ticked yes to that particular
- * item: 21 photographs, 16 email addresses, 7 mobile numbers. Sri Prasanta
- * Mridha's portrait came to the office separately and is the one entry here
- * with no row in that form. Several people
+ * item: 21 photographs, 16 email addresses, 7 mobile numbers. Two more
+ * portraits — Sri Prasanta Mridha's and Sri Sanjay Ghosh's — came to the
+ * office separately and have no row in that form. Several people
  * sent a photograph while refusing one or both of the contact details, and
  * their row shows a dash — that is the answer they gave, not missing data.
  * Nobody who did not fill the form in appears here with anything.
@@ -356,7 +356,7 @@ export const staff = [
   { sl: 3, name: 'Smt. Manika Roy', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Geography), B.Ed. (First Class)', photo: null },
   { sl: 4, name: 'Smt. Reshma Khatun', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed.', phone: '80170 43291', tel: '+918017043291', email: 'reshma2uin@gmail.com', photo: 'assets/img/staff/reshma-khatun.jpg' },
   { sl: 5, name: 'Sri Trinath Mistri', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed.', photo: null },
-  { sl: 6, name: 'Sri Sanjay Ghosh', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Com., B.Ed. (First Class), C.A., C.M.A.', photo: null },
+  { sl: 6, name: 'Sri Sanjay Ghosh', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Com., B.Ed. (First Class), C.A., C.M.A.', photo: 'assets/img/staff/sanjay-ghosh.jpg' },
   { sl: 7, name: 'Sri Dipnarayan Biswas', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Hons.) (Physics), B.Ed.', photo: null },
   { sl: 8, name: 'Sri Biplab Haldar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Chemistry), B.Ed. (First Class)', photo: null },
   { sl: 9, name: 'Sri Debashis Sarkar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (English), B.Ed. (First Class)', email: 'debashis2uin@gmail.com', photo: 'assets/img/staff/debashis-sarkar.jpg' },
