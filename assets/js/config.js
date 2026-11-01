@@ -42,5 +42,5 @@ export const config = {
   ],
 
   /** Session the admission form is collecting for, used on the printed form. */
-  admissionSession: '2027–28',
+  admissionSession: '2027',
 };

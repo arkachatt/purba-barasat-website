@@ -143,8 +143,9 @@ offers to retry sending.
 `name` appended to `COLUMNS` in `Code.gs`. It then appears on screen, in both
 sheets and on the PDF automatically.
 
-**Adding a class** is a row in `admissionAgeRanges` and an entry in that
-stream's `classes` / `lastClasses` in `data/site.js`. The Apps Script needs no
+**Adding a class** is a row in `admissionDobRanges` — the window of birth
+dates the notice publishes for it — and an entry in that stream's `classes` /
+`lastClasses` in `data/site.js`. The Apps Script needs no
 change: it takes the numeral off the submitted class name rather than keeping
 a table of its own.
 

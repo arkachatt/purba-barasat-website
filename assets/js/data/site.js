@@ -129,8 +129,8 @@ export const carouselIntro = {
 export const admissionBanner = {
   active: true,
   chip: 'Open now',
-  title: 'Admission open for Classes V–VIII — Session 2027–28',
-  sub: 'ভর্তি চলছে · Bengali and English medium · Forms accepted 5–25 January 2027',
+  title: 'Admission open for Classes V–VIII — Session 2027',
+  sub: 'ভর্তি চলছে · Bengali and English medium · Online forms 5–25 November 2026',
   cta: { label: 'Go to Admission', href: 'admission.html' },
 };
 
@@ -419,17 +419,6 @@ export const students = {
    ══════════════════════════════════════════════════════════════════════════ */
 
 /**
- * Age on `admissionForm.ageCutoff`, per class, each a year above the one
- * below it. The upper bound is tolerance rather than a rule — a child who
- * repeated a year is still eligible and the office decides — so it is
- * deliberately generous.
- *
- * These are the numbers to edit when the session moves. The validator reads
- * them and computes nothing, and the eligibility line published on the
- * admission page is built from them below, so the page cannot drift out of
- * step with what the form actually accepts.
- */
-/**
  * Classes that have a rule and a row in the form but are not admitted this
  * session. They appear greyed and unselectable in the class dropdown, are
  * refused on submit, and are left out of the eligibility line published on
@@ -438,37 +427,58 @@ export const students = {
  */
 export const admissionClosedClasses = ['Class IX'];
 
-export const admissionAgeRanges = {
-  'Class V':    { min: 10, max: 14 },
-  'Class VI':   { min: 11, max: 15 },
-  'Class VII':  { min: 12, max: 16 },
-  'Class VIII': { min: 13, max: 17 },
-  'Class IX':   { min: 14, max: 18 },
+/**
+ * The window of birth dates each class accepts.
+ *
+ * Class V comes straight off the school's notice — "০২/০১/২০১৬ থেকে
+ * ০১/০১/২০১৭ (উভয় দিন অন্তর্ভুক্ত)" — and both ends are inclusive. It is a
+ * twelve-month window, not an age in years: a child who repeated a year
+ * falls outside it, and that is the office's call to make on paper, not the
+ * form's to wave through.
+ *
+ * Only Class V has been published. Classes VI–VIII are the same window
+ * shifted back a year each, which is the pattern the notice sets — but they
+ * are a guess until the English-medium notice arrives, and `provisional`
+ * marks them so nobody mistakes them for the school's own numbers. Check
+ * them against that notice before the English form opens.
+ *
+ * Dates are ISO so the validator can compare them as plain strings; that
+ * also keeps time zones out of it entirely.
+ */
+export const admissionDobRanges = {
+  'Class V':    { from: '2016-01-02', to: '2017-01-01' },
+  'Class VI':   { from: '2015-01-02', to: '2016-01-01', provisional: true },
+  'Class VII':  { from: '2014-01-02', to: '2015-01-01', provisional: true },
+  'Class VIII': { from: '2013-01-02', to: '2014-01-01', provisional: true },
+  'Class IX':   { from: '2012-01-02', to: '2013-01-01', provisional: true },
 };
 
-const ageEligibilityLine = (() => {
-  const names = Object.keys(admissionAgeRanges)
-    .filter((klass) => !admissionClosedClasses.includes(klass));
-  const first = names[0];
-  const last = names[names.length - 1];
-  return `Age as on 1 January 2027: ${admissionAgeRanges[first].min}+ for ${first}, ` +
-    `a year more for each class above — ${admissionAgeRanges[last].min}+ for ${last}`;
-})();
+/** ISO to the day/month/year the notice itself prints. */
+export const dmy = (iso) => iso.split('-').reverse().join('/');
+
+/* The eligibility bullet is built from the table above, so the page cannot
+   promise a window the form would then refuse. */
+const dobEligibilityLine = 'Date of birth, both days included — ' +
+  Object.keys(admissionDobRanges)
+    .filter((klass) => !admissionClosedClasses.includes(klass))
+    .map((klass) => `${klass.replace('Class ', '')}: ` +
+      `${dmy(admissionDobRanges[klass].from)} to ${dmy(admissionDobRanges[klass].to)}`)
+    .join(' · ');
 
 export const admission = {
   /* The single switch that turns the whole page between its two states. */
   open: true,
-  kicker: '05 · Session 2027–28',
+  kicker: '05 · Session 2027',
   kickerClosed: '05 · Session 2026–27',
   title: 'Admission',
   titleBn: 'ভর্তি',
-  windowLabel: 'Admissions open · 5–25 Jan 2027',
+  windowLabel: 'Online forms · 5–25 Nov 2026',
   closedLabel: 'Admissions closed for 2026–27',
   closed: {
     heading: 'The admission window for 2026–27 has closed.',
-    body: 'Applications for Session 2027–28 open on <strong>5 January 2027</strong>. The notice will be published here and on the Notice page. এই পাতায় ভর্তির বিজ্ঞপ্তি প্রকাশিত হবে।',
+    body: 'Applications for Session 2027 open on <strong>5 November 2026</strong>. The notice will be published here and on the Notice page. এই পাতায় ভর্তির বিজ্ঞপ্তি প্রকাশিত হবে।',
     cta: { label: 'Watch the Notice page', href: 'notice.html' },
-    applyLabel: 'Apply Online — opens 5 Jan 2027',
+    applyLabel: 'Apply Online — opens 5 Nov 2026',
   },
   blocks: [
     {
@@ -477,12 +487,18 @@ export const admission = {
          places to keep in step. What differs — the classes on offer, the
          notice and the form it opens — hangs off `streams`. */
       id: 'A', kicker: 'Block A', title: 'Classes V–VIII', open: true,
-      sub: 'পঞ্চম থেকে অষ্টম শ্রেণি · Bengali and English medium · Age as on 1 Jan 2027',
+      sub: 'পঞ্চম থেকে অষ্টম শ্রেণি · Bengali and English medium · Session 2027',
       subClosed: 'Eligibility and documents stay published for reference',
+      /* Every line below the first comes from the school's own notice. The
+         lottery line does not — it predates the notice and the notice is
+         silent on how selection is made, so check it before the next one. */
       rules: [
-        ageEligibilityLine,
+        'Online form 5–25 November 2026 · printed form and documents at the office 13–28 November 2026, 11:30–13:00',
+        dobEligibilityLine,
+        'Application fee ₹100, paid at the office when the printed form is submitted',
+        'Documents (photocopies): the printed application with a recent passport photo, Aadhaar of student and guardian (self-attested), digital birth certificate, caste certificate if SC/ST/OBC, and the first page of the bank passbook showing the account number and IFSC',
+        'Bring the original documents for verification. Incomplete or late applications are not accepted',
         'Selection by lottery where applications exceed seats (per state rules)',
-        'Documents: birth certificate, Aadhaar, previous report card, 2 photos',
       ],
       streams: [
         {
@@ -523,8 +539,8 @@ export const admission = {
     },
   ],
   notes: [
-    { heading: 'How it works', text: 'Fill the online form and download the application PDF it produces. Print it and bring it to the office with the original documents on the verification date.' },
-    { heading: 'Fees', text: 'No application fee. Admission fee as per Government of West Bengal norms — payable at the office after selection.' },
+    { heading: 'How it works', text: 'Fill the online form between 5 and 25 November 2026 and download the application PDF it produces. Print it, sign it, and bring it to the office between 13 and 28 November 2026, 11:30–13:00, with the original documents.' },
+    { heading: 'Fees', text: 'Application fee ₹100, paid at the office when the printed form is submitted. Admission fee as per Government of West Bengal norms — payable after selection.' },
     { heading: 'Help', text: 'Office helpline (033) 2552 2928 / (033) 2584 4601, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
   ],
 };
@@ -546,7 +562,7 @@ export const admissionStreams = {
   bengali: {
     id: 'bengali', letter: 'B',
     label: 'Bengali Medium', labelBn: 'বাংলা মাধ্যম',
-    kicker: 'Admission · Bengali medium · Session 2027–28',
+    kicker: 'Admission · Bengali medium · Session 2027',
     title: 'Online Application — Bengali Medium',
     classes: ['Class V'],
     lastClasses: ['Class IV'],
@@ -554,7 +570,7 @@ export const admissionStreams = {
   english: {
     id: 'english', letter: 'E',
     label: 'English Medium', labelBn: 'ইংরেজি মাধ্যম',
-    kicker: 'Admission · English medium · Session 2027–28',
+    kicker: 'Admission · English medium · Session 2027',
     title: 'Online Application — English Medium',
     /* Class IX stays in the list, greyed, rather than being removed: the
        school means to admit to it, and `admissionClosedClasses` is the one
@@ -582,16 +598,15 @@ export const admissionStreams = {
  *              (the PDF's built-in fonts cannot draw Bengali)
  */
 export const admissionForm = {
-  kicker: 'Admission · Session 2027–28',
+  kicker: 'Admission · Session 2027',
   title: 'Online Application — Class V',
   titleBn: 'অনলাইন আবেদন',
   intro: 'Fill this form, then print the PDF it produces and bring it to the school office with the original documents.',
   requiredNote: 'Fields marked * are required. Write names exactly as on the birth certificate.',
   declaration: 'I declare that the information given above is true to the best of my knowledge. আমি ঘোষণা করছি যে উপরে প্রদত্ত তথ্য সত্য।',
   submitLabel: 'Submit & download form',
-  /* Read by rules.age — the date the applicant's age is measured against. */
-  ageCutoff: '2027-01-01',
-  ageRanges: admissionAgeRanges,
+  /* Read by rules.dob — the birth-date window each class accepts. */
+  dobRanges: admissionDobRanges,
   groups: [
     {
       id: 'applicant', title: 'Applicant', titleBn: 'আবেদনকারীর তথ্য',
@@ -605,7 +620,7 @@ export const admissionForm = {
           placeholder: 'As on birth certificate', requiredMessage: "Enter the student's name." },
         { name: 'nameBn', label: 'নাম (বাংলায়)', type: 'text', half: true, bengali: true, pdfSkip: true,
           placeholder: 'জন্ম শংসাপত্র অনুসারে' },
-        { name: 'dob', label: 'Date of birth', type: 'date', required: true, half: true, rule: 'age',
+        { name: 'dob', label: 'Date of birth', type: 'date', required: true, half: true, rule: 'dob',
           requiredMessage: 'Enter the date of birth.' },
         { name: 'gender', label: 'Gender', type: 'radio', required: true, half: true,
           options: ['Male', 'Female', 'Other'], requiredMessage: 'Choose the gender.' },
@@ -732,10 +747,10 @@ export function formFor(streamId) {
 
 export const admissionConfirmation = {
   title: 'Application submitted',
-  titleBn: 'আবেদন জমা হয়েছে · Session 2027–28',
+  titleBn: 'আবেদন জমা হয়েছে · Session 2027',
   next: [
     { title: 'Print', text: 'Your application form has downloaded. Print it and sign it, and keep the reference number safe.' },
-    { title: 'Verify', text: 'Bring the printout and original documents to the office on the verification date, announced on the Notice page by 28 Jan 2027.' },
+    { title: 'Verify', text: 'Bring the printout, the ₹100 application fee and the original documents to the office between 13 and 28 November 2026, 11:30–13:00.' },
     { title: 'Result', text: 'Selection results, and the lottery where one is needed, are published on the Notice page and on the school notice board.' },
   ],
 };

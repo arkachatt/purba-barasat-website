@@ -9,7 +9,7 @@
  * school, so it must never depend on a server answering.
  */
 import { config } from '../config.js';
-import { admissionForm, admissionStreams } from '../data/site.js';
+import { admissionForm, admissionStreams, dmy } from '../data/site.js';
 
 /* Drafts are per medium: one family applying for two children, one in each
    medium, is an ordinary case, and a shared key would have the second
@@ -83,30 +83,25 @@ export const rules = {
   },
 
   /**
-   * Each class has its own age window, listed in admissionForm.ageRanges.
-   * Nothing is computed from the class here — the bounds are a policy the
-   * office changes, not arithmetic.
+   * The date of birth has to fall inside the window the notice publishes for
+   * that class — `admissionForm.dobRanges`, both ends inclusive. Nothing is
+   * computed from the class: the window is a policy the office prints, not
+   * arithmetic to re-derive.
    *
-   * The cutoff is split by hand rather than handed to `new Date`, because
-   * `new Date('2027-01-01')` is UTC midnight while the getters below are
-   * local: anywhere west of Greenwich the comparison slips a day. India is
-   * east of it, so this has never shown — which is exactly why it would not
-   * be found later.
+   * The comparison is on the ISO strings themselves. A date input hands back
+   * YYYY-MM-DD, which sorts the same way it reads, so this needs no Date at
+   * all — and with no Date there is no UTC-versus-local midnight to slip a
+   * day on, which is what the old age check had to work around.
    */
-  age(value, data) {
+  dob(value, data) {
     if (!value) return null;
-    const [cy, cm, cd] = String(admissionForm.ageCutoff || '2027-01-01').split('-').map(Number);
-    const cutoff = new Date(cy, cm - 1, cd);
-    const dob = new Date(value);
-    if (Number.isNaN(dob.getTime())) return 'Enter a valid date of birth.';
-    let age = cutoff.getFullYear() - dob.getFullYear();
-    const before = cutoff.getMonth() < dob.getMonth() ||
-      (cutoff.getMonth() === dob.getMonth() && cutoff.getDate() < dob.getDate());
-    if (before) age -= 1;
-    const range = admissionForm.ageRanges[data.class];
-    if (!range) return null;            /* a class with no rule written for it */
-    if (age < range.min) return `Applicant must be ${range.min}+ on 1 Jan 2027 for ${data.class}.`;
-    if (age > range.max) return `Please check the date of birth — the applicant is over ${range.max}.`;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'Enter a valid date of birth.';
+    const range = admissionForm.dobRanges[data.class];
+    if (!range) return null;          /* a class with no window published yet */
+    if (value < range.from || value > range.to) {
+      return `For ${data.class} the date of birth must be between ` +
+        `${dmy(range.from)} and ${dmy(range.to)}, both days included.`;
+    }
     return null;
   },
   /**

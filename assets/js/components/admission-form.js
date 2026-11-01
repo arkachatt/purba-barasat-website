@@ -148,7 +148,7 @@ class AdmissionForm extends SiteComponent {
     return html`
       <div class="page-header" style="margin-bottom:28px">
         <div>
-          <div class="kicker">Admission · Session 2027–28</div>
+          <div class="kicker">Admission · Session 2027</div>
           <h1 style="font-size:40px">Which medium are you applying for?
             <span class="bn" style="font-size:22px">/ কোন মাধ্যম?</span></h1>
         </div>
@@ -197,10 +197,15 @@ class AdmissionForm extends SiteComponent {
             </label>`)}
         </div>`;
 
+      /* A date of birth is bounded by the window its class publishes, so the
+         picker itself will not offer a date the form would then refuse. The
+         bounds follow the class — see `paintDobRange`. */
+      const range = field.name === 'dob' ? this.dobRange() : null;
       return html`
         <input class="input ${field.bengali ? 'input-bn' : ''}" id="${id}" name="${field.name}"
                type="${field.type === 'date' ? 'date' : field.type === 'tel' ? 'tel' : 'text'}"
                value="${value}" placeholder="${field.placeholder || ''}"
+               ${raw(range ? `min="${range.from}" max="${range.to}"` : '')}
                ${raw(field.inputmode ? `inputmode="${field.inputmode}"` : '')}
                ${raw(field.readonly ? 'readonly' : '')}
                ${raw(error ? 'aria-invalid="true"' : '')}>`;
@@ -257,6 +262,7 @@ class AdmissionForm extends SiteComponent {
         }
         this.paintErrorCount();
       }
+      if (input.name === 'class') this.paintDobRange();
       this.persist();
     });
     form.addEventListener('submit', (event) => { event.preventDefault(); this.submit(); });
@@ -287,6 +293,7 @@ class AdmissionForm extends SiteComponent {
 
     this.paintErrorCount();
     this.paintDraftNote();
+    this.paintDobRange();
   }
 
   setBusy(message) {
@@ -341,6 +348,22 @@ class AdmissionForm extends SiteComponent {
   /* The count lives beside the fields rather than in them, so clearing an
      error in place has to move it too: an applicant who has just fixed the
      last one should not still be told something needs attention. */
+  /** The birth-date window published for the class currently chosen. */
+  dobRange() {
+    return this.form?.dobRanges?.[this.data.class] || null;
+  }
+
+  /* Changing the class changes which dates the picker will offer. The field
+     is not re-rendered — that would take the focus — so the bounds are moved
+     on the element in place. */
+  paintDobRange() {
+    const input = this.querySelector('input[name="dob"]');
+    if (!input) return;
+    const range = this.dobRange();
+    if (range) { input.min = range.from; input.max = range.to; }
+    else { input.removeAttribute('min'); input.removeAttribute('max'); }
+  }
+
   paintErrorCount() {
     const note = this.querySelector('[data-error-count]');
     if (!note) return;
