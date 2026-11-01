@@ -86,7 +86,16 @@ export const school = {
      to the school's WBCHSE institute code 103182. */
   diseCode: '19112301305',
   wbchseCode: '103182',
-  lastUpdated: '18 Sep 2026',
+};
+
+/**
+ * Who keeps the site, named in the footer's legal row. A reader who finds
+ * something wrong on a page should know who to tell, and for this site that
+ * is the people who build it rather than the school office.
+ */
+export const maintainer = {
+  name: 'Smart Software (chalked.in)',
+  phone: { label: '7980819962', href: 'tel:+917980819962' },
 };
 
 /** The line above the masthead: what kind of school this is, at a glance. */
