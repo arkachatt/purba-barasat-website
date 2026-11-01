@@ -587,6 +587,12 @@ export const admissionStreams = {
     classes: ['Class V', 'Class VI', 'Class VII', 'Class VIII', 'Class IX'],
     lastClasses: ['Class IV', 'Class V', 'Class VI', 'Class VII', 'Class VIII'],
     notYet: admissionClosedClasses,
+    /* The English-medium register is kept in English, so the Bengali
+       spelling of the name has nothing to be written into. The field is
+       dropped from this stream's form rather than left blank — see
+       `omit` in formFor(). The column stays in the spreadsheet so both
+       mediums' rows line up under the same headers. */
+    omit: ['nameBn'],
   },
 };
 
@@ -610,7 +616,7 @@ export const admissionForm = {
   title: 'Online Application — Class V',
   titleBn: 'অনলাইন আবেদন',
   intro: 'Fill this form, then print the PDF it produces and bring it to the school office with the original documents.',
-  requiredNote: 'Fields marked * are required. Write names exactly as on the birth certificate.',
+  requiredNote: 'Fields marked * are required; those marked (optional) may be left empty. Write names exactly as on the birth certificate.',
   declaration: 'I declare that the information given above is true to the best of my knowledge. আমি ঘোষণা করছি যে উপরে প্রদত্ত তথ্য সত্য।',
   submitLabel: 'Submit & download form',
   /* Read by rules.dob — the birth-date window each class accepts. */
@@ -654,17 +660,15 @@ export const admissionForm = {
       fields: [
         { name: 'father', label: "Father's name", type: 'text', required: true, half: true,
           requiredMessage: "Enter the father's name." },
-        { name: 'fatherOccupation', label: "Father's occupation", type: 'text', required: true, half: true,
-          requiredMessage: "Enter the father's occupation." },
+        { name: 'fatherOccupation', label: "Father's occupation", type: 'text', half: true },
         { name: 'mother', label: "Mother's name", type: 'text', required: true, half: true,
           requiredMessage: "Enter the mother's name." },
-        { name: 'motherOccupation', label: "Mother's occupation", type: 'text', required: true, half: true,
-          requiredMessage: "Enter the mother's occupation." },
-        { name: 'guardian', label: "Guardian's name", type: 'text', required: true, half: true,
-          placeholder: 'Repeat a parent if they are the guardian',
-          requiredMessage: "Enter the guardian's name." },
-        { name: 'guardianOccupation', label: "Guardian's occupation", type: 'text', required: true, half: true,
-          requiredMessage: "Enter the guardian's occupation." },
+        { name: 'motherOccupation', label: "Mother's occupation", type: 'text', half: true },
+        /* Optional: for most applicants the guardian is a parent already
+           named above, so the office treats a blank here as "the parents". */
+        { name: 'guardian', label: "Guardian's name", type: 'text', half: true,
+          placeholder: 'Only if someone other than a parent' },
+        { name: 'guardianOccupation', label: "Guardian's occupation", type: 'text', half: true },
       ],
     },
     {
@@ -712,9 +716,10 @@ export const admissionForm = {
         { name: 'ifsc', label: 'IFSC code', type: 'text', required: true, half: true,
           placeholder: 'e.g. SBIN0001234', rule: 'ifsc',
           requiredMessage: 'Enter the IFSC code.' },
-        { name: 'micr', label: 'MICR code', type: 'text', required: true, half: true,
-          inputmode: 'numeric', placeholder: '9 digits', rule: 'micr',
-          requiredMessage: 'Enter the MICR code.' },
+        /* Optional: not every passbook prints it, and the account number
+           with the IFSC is enough to pay into. Checked only when filled. */
+        { name: 'micr', label: 'MICR code', type: 'text', half: true,
+          inputmode: 'numeric', placeholder: '9 digits, if printed in the passbook', rule: 'micr' },
       ],
     },
   ],
@@ -738,17 +743,19 @@ export function formFor(streamId) {
     title: stream.title,
     groups: admissionForm.groups.map((group) => ({
       ...group,
-      fields: group.fields.map((field) => {
-        if (field.name === 'class') {
-          /* `disabledOptions` greys a class the school is not admitting to
-             this session; the default is the first class it IS admitting. */
-          const notYet = stream.notYet || [];
-          const open = stream.classes.filter((klass) => !notYet.includes(klass));
-          return { ...field, options: stream.classes, disabledOptions: notYet, value: open[0] };
-        }
-        if (field.name === 'lastClass') return { ...field, options: stream.lastClasses };
-        return field;
-      }),
+      fields: group.fields
+        .filter((field) => !(stream.omit || []).includes(field.name))
+        .map((field) => {
+          if (field.name === 'class') {
+            /* `disabledOptions` greys a class the school is not admitting to
+               this session; the default is the first class it IS admitting. */
+            const notYet = stream.notYet || [];
+            const open = stream.classes.filter((klass) => !notYet.includes(klass));
+            return { ...field, options: stream.classes, disabledOptions: notYet, value: open[0] };
+          }
+          if (field.name === 'lastClass') return { ...field, options: stream.lastClasses };
+          return field;
+        }),
     })),
   };
 }

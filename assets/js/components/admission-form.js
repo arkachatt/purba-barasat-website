@@ -94,7 +94,8 @@ class AdmissionForm extends SiteComponent {
         <aside class="form-aside">
           <p class="form-aside-intro">${form.intro}</p>
           <p class="form-aside-note">
-            Fields marked <span class="req">*</span> are required. Write names exactly as on
+            Fields marked <span class="req">*</span> are required; those marked
+            <span class="opt">(optional)</span> may be left empty. Write names exactly as on
             the birth certificate.
           </p>
           <p class="form-aside-errors" data-error-count ${raw(errorCount ? '' : 'hidden')}>
@@ -214,7 +215,9 @@ class AdmissionForm extends SiteComponent {
     return html`
       <div class="field ${field.half ? 'field-half' : 'field-full'}" data-field="${field.name}"
            ${raw(error ? 'data-invalid' : '')}>
-        <label for="${id}">${field.label}${when(field.required, () => html` <span class="req">*</span>`)}</label>
+        <label for="${id}">${field.label}${field.required
+          ? html` <span class="req">*</span>`
+          : html` <span class="opt">(optional)</span>`}</label>
         ${control()}
         ${when(error, () => html`
           <div class="field-error">${raw(icon('alert-circle', 14))}${error}</div>`)}

@@ -42,6 +42,9 @@
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px 28px; }
 .form-grid .field-full { grid-column: 1 / -1; }
 .req { color: var(--color-accent-700); }
+/* The counterpart to the asterisk: a field a guardian may leave empty
+   says so in words, so nobody hunts for a mark that isn't there. */
+.opt { font-weight: 400; color: var(--color-neutral-700); }
 .radio-row { display: flex; gap: 20px; min-height: 48px; align-items: center; flex-wrap: wrap; }
 .radio-row .radio { font-size: 16px; }
 .input-bn { font-family: "Noto Sans Bengali", sans-serif; }
