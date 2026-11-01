@@ -39,6 +39,13 @@
   font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--color-accent-800);
 }
 
+/* The embedded map cannot give directions, so the way out to the real
+   thing stays under it. */
+.contact-map-link {
+  display: flex; align-items: center; gap: 6px;
+  margin: 10px 0 0; font-size: 15px;
+}
+
 .enquiry-form { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
 .enquiry-form h2 { font-size: 30px; margin: 0; }
 .enquiry-form h2 .bn { font-size: 18px; }

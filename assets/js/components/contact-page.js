@@ -12,7 +12,7 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { contact, features } from '../data/site.js';
+import { contact, school, features } from '../data/site.js';
 import { validateStep } from '../services/admission.js';
 import { sendEnquiry, EnquiryError } from '../services/enquiry.js';
 
@@ -35,15 +35,23 @@ class ContactPage extends SiteComponent {
               </div>`)}
           </dl>
 
-          <div class="blueprint contact-map">
-            ${contact.map.embed
-              ? raw(`<iframe src="${contact.map.embed}" title="Map" loading="lazy"></iframe>`)
-              : html`
-                <div class="contact-map-plate">
-                  ${raw(icon('map-pin', 26))}
-                  <span>${contact.map.label}</span>
-                  <a href="${contact.map.link.href}">${contact.map.link.label}</a>
-                </div>`}
+          <div class="contact-map-wrap">
+            <div class="blueprint contact-map">
+              ${contact.map.embed
+                ? raw(`<iframe src="${contact.map.embed}" loading="lazy"
+                         title="Map showing ${school.name}, ${school.district}"
+                         referrerpolicy="no-referrer-when-downgrade"></iframe>`)
+                : html`
+                  <div class="contact-map-plate">
+                    ${raw(icon('map-pin', 26))}
+                    <span>${contact.map.label}</span>
+                    <a href="${contact.map.link.href}">${contact.map.link.label}</a>
+                  </div>`}
+            </div>
+            ${when(contact.map.embed, () => html`
+              <p class="contact-map-link">
+                ${raw(icon('external-link', 15))}<a href="${contact.map.link.href}">${contact.map.link.label}</a>
+              </p>`)}
           </div>
         </div>
 

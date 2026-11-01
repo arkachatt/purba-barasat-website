@@ -1152,7 +1152,23 @@ export const contact = {
       lines: ['Monday–Saturday 10:30–16:30 · Closed Sundays and listed holidays',
               '<span class="text-muted">School hours 10:50–16:20 (morning section 6:30–10:30 for Classes V–VI)</span>'] },
   ],
-  map: { label: 'Map embed · Purba Barasat', link: { label: 'Open in Google Maps →', href: '#maps' }, embed: null },
+  /* The school's own pin on Google Maps, found by searching for it and
+     confirmed by the telephone number on the listing — 033 2552 2928, the
+     office's. Maps writes the address 121/2 Taki Road, Monoranjan Pally,
+     Kalikapur, Barasat 700124, which is the same place the lines above
+     describe from the Champadali end.
+
+     The embed is the keyless `output=embed` form, so nothing here needs a
+     Google API key or a billing account. `embed: null` brings back the
+     hatched placeholder. */
+  map: {
+    label: 'Map embed · Purba Barasat',
+    link: {
+      label: 'Open in Google Maps →',
+      href: 'https://www.google.com/maps/place/Purba+Barasat+Adarsha+Bidyapeeth+(H.S.)/@22.7149401,88.4972367,17z',
+    },
+    embed: 'https://maps.google.com/maps?q=22.7149401,88.4972367&z=16&hl=en&output=embed',
+  },
   enquiry: {
     title: 'Send an enquiry', titleBn: 'জিজ্ঞাসা পাঠান',
     intro: 'The office replies within 3 working days. For urgent matters, please call.',
