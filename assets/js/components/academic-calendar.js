@@ -13,6 +13,20 @@ import { calendar, holidays, exams, syllabus, features } from '../data/site.js';
 /** Only the tabs whose feature switch is on. */
 const tabs = calendar.tabs.filter((tab) => !tab.feature || features[tab.feature]);
 
+/**
+ * A tab with nothing in it yet. Published lists are what this page is for,
+ * so an empty one is said plainly rather than drawn as a table with no rows.
+ */
+function awaiting(what, bn) {
+  return html`
+    <empty-state icon="calendar" heading="Not published yet"
+                 action="Contact the office" action-href="contact.html">
+      The school office has not published ${what} for this academic year.
+      It appears here as soon as it does.
+      <span class="bn">${bn}</span>
+    </empty-state>`;
+}
+
 /** Days from today to a date, for the "next holiday" panel. */
 function daysUntil(iso) {
   const day = 24 * 60 * 60 * 1000;
@@ -91,6 +105,9 @@ class AcademicCalendar extends SiteComponent {
   }
 
   renderHolidays() {
+    if (!holidays.list.length) {
+      return awaiting('the holiday list', 'ছুটির তালিকা এখনও প্রকাশিত হয়নি।');
+    }
     const { holiday: next, ongoing } = closureNow();
     const away = next && !ongoing ? daysUntil(next.date) : null;
     const when_ = ongoing
@@ -143,6 +160,9 @@ class AcademicCalendar extends SiteComponent {
   }
 
   renderExams() {
+    if (!exams.rows.length) {
+      return awaiting('the examination schedule', 'পরীক্ষার সূচি এখনও প্রকাশিত হয়নি।');
+    }
     const cell = (value) => typeof value === 'string'
       ? html`${value}`
       : html`${value.text}<span class="tag tag-${value.tone}">${value.tag}</span>`;
@@ -185,6 +205,9 @@ class AcademicCalendar extends SiteComponent {
   }
 
   renderSyllabus() {
+    if (!syllabus.length) {
+      return awaiting('the syllabus', 'পাঠ্যসূচি এখনও প্রকাশিত হয়নি।');
+    }
     return html`
       <div class="syllabus-list">
         ${each(syllabus, (item) => html`

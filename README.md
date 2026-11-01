@@ -177,7 +177,8 @@ Script, which is fine from a Pages origin.
 deleting anything — the page, its component and its content all stay in place:
 
 ```js
-export const features = { login: false, results: false, calendar: false, enquiry: false };
+export const features = { login: false, results: false, calendar: true,
+                          exams: true, syllabus: true, enquiry: false };
 ```
 
 Turning one off hides every way in (header button, nav item, dropdown entry,
@@ -191,9 +192,7 @@ Currently off: **login** (this site's own role-picker gateway, `login.html`
 — the masthead's Log In button bypasses it and goes straight to the school's
 management software at `portal.href`, so the gateway is a screen to get past
 rather than a way in),
-**results** (Results & Events and the event detail page), **calendar** (the
-whole Academic Calendar, `calendar.html`), **exams** and **syllabus** (two of
-its three tabs, moot while the calendar itself is off) and **enquiry** (the
+**results** (Results & Events and the event detail page) and **enquiry** (the
 "Send an enquiry" form on the Contact page — the address, phone and map stay
 and widen to fill the page).
 

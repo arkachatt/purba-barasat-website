@@ -22,26 +22,17 @@ export const features = {
   login: false,
 
   /* Results & Events. Off until the board figures and event write-ups are
-     real: hides the nav item, the footer and home-page links, and closes
-     results.html and event.html. */
+     the school's own rather than the design's. */
   results: false,
 
-  /* The whole Academic Calendar. Off until the school's own almanac for the
-     coming session is in: hides the nav item and its dropdown, the home-page
-     tile, the footer's Holiday List link, and closes calendar.html. The
-     holiday, exam and syllabus data below stays as it is. */
-  calendar: false,
-
-  /* The syllabus tab of the Academic Calendar. Off until the subject PDFs are
-     uploaded: hides the tab and the header dropdown entry. Moot while
-     `calendar` itself is off. */
-  syllabus: false,
-
-  /* The exam schedule. Off because the routine still carries the design's
-     invented dates, which run Jun 2026 – Mar 2027 and so contradict the real
-     holiday list beside them. On again once the school's routine is in. Moot
-     while `calendar` itself is off. */
-  exams: false,
+  /* The Academic Calendar and both of its optional tabs. On, with all three
+     lists empty: the page, the menu item and the tabs are back so a guardian
+     can see what will be published and where, and each tab says plainly that
+     the office has not published it yet. Filling one in is adding rows to
+     `holidays.list`, `exams.rows` or `syllabus` below. */
+  calendar: true,
+  exams: true,
+  syllabus: true,
 
   /* The "Send an enquiry" form on the Contact page. Off because nothing
      carries the enquiry away yet — `services/enquiry.js` has no adapter, so a
@@ -926,62 +917,41 @@ export const calendar = {
   ],
 };
 
+/**
+ * The holiday list, the examination schedule and the syllabus: the three
+ * tabs of the Academic Calendar, and all three empty.
+ *
+ * What stood here was the design's invented almanac — sixty-five days of
+ * holidays, five columns of evaluation dates, a Class IX reading list — none
+ * of it from the school. A guardian planning a journey around a published
+ * date is the reason that cannot stay on a live page, so the lists are empty
+ * and each tab says so.
+ *
+ * Filling one in is adding entries below and nothing else; the tables, the
+ * totals and the "next holiday" panel all follow the data.
+ */
 export const holidays = {
-  /* West Bengal schools run on the calendar year, so this is the list for
-     academic year 2026 as published by the school. `days` counts school days,
-     not calendar days — Sundays are excluded, which is why the Puja vacation
-     spans 28 dates but counts 24. */
   year: '2026',
-  totalDays: 65,
+  /* Counted from the list, not typed beside it. `days` on an entry counts
+     school days rather than calendar days, so a vacation that spans a
+     Sunday counts one fewer. */
+  get totalDays() { return this.list.reduce((sum, holiday) => sum + (holiday.days || 0), 0); },
   pdf: { label: 'Holiday list PDF', href: '#pdf' },
-  note: 'Holiday list for the academic year 2026, 65 days in all, including 3 at the discretion of the Head Teacher. Days are counted excluding Sundays. Changes are announced on the Notice page.',
-  /* `date` is the machine-readable start, used to work out the next holiday.
-     `end` marks a vacation that runs over several days. */
-  list: [
-    { date: '2026-01-01', label: '01 Jan 2026', day: 'Thursday',  name: 'English New Year', days: 1 },
-    { date: '2026-01-12', label: '12 Jan 2026', day: 'Monday',    name: 'Swami Vivekananda Jayanti', days: 1 },
-    { date: '2026-01-23', label: '23 Jan 2026', day: 'Friday',    name: 'Saraswati Puja & Netaji Subhas birth anniversary', days: 1, observed: true },
-    { date: '2026-01-26', label: '26 Jan 2026', day: 'Monday',    name: 'Republic Day', days: 1, observed: true },
-    { date: '2026-02-04', label: '04 Feb 2026', day: 'Wednesday', name: 'Shab-e-Barat', days: 1 },
-    { date: '2026-02-14', label: '14 Feb 2026', day: 'Saturday',  name: "Thakur Panchanan Barma's birthday", days: 1 },
-    { date: '2026-02-15', label: '15 Feb 2026', day: 'Sunday',    name: 'Shivratri', days: 0 },
-    { date: '2026-03-03', label: '03 Mar 2026', day: 'Tuesday',   name: 'Dolyatra (Holi)', days: 1 },
-    { date: '2026-03-17', label: '17 Mar 2026', day: 'Tuesday',   name: "Sri Sri Harichand Thakur's birthday", days: 1 },
-    { date: '2026-03-20', label: '20 Mar 2026', day: 'Friday',    name: 'Day before Eid-ul-Fitr', days: 1 },
-    { date: '2026-03-21', label: '21 Mar 2026', day: 'Saturday',  name: 'Eid-ul-Fitr', days: 1 },
-    { date: '2026-03-26', label: '26 Mar 2026', day: 'Thursday',  name: 'Ram Navami', days: 1 },
-    { date: '2026-03-31', label: '31 Mar 2026', day: 'Tuesday',   name: 'Mahavir Jayanti', days: 1 },
-    { date: '2026-04-03', label: '03 Apr 2026', day: 'Friday',    name: 'Good Friday', days: 1 },
-    { date: '2026-04-14', label: '14 Apr 2026', day: 'Tuesday',   name: "Dr. B. R. Ambedkar's birthday", days: 1 },
-    { date: '2026-04-15', label: '15 Apr 2026', day: 'Wednesday', name: 'Bengali New Year (Poila Boishakh)', days: 1 },
-    { date: '2026-05-01', label: '01 May 2026', day: 'Friday',    name: "May Day, Buddha Purnima & Raghunath Murmu's birthday", days: 1 },
-    { date: '2026-05-09', label: '09 May 2026', day: 'Saturday',  name: 'Rabindra Jayanti', days: 1 },
-    { date: '2026-05-11', end: '2026-05-16', label: '11 – 16 May 2026', day: 'Mon – Sat', name: 'Summer vacation', days: 6 },
-    { date: '2026-05-26', label: '26 May 2026', day: 'Tuesday',   name: 'Day before Eid-ul-Adha (Bakrid)', days: 1 },
-    { date: '2026-05-27', label: '27 May 2026', day: 'Wednesday', name: 'Eid-ul-Adha (Bakrid)', days: 1 },
-    { date: '2026-06-26', label: '26 Jun 2026', day: 'Friday',    name: 'Muharram', days: 1 },
-    { date: '2026-07-16', label: '16 Jul 2026', day: 'Thursday',  name: 'Rath Yatra', days: 1 },
-    { date: '2026-08-15', label: '15 Aug 2026', day: 'Saturday',  name: 'Independence Day', days: 1, observed: true },
-    { date: '2026-08-26', label: '26 Aug 2026', day: 'Wednesday', name: 'Fateha-i-Yajdaham', days: 1 },
-    { date: '2026-09-04', label: '04 Sep 2026', day: 'Friday',    name: 'Janmashtami', days: 1 },
-    { date: '2026-10-02', label: '02 Oct 2026', day: 'Friday',    name: 'Gandhi Jayanti', days: 1 },
-    { date: '2026-10-10', label: '10 Oct 2026', day: 'Saturday',  name: 'Mahalaya', days: 1 },
-    { date: '2026-10-16', end: '2026-11-12', label: '16 Oct – 12 Nov 2026', day: 'Fri – Thu',
-      name: 'Puja vacation (Panchami to the day after Bhratridwitiya)', days: 24 },
-    { date: '2026-11-15', label: '15 Nov 2026', day: 'Sunday',    name: "Birsa Munda's birthday & Chhath Puja", days: 0 },
-    { date: '2026-11-24', label: '24 Nov 2026', day: 'Tuesday',   name: "Guru Nanak's birthday & Parshvanatha Rathayatra", days: 1 },
-    { date: '2026-12-25', label: '25 Dec 2026', day: 'Friday',    name: 'Christmas', days: 1 },
-    { date: '2026-12-28', end: '2026-12-31', label: '28 – 31 Dec 2026', day: 'Mon – Thu', name: 'Winter vacation', days: 4 },
-    /* No fixed date: the Head Teacher sets these during the year. */
-    { date: null, label: 'To be announced', day: '—',
-      name: 'At the discretion of the Head Teacher', days: 3 },
-  ],
+  note: 'Changes to the published list are announced on the Notice page.',
+  /* `date` is the machine-readable start, used to work out the next holiday;
+     `end` marks a vacation that runs over several days; `days` is how many
+     school days it costs; `observed: true` marks one kept on another date.
+     e.g. { date: '2027-01-26', label: '26 Jan 2027', day: 'Tuesday',
+            name: 'Republic Day', days: 1 } */
+  list: [],
 };
 
 export const exams = {
-  legend: '<strong>F</strong> = Formative evaluation · <strong>S</strong> = Summative evaluation · Dates are inclusive; detailed subject routines are published as notices two weeks before each exam.',
+  legend: '<strong>F</strong> = Formative evaluation · <strong>S</strong> = Summative evaluation · Dates are inclusive; detailed subject routines are published as notices before each exam.',
   legendShort: 'F = Formative · S = Summative · Dates inclusive',
   pdf: { label: 'Download routine PDF', href: '#pdf' },
+  /* The West Bengal evaluation structure, which is the board's and not the
+     school's to invent. The dates under it are the school's. */
   columns: [
     { id: 'f1', label: 'F1', note: '· Formative 1' },
     { id: 's1', label: 'S1', note: '· Summative 1' },
@@ -989,42 +959,19 @@ export const exams = {
     { id: 's2', label: 'S2', note: '· Summative 2' },
     { id: 's3', label: 'S3', note: '· Summative 3 / Annual' },
   ],
-  /* A cell is either a plain string or { text, tag, tone }. */
-  rows: [
-    { klass: 'Class V',    f1: '20–24 Jun 2026', s1: '10–18 Aug 2026', f2: '21–25 Sep 2026', s2: '23 Nov – 2 Dec 2026', s3: '8–19 Mar 2027' },
-    { klass: 'Class VI',   f1: '20–24 Jun 2026', s1: '10–18 Aug 2026', f2: '21–25 Sep 2026', s2: '23 Nov – 2 Dec 2026', s3: '8–19 Mar 2027' },
-    { klass: 'Class VII',  f1: '20–24 Jun 2026', s1: '10–18 Aug 2026', f2: '21–25 Sep 2026', s2: '23 Nov – 2 Dec 2026', s3: '8–19 Mar 2027' },
-    { klass: 'Class VIII', f1: '20–24 Jun 2026', s1: '10–18 Aug 2026', f2: '21–25 Sep 2026', s2: '23 Nov – 2 Dec 2026', s3: '8–19 Mar 2027' },
-    { klass: 'Class IX',   f1: '22–26 Jun 2026', s1: '10–20 Aug 2026', f2: '21–25 Sep 2026', s2: '23 Nov – 4 Dec 2026', s3: '1–12 Mar 2027' },
-    { klass: 'Class X',    f1: '22–26 Jun 2026', s1: '10–20 Aug 2026', f2: '—',
-      s2: { text: '16–27 Nov 2026', tag: 'Test', tone: 'accent' }, s3: 'Madhyamik (WBBSE) Feb 2027' },
-    { klass: 'Class XI',   f1: '—', s1: { text: '17–28 Aug 2026', tag: 'Sem 1', tone: 'neutral' }, f2: '—', s2: '—',
-      s3: { text: '8–19 Mar 2027', tag: 'Sem 2', tone: 'neutral' } },
-    { klass: 'Class XII',  f1: '—', s1: { text: '17–28 Aug 2026', tag: 'Sem 3', tone: 'neutral' }, f2: '—',
-      s2: { text: '16–27 Nov 2026', tag: 'Test', tone: 'accent' },
-      s3: { text: 'HS (WBCHSE) Mar 2027', tag: 'Sem 4', tone: 'neutral' } },
-  ],
+  /* One row per class. A cell is either a plain string or
+     { text, tag, tone } when it needs a chip beside the dates. e.g.
+     { klass: 'Class V', f1: '20–24 Jun 2027', s1: '…', f2: '…', s2: '…', s3: '…' } */
+  rows: [],
 };
 
-/** Syllabus, one accordion panel per class. `subjects: null` = not published yet. */
-export const syllabus = [
-  { klass: 'Class V',    meta: '8 subjects', subjects: null },
-  { klass: 'Class VI',   meta: '8 subjects', subjects: null },
-  { klass: 'Class VII',  meta: '8 subjects', subjects: null },
-  { klass: 'Class VIII', meta: '8 subjects', subjects: null },
-  { klass: 'Class IX',   meta: '7 subjects · WBBSE 2026–27', open: true, subjects: [
-    { name: 'Bengali (1st language) · বাংলা', book: 'Sahitya Sanchayan, Vyakaran', updated: 'Apr 2026', pdf: 'PDF · 180 KB', href: '#pdf' },
-    { name: 'English (2nd language)',        book: 'Bliss',                       updated: 'Apr 2026', pdf: 'PDF · 120 KB', href: '#pdf' },
-    { name: 'Mathematics · গণিত',            book: 'Ganit Prakash IX',            updated: 'Apr 2026', pdf: 'PDF · 210 KB', href: '#pdf' },
-    { name: 'Physical Science · ভৌতবিজ্ঞান',  book: 'Bhautabigyan IX',             updated: 'Apr 2026', pdf: 'PDF · 160 KB', href: '#pdf' },
-    { name: 'Life Science · জীবনবিজ্ঞান',     book: 'Jibanbigyan IX',              updated: 'Apr 2026', pdf: 'PDF · 150 KB', href: '#pdf' },
-    { name: 'History · ইতিহাস',              book: 'Itihas O Paribesh IX',        updated: 'May 2026', pdf: 'PDF · 140 KB', href: '#pdf' },
-    { name: 'Geography · ভূগোল',             book: 'Bhugol O Paribesh IX',        updated: 'May 2026', pdf: 'PDF · 130 KB', href: '#pdf' },
-  ] },
-  { klass: 'Class X',   meta: '7 subjects · Madhyamik', subjects: null },
-  { klass: 'Class XI',  meta: 'Science · Arts', subjects: null },
-  { klass: 'Class XII', meta: 'Science · Arts', subjects: null },
-];
+/* One entry per class, newest syllabus first within a class. e.g.
+   { klass: 'Class IX', meta: '7 subjects · WBBSE 2027–28', subjects: [
+       { name: 'Bengali · বাংলা', book: 'Sahitya Sanchayan',
+         updated: 'Apr 2027', pdf: 'PDF · 180 KB', href: 'assets/pdf/…' } ] }
+   A class with `subjects: null` is listed as awaited; the list being empty
+   means nothing has been published at all. */
+export const syllabus = [];
 
 /* ══════════════════════════════════════════════════════════════════════════
    05 — Results & Events · Notice board · Contact
