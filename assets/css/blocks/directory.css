@@ -25,6 +25,8 @@
 .directory-table td.is-photo { padding: 8px 16px; }
 .directory-table td.is-name { font-weight: 500; }
 .directory-table a { text-decoration: none; }
+/* A mobile number is one thing; broken over two lines it reads as two. */
+.directory-table a[href^="tel:"] { white-space: nowrap; }
 .directory-thumb { width: 44px; height: 52px; display: block; overflow: hidden; }
 .directory-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
