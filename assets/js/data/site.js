@@ -165,7 +165,7 @@ export const headmaster = {
   postShort: 'Headmaster · M.Sc. (Chemistry), B.Ed. (First Class)',
   /* The office's photograph, cropped to the 5:6 both photo boxes use. */
   photo: 'assets/img/headmaster.jpg',
-  excerpt: 'Dear parents and students, a new session is a chance to begin again. Our teachers have prepared a fuller calendar of remedial classes this year, and I ask every guardian to keep the school informed of…',
+  excerpt: "Purba Barasat Adarsha Bidyapith has stood beside Taki Road since 1963, when a few determined people of Kalikapur began a school with two classes under a tiled roof. What has not changed is who the school is for\u2026",
   href: 'hm.html',
 };
 
@@ -248,7 +248,6 @@ export const about = {
     ] },
     { heading: 'Results and standing', blocks: [
       { type: 'p', text: "Despite a very high student enrolment and the constraints of its infrastructure, the school's results in both the Madhyamik and the Higher Secondary examinations have been notably commendable, and it has been officially designated an ‘A’ Category school." },
-      { type: 'p', text: 'Following the worldwide disruption of the COVID-19 pandemic through the 2020 and 2021 academic years — which cost our students irreparably — we hope that with the warm cooperation and devotion of guardians, well-wishers, teachers and non-teaching staff, those setbacks will be overcome through the all-round development of the school.' },
     ] },
   ],
   /* The account above is published over the Headmaster's signature. */
@@ -296,7 +295,7 @@ export const hmLetter = {
   name: 'Samir Acharya',
   post: 'Headmaster (HM) · Chemistry',
   credentials: 'M.Sc. (Chemistry), B.Ed. (First Class)',
-  meta: ['Message updated 12 Aug 2026', 'Session 2026–27'],
+  meta: ['Message updated 01 Nov 2026', 'Session 2026–27'],
   /* The Headmaster has no separate email — write to the school office. The
      room number and parent-meeting hours that sat here were invented by the
      design and have been removed rather than left on a live page about a
@@ -306,10 +305,17 @@ export const hmLetter = {
     ['Phone', '<a href="tel:+913325522928">(033) 2552 2928</a>'],
   ],
   salutation: 'Dear parents, students and colleagues,',
+  /* Written for the Headmaster to read over and change as he wishes, and
+     deliberately free of any claim this site cannot stand behind — no pass
+     percentages, no college placements, no awards. Everything it states is
+     already published elsewhere on the site: the founding, the streams, the
+     enrolment, the two admission notices. Replace it with his own words
+     whenever he sends them. */
   paragraphs: [
-    "A new session is a chance to begin again. Last year our Madhyamik candidates recorded the school's best pass percentage in a decade, and our Higher Secondary science students earned places in engineering and nursing colleges across the state. I congratulate them — and their teachers, who stayed back for remedial classes long after the last bell.",
-    'This year we have three priorities. First, regular attendance: a child who misses school on Mondays and Saturdays loses a fifth of the year. Second, reading in both Bengali and English every single day, at home as well as in class. Third, kindness — towards classmates, towards the staff who keep our campus clean, and towards ourselves when a result disappoints.',
-    'I ask every guardian to keep the school informed of a change of phone number or address, to attend the parent–teacher meetings announced on the Notice page, and to speak to me directly on Saturday mornings if something is not right. My door is open.',
+    "Purba Barasat Adarsha Bidyapith has stood beside Taki Road since 1963, when a few determined people of Kalikapur began a school with two classes under a tiled roof. It now teaches more than two and a half thousand students from Class V upward, in Bengali, with Science, Commerce and Arts at the Higher Secondary stage and a vocational wing besides. The building has grown to five storeys. What has not changed is who the school is for: the children of the families around it.",
+    "Much of what a school achieves is settled by small, ordinary habits. Come every day — a child who is absent on Mondays and Saturdays loses a fifth of the year, and no amount of extra class makes that up afterwards. Read every day, in Bengali and in English both, at home as well as in class. And be kind: to classmates, to the staff who keep this campus clean, and to yourself on the day a result disappoints.",
+    "For the coming session the school is calling applications for Class V in the Bengali medium, and for Classes V to VIII in a dedicated English section. Both notices are published on this site with the dates, the age limits and the papers to bring. I would ask every guardian to read the notice itself rather than rely on what is said at the school gate, and to come to the office if anything in it is unclear.",
+    "This website is new and still filling up; until it is complete the office remains the authority on anything you read here. Please tell us when a telephone number or an address changes, come to the parent-teacher meetings when they are announced, and if something is wrong, say so — to the class teacher first, and to me if it is not put right. The door of this room is not closed to any guardian.",
     'With warm regards,',
   ],
   signature: { name: 'Samir Acharya', post: 'Headmaster, Purba Barasat Adarsha Bidyapith' },
