@@ -69,7 +69,7 @@
 .declaration .dot { border-radius: 0; margin-top: 3px; }
 
 .form-actions {
-  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  display: flex; justify-content: flex-end; align-items: center; gap: 16px;
   border-top: 1px solid var(--color-divider); padding-top: 24px;
 }
 .form-actions-main { display: flex; gap: 12px; }
@@ -97,7 +97,6 @@
     border-top: 0; padding-top: 4px;
   }
   .form-actions .btn { min-height: 52px; }
-  .form-actions-save { order: 2; }
   .form-actions-main { display: contents; }
 }
 

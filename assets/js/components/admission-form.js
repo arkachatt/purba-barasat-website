@@ -120,8 +120,11 @@ class AdmissionForm extends SiteComponent {
 
           <div data-submit-error></div>
 
+          <!-- No save-draft-and-exit button: every keystroke is already
+               saved by the input and change handlers, so offering to do it
+               suggested the draft was lost without one. The note above says
+               when it was last saved, and Discard draft wipes it. -->
           <div class="form-actions">
-            <button type="button" class="btn btn-ghost form-actions-save" data-save>Save draft &amp; exit</button>
             <div class="form-actions-main">
               <button type="submit" class="btn btn-primary" data-submit>
                 ${raw(icon('download', 16))}${form.submitLabel}
@@ -269,11 +272,6 @@ class AdmissionForm extends SiteComponent {
       this.persist();
     });
     form.addEventListener('submit', (event) => { event.preventDefault(); this.submit(); });
-
-    this.querySelector('[data-save]').addEventListener('click', () => {
-      this.persist();
-      window.location.href = 'admission.html';
-    });
 
     /* An abandoned draft holds a child's Aadhaar on what may be a shared
        phone, so there is always a way to wipe it. */

@@ -667,8 +667,13 @@ export const admissionForm = {
           options: ['Male', 'Female', 'Other'], requiredMessage: 'Choose the gender.' },
         { name: 'category', label: 'Category', type: 'select', required: true, half: true,
           options: ['General', 'SC', 'ST', 'OBC', 'CWSN'] },
-        { name: 'religion', label: 'Religion', type: 'text', required: true, half: true,
-          requiredMessage: 'Enter the religion.' },
+        /* A list rather than a free-text box, so the register does not end
+           up holding six spellings of the same answer. The first option is
+           blank on purpose: a select seeds itself to its first option, and
+           nothing should quietly answer this question for a child. */
+        { name: 'religion', label: 'Religion', type: 'select', required: true, half: true,
+          options: ['', 'Hindu', 'Muslim', 'Christian', 'Sikh', 'Buddhist', 'Jain', 'Other'],
+          requiredMessage: 'Choose the religion.' },
         { name: 'bloodGroup', label: 'Blood group', type: 'select', required: true, half: true,
           options: ['A+', 'B+', 'O+', 'AB+', 'A−', 'B−', 'O−', 'AB−', 'Not known'] },
         { name: 'bpl', label: 'BPL card holder', type: 'radio', required: true, half: true,
@@ -730,21 +735,21 @@ export const admissionForm = {
     },
     {
       id: 'bank', title: 'Bank account', titleBn: 'ব্যাঙ্ক অ্যাকাউন্ট',
-      /* Collected for scholarship and direct-benefit payments. */
-      note: "The student's own account, used for scholarship and Government benefit payments.",
+      /* Collected for scholarship and direct-benefit payments, and optional
+         throughout: a child who has not yet been taken to open an account
+         should not be stopped from applying for a school place over it. The
+         office can take the passbook at the counter. Each rule below still
+         runs on anything that is filled in, so a wrong IFSC is caught even
+         though a missing one is allowed. */
+      note: "The student's own account, used for scholarship and Government benefit payments. " +
+        'Leave this group empty if the account is not open yet and bring the passbook to the office later.',
       fields: [
-        { name: 'bankAccount', label: 'Bank account number', type: 'text', required: true, half: true,
-          inputmode: 'numeric', rule: 'bankAccount',
-          requiredMessage: 'Enter the bank account number.' },
-        { name: 'bankName', label: 'Bank name', type: 'text', required: true, half: true,
-          requiredMessage: 'Enter the bank name.' },
-        { name: 'branchName', label: 'Branch name', type: 'text', required: true, half: true,
-          requiredMessage: 'Enter the branch name.' },
-        { name: 'ifsc', label: 'IFSC code', type: 'text', required: true, half: true,
-          placeholder: 'e.g. SBIN0001234', rule: 'ifsc',
-          requiredMessage: 'Enter the IFSC code.' },
-        /* Optional: not every passbook prints it, and the account number
-           with the IFSC is enough to pay into. Checked only when filled. */
+        { name: 'bankAccount', label: 'Bank account number', type: 'text', half: true,
+          inputmode: 'numeric', rule: 'bankAccount' },
+        { name: 'bankName', label: 'Bank name', type: 'text', half: true },
+        { name: 'branchName', label: 'Branch name', type: 'text', half: true },
+        { name: 'ifsc', label: 'IFSC code', type: 'text', half: true,
+          placeholder: 'e.g. SBIN0001234', rule: 'ifsc' },
         { name: 'micr', label: 'MICR code', type: 'text', half: true,
           inputmode: 'numeric', placeholder: '9 digits, if printed in the passbook', rule: 'micr' },
       ],
