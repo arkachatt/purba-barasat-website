@@ -428,7 +428,7 @@ const casualStaff = [
   { sl: 'C1',  name: 'Sankar Biswas',          post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
   { sl: 'C2',  name: 'Chandrani Mitra',        post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
   { sl: 'C3',  name: 'Biswajit Mondal',        post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
-  { sl: 'C4',  name: 'Visadeb Chatterjee',     post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C4',  name: 'Viswadeb Chatterjee',     post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
   { sl: 'C5',  name: 'Pradip Saha (Soumen)',   post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
   { sl: 'C6',  name: 'Swapan Das',             post: 'Group D Staff', group: 'Group D Staff', kind: 'casualNonTeaching', qualification: null, photo: null },
   { sl: 'C7',  name: 'Pradip Paul',            post: 'Group D Staff', group: 'Group D Staff', kind: 'casualNonTeaching', qualification: null, photo: null },
