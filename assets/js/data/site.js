@@ -112,18 +112,16 @@ export const navigation = [
 ];
 
 /** Carousel slides. Give a slide an `image` and the hatched plate steps aside. */
+/* Every slide is waiting for a photograph from the school and renders a
+   hatched placeholder naming its subject until one arrives. Set `image` to a
+   path to fill one; add `alt` describing what is in it, and `duotone: true`
+   to wash it into the steel accent — the design system's treatment for
+   content imagery, which the school's own photographs do not need. */
 export const carouselSlides = [
-  /* `duotone: true` washes a photograph into the steel accent, which is the
-     design system's treatment for content imagery. It is off here so the
-     school's own photographs read as themselves. */
-  { caption: 'Teaching and non-teaching staff, in front of the main building',
-    image: 'assets/img/staff-group.jpg',
-    alt: 'The teaching and non-teaching staff of Purba Barasat Adarsha Bidyapith, photographed together in front of the main school building',
-    duotone: false },
   { caption: 'Science laboratory, Class XI', image: null },
-  { caption: 'Annual sports day, 2026',     image: null },
-  { caption: 'Library reading room',        image: null },
-  { caption: 'Independence Day assembly',   image: null },
+  { caption: 'Annual sports day, 2026',      image: null },
+  { caption: 'Library reading room',         image: null },
+  { caption: 'Independence Day assembly',    image: null },
 ];
 
 export const carouselIntro = {
