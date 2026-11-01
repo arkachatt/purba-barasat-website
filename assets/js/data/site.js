@@ -163,7 +163,8 @@ export const headmaster = {
   name: 'Samir Acharya',
   post: 'Headmaster (HM) · M.Sc. (Chemistry), B.Ed. (First Class)',
   postShort: 'Headmaster · M.Sc. (Chemistry), B.Ed. (First Class)',
-  photo: null,
+  /* The office's photograph, cropped to the 5:6 both photo boxes use. */
+  photo: 'assets/img/headmaster.jpg',
   excerpt: 'Dear parents and students, a new session is a chance to begin again. Our teachers have prepared a fuller calendar of remedial classes this year, and I ask every guardian to keep the school informed of…',
   href: 'hm.html',
 };
@@ -291,7 +292,7 @@ export const hmLetter = {
   kicker: '02 · Message',
   title: "From HM's Desk",
   titleBn: 'প্রধান শিক্ষকের কলম',
-  photo: null,
+  photo: 'assets/img/headmaster.jpg',
   name: 'Samir Acharya',
   post: 'Headmaster (HM) · Chemistry',
   credentials: 'M.Sc. (Chemistry), B.Ed. (First Class)',
@@ -380,9 +381,8 @@ export const staff = [
   { sl: 54, name: null, post: 'Group D Staff', group: 'Group D Staff', kind: 'nonTeaching', qualification: null, vacant: true, photo: null },
   { sl: 55, name: 'Sri Kausik Kumar Konar', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: 'B.Com. (Hons.), Computer ‘O’ Level', photo: null },
   { sl: 56, name: 'Sri Arnab Das', post: 'ICT Teacher', group: 'ICT Teacher', kind: 'teaching', qualification: 'B.C.A., M.Sc. (1st Class)', photo: null },
-  /* Filed a form response but was not on the roster the office published;
-     his qualification is still to come from the office. */
-  { sl: 57, name: 'Sri Subhadeep Basu', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: null, photo: null },
+  /* Filed a form response but was not on the roster the office published. */
+  { sl: 57, name: 'Sri Subhadeep Basu', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: 'B.C.A.', photo: null },
 ];
 
 /** Which posts the filter offers, in the order the office lists them. */

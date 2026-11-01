@@ -21,7 +21,7 @@ class HmDesk extends SiteComponent {
     return html`
       <section class="hm-desk blueprint" aria-label="From the HM's Desk">
         <div class="hm-head">
-          <div class="hm-photo blueprint hatch">${photo}</div>
+          <div class="hm-photo blueprint ${headmaster.photo ? '' : 'hatch'}">${photo}</div>
           <div class="hm-id">
             <div class="kicker kicker-sm">
               <span class="hm-kicker-long">${headmaster.kicker}</span>
