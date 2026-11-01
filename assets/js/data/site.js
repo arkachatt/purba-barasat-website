@@ -12,9 +12,13 @@
  * and a direct visit is sent home. Flip a flag back to true to restore it.
  */
 export const features = {
-  /* The management-software gateway. Off until the school's system is ready:
-     hides the header button, the footer link, the Students → Student Portal
-     entry and the portal button on the Students page, and closes login.html. */
+  /* The site's own log-in gateway at login.html — the role picker that stood
+     between a visitor and the management software. Off: the school's system
+     has its own sign-in page, so a second one here would be a screen to get
+     past rather than a way in. This hides the footer link, the Students →
+     Student Portal entry and the portal button on the Students page, and
+     closes login.html. The header's Log In button does not depend on it; see
+     `portal` below, which sends people straight to the real thing. */
   login: false,
 
   /* Results & Events. Off until the board figures and event write-ups are
@@ -44,6 +48,21 @@ export const features = {
      guardian would fill it in and the office would never see it. The address,
      phone and map stay, and widen to fill the page. */
   enquiry: false,
+};
+
+/**
+ * Where "Log In" goes: the school's management software, which lives on its
+ * own domain and has its own sign-in page. The button is in the masthead
+ * rather than the navigation because it leaves the website — the nav is for
+ * pages of this site, and this is not one.
+ *
+ * Same tab on purpose. A new tab a guardian cannot easily close is worse on
+ * a phone than a Back button that works.
+ */
+export const portal = {
+  label: 'Log In',
+  labelBn: 'লগ ইন',
+  href: 'https://purba-barasat.chalked.in',
 };
 
 export const school = {

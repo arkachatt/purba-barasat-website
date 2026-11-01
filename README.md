@@ -186,7 +186,10 @@ footer link, home tile) **and** closes the page itself: a gated page carries
 or a typed URL cannot reach a hidden page either. Flip a flag back to `true`
 and everything returns.
 
-Currently off: **login** (the management-software gateway, `login.html`),
+Currently off: **login** (this site's own role-picker gateway, `login.html`
+— the masthead's Log In button bypasses it and goes straight to the school's
+management software at `portal.href`, so the gateway is a screen to get past
+rather than a way in),
 **results** (Results & Events and the event detail page), **calendar** (the
 whole Academic Calendar, `calendar.html`), **exams** and **syllabus** (two of
 its three tabs, moot while the calendar itself is off) and **enquiry** (the

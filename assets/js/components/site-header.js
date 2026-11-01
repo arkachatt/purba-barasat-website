@@ -11,7 +11,7 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { school, headerStrip, navigation, features } from '../data/site.js';
+import { school, headerStrip, navigation, portal, features } from '../data/site.js';
 
 /** Drop anything whose `feature` switch is off, at every level of the nav. */
 const enabled = (item) => !item.feature || features[item.feature];
@@ -70,8 +70,11 @@ class SiteHeader extends SiteComponent {
           </nav>
           <div class="header-actions">
             <a class="btn btn-secondary btn-md" href="notice.html">${raw(icon('bell', 16))}Notice</a>
-            ${when(features.login, () => html`
-              <a class="btn btn-primary btn-md" href="login.html">${raw(icon('log-in', 16))}Log In</a>`)}
+            <!-- Leaves the website for the school's management software, so
+                 it sits in the masthead rather than the navigation. -->
+            <a class="btn btn-primary btn-md" href="${portal.href}">
+              ${raw(icon('log-in', 16))}${portal.label}
+            </a>
           </div>
         </div>
 
@@ -82,9 +85,8 @@ class SiteHeader extends SiteComponent {
           </button>
           ${raw(brand('sm'))}
           <a class="btn btn-secondary btn-square" href="notice.html" aria-label="Notice">${raw(icon('bell', 18))}</a>
-          ${when(features.login, () => html`
-            <a class="btn btn-primary" href="login.html"
-               style="height:44px;padding-inline:12px;flex:none;font-size:14px">Log In</a>`)}
+          <a class="btn btn-primary" href="${portal.href}"
+             style="height:44px;padding-inline:12px;flex:none;font-size:14px">${portal.label}</a>
         </div>
 
         <div class="drawer" id="site-drawer" hidden>
