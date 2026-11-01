@@ -369,6 +369,9 @@ export const staff = [
   { sl: 54, name: null, post: 'Group D Staff', group: 'Group D Staff', kind: 'nonTeaching', qualification: null, vacant: true, photo: null },
   { sl: 55, name: 'Sri Kausik Kumar Konar', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: 'B.Com. (Hons.), Computer ‘O’ Level', photo: null },
   { sl: 56, name: 'Sri Arnab Das', post: 'ICT Teacher', group: 'ICT Teacher', kind: 'teaching', qualification: 'B.C.A., M.Sc. (1st Class)', photo: null },
+  /* Filed a form response but was not on the roster the office published;
+     his qualification is still to come from the office. */
+  { sl: 57, name: 'Sri Subhadeep Basu', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: null, photo: null },
 ];
 
 /** Which posts the filter offers, in the order the office lists them. */
