@@ -4,11 +4,15 @@
  * Address, phone, email and hours beside an enquiry form. The form is built
  * from `contact.enquiry.fields` and validated by the same rules the admission
  * form uses, so a phone number is checked the same way everywhere.
+ *
+ * The form sits behind `features.enquiry`. With it off the address column
+ * takes the whole width (`.is-plain`) and the map moves beside the details,
+ * so the page is not a narrow column next to a void.
  */
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { contact } from '../data/site.js';
+import { contact, features } from '../data/site.js';
 import { validateStep } from '../services/admission.js';
 import { sendEnquiry, EnquiryError } from '../services/enquiry.js';
 
@@ -18,7 +22,7 @@ class ContactPage extends SiteComponent {
 
   render() {
     return html`
-      <div class="contact-split">
+      <div class="contact-split ${features.enquiry ? '' : 'is-plain'}">
         <div class="contact-info">
           <dl class="contact-list">
             ${each(contact.details, (item) => html`
@@ -43,6 +47,7 @@ class ContactPage extends SiteComponent {
           </div>
         </div>
 
+        ${when(features.enquiry, () => html`
         <form class="blueprint enquiry-form" novalidate>
           <div>
             <h2>${contact.enquiry.title} <span class="bn">/ ${contact.enquiry.titleBn}</span></h2>
@@ -57,14 +62,16 @@ class ContactPage extends SiteComponent {
             <span class="enquiry-privacy">${contact.enquiry.privacy}</span>
             <button type="submit" class="btn btn-primary btn-lg">${contact.enquiry.submit}</button>
           </div>
-        </form>
+        </form>`)}
       </div>`;
   }
 
   hydrate() {
+    const form = this.querySelector('form');
+    if (!form) return;                               // the enquiry form is switched off
+
     this.paintFields();
 
-    const form = this.querySelector('form');
     form.addEventListener('input', (event) => {
       if (!event.target.name) return;
       this.data[event.target.name] = event.target.value;

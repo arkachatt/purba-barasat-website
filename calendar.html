@@ -11,8 +11,12 @@
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="assets/css/site.css">
   <script type="module" src="assets/js/main.js"></script>
+  <script type="module">
+    import { gate } from './assets/js/core/gate.js';
+    gate('calendar');
+  </script>
 </head>
-<body class="page">
+<body class="page gated">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <offline-bar></offline-bar>

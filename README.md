@@ -23,7 +23,7 @@ ES modules need HTTP — opening `index.html` over `file://` will not work.
 | Admission | `admission.html` | 03 · 1a–1c |
 | Online application | `admission-form.html` | 03 · 1d–1j |
 | Confirmation | `admission-submitted.html` | 03 · 1k–1l |
-| Academic Calendar | `calendar.html` (`#holidays` `#exams` `#syllabus`) | 04 · all |
+| Academic Calendar | `calendar.html` (`#holidays` `#exams` `#syllabus`) — hidden | 04 · all |
 | Results & Events | `results.html` | 05 · 1a–1b |
 | Event detail | `event.html?id=…` | 05 · 1c–1d |
 | Notice board | `notice.html` | 05 · 1e–1g |
@@ -171,7 +171,7 @@ Script, which is fine from a Pages origin.
 deleting anything — the page, its component and its content all stay in place:
 
 ```js
-export const features = { login: false, results: false, syllabus: false };
+export const features = { login: false, results: false, calendar: false, enquiry: false };
 ```
 
 Turning one off hides every way in (header button, nav item, dropdown entry,
@@ -182,8 +182,11 @@ or a typed URL cannot reach a hidden page either. Flip a flag back to `true`
 and everything returns.
 
 Currently off: **login** (the management-software gateway, `login.html`),
-**results** (Results & Events and the event detail page) and **syllabus** (the
-third tab of the Academic Calendar — holidays and exams are unaffected).
+**results** (Results & Events and the event detail page), **calendar** (the
+whole Academic Calendar, `calendar.html`), **exams** and **syllabus** (two of
+its three tabs, moot while the calendar itself is off) and **enquiry** (the
+"Send an enquiry" form on the Contact page — the address, phone and map stay
+and widen to fill the page).
 
 ## Known stubs
 
@@ -197,8 +200,10 @@ with a `set*Adapter()` seam. Until those are wired:
   below. With no endpoint configured it still validates, still produces the
   PDF, and tells the applicant the reference came from the website rather than
   the office. Seams: `setSubmitAdapter` and `rules`.
-- **`enquiry.js`** — the contact form validates, then points the visitor at the
-  phone number. `setEnquiryAdapter(fn)` connects the office inbox.
+- **`enquiry.js`** — unreachable for now: the contact form is hidden behind
+  `features.enquiry`, because validating an enquiry and then pointing the
+  visitor at the phone number reads like the office received it. Connect the
+  inbox with `setEnquiryAdapter(fn)`, then switch the flag back on.
 - **Photographs** — every image slot (`carouselSlides`, `headmaster.photo`,
   `school.logo`, `about.gallery`, event covers, staff portraits) is `null` and
   renders a hatched placeholder naming its subject. Set a path and the

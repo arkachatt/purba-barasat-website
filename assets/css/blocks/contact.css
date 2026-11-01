@@ -2,10 +2,18 @@
    contact.css — <contact-page>. Where the school is and how to reach it, with
    an enquiry form beside it. The address column comes first on a phone: most
    people arriving here want the phone number, not the form.
+
+   `.is-plain` is the same page with the enquiry form switched off: one column
+   instead of two, with the map moved up beside the address details.
    ========================================================================== */
 
 .contact-split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: start; }
 .contact-info { display: flex; flex-direction: column; gap: 24px; }
+.contact-split.is-plain { grid-template-columns: minmax(0, 1fr); }
+.contact-split.is-plain .contact-info {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 48px; align-items: start;
+}
 .contact-list { margin: 0; display: flex; flex-direction: column; gap: 18px; font-size: 16px; line-height: 1.5; }
 .contact-item { display: grid; grid-template-columns: 28px 1fr; gap: 14px; }
 .contact-item svg { color: var(--color-accent-700); }
@@ -43,6 +51,7 @@
 
 @media (max-width: 1023px) {
   .contact-split { grid-template-columns: 1fr; gap: 24px; }
+  .contact-split.is-plain .contact-info { grid-template-columns: 1fr; gap: 24px; }
   .enquiry-form { padding: 20px; }
   .enquiry-form h2 { font-size: 24px; }
   .enquiry-grid { grid-template-columns: 1fr; gap: 14px; }

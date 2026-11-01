@@ -22,14 +22,28 @@ export const features = {
      results.html and event.html. */
   results: false,
 
+  /* The whole Academic Calendar. Off until the school's own almanac for the
+     coming session is in: hides the nav item and its dropdown, the home-page
+     tile, the footer's Holiday List link, and closes calendar.html. The
+     holiday, exam and syllabus data below stays as it is. */
+  calendar: false,
+
   /* The syllabus tab of the Academic Calendar. Off until the subject PDFs are
-     uploaded: hides the tab and the header dropdown entry. */
+     uploaded: hides the tab and the header dropdown entry. Moot while
+     `calendar` itself is off. */
   syllabus: false,
 
   /* The exam schedule. Off because the routine still carries the design's
      invented dates, which run Jun 2026 – Mar 2027 and so contradict the real
-     holiday list beside them. On again once the school's routine is in. */
+     holiday list beside them. On again once the school's routine is in. Moot
+     while `calendar` itself is off. */
   exams: false,
+
+  /* The "Send an enquiry" form on the Contact page. Off because nothing
+     carries the enquiry away yet — `services/enquiry.js` has no adapter, so a
+     guardian would fill it in and the office would never see it. The address,
+     phone and map stay, and widen to fill the page. */
+  enquiry: false,
 };
 
 export const school = {
@@ -79,6 +93,7 @@ export const navigation = [
     ] },
   { label: 'Admission',         bn: 'ভর্তি',                href: 'admission.html' },
   { label: 'Academic Calendar', bn: 'শিক্ষাবর্ষ পঞ্জিকা',     href: 'calendar.html',
+    feature: 'calendar',
     children: [
       { label: 'Holiday List',  bn: 'ছুটির তালিকা',          href: 'calendar.html#holidays' },
       { label: 'Exam Schedule', bn: 'পরীক্ষার সূচি',          href: 'calendar.html#exams', feature: 'exams' },
@@ -146,7 +161,7 @@ export const quickLinks = [
   { icon: 'bell',     title: 'Notice',            shortTitle: 'Notice',   bn: 'বিজ্ঞপ্তি', sub: 'All circulars & PDFs',        href: 'notice.html' },
   { icon: 'trophy',   title: 'Results',           shortTitle: 'Results',  bn: 'ফলাফল',    sub: 'Madhyamik & HS',              href: 'results.html', feature: 'results' },
   { icon: 'calendar', title: 'Academic Calendar', shortTitle: 'Calendar', bn: 'পঞ্জিকা',   sub: features.syllabus ? 'Holidays, exams, syllabus' : 'Holidays and exam schedule',
-    href: 'calendar.html' },
+    href: 'calendar.html', feature: 'calendar' },
   { icon: 'map-pin',  title: 'Contact',           shortTitle: 'Contact',  bn: 'যোগাযোগ',   sub: 'Address, phone, map',         href: 'contact.html' },
 ];
 
@@ -154,7 +169,7 @@ export const footerLinks = [
   { label: 'Notice',       href: 'notice.html' },
   { label: 'Admission',    href: 'admission.html' },
   { label: 'Results',      href: 'results.html', feature: 'results' },
-  { label: 'Holiday List', href: 'calendar.html#holidays' },
+  { label: 'Holiday List', href: 'calendar.html#holidays', feature: 'calendar' },
   { label: 'Teachers',     href: 'teachers.html' },
   { label: 'Log In',       href: 'login.html', feature: 'login' },
 ];
