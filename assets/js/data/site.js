@@ -91,7 +91,11 @@ export const navigation = [
   { label: "From HM's Desk",    bn: 'প্রধান শিক্ষকের কলম',    href: 'hm.html' },
   { label: 'Teachers',          bn: 'শিক্ষকমণ্ডলী',          href: 'teachers.html',
     children: [
-      { label: 'Teaching Staff',     bn: 'শিক্ষক',           href: 'teachers.html' },
+      /* The hash picks the directory's teaching/non-teaching segment — see
+         `kindFromHash` in components/staff-directory.js. Both carry one, so
+         either item works from the teachers page itself, where a bare
+         `teachers.html` link would do nothing at all. */
+      { label: 'Teaching Staff',     bn: 'শিক্ষক',           href: 'teachers.html#teaching' },
       { label: 'Non-teaching Staff', bn: 'শিক্ষাকর্মী',       href: 'teachers.html#non-teaching' },
     ] },
   { label: 'Students',          bn: 'ছাত্রছাত্রী',           href: 'students.html',

@@ -159,6 +159,14 @@ class SiteHeader extends SiteComponent {
       });
     });
 
+    /* A menu item that only changes the hash — Teachers > Non-teaching
+       Staff, read on the teachers page — does not reload the page, so the
+       panel or drawer would otherwise stay hanging open over the answer. */
+    qsa('.dropdown-link', this).forEach((link) =>
+      link.addEventListener('click', () => closeAll()));
+    qsa('.drawer-child', this).forEach((link) =>
+      link.addEventListener('click', () => setDrawer(false)));
+
     document.addEventListener('click', (event) => {
       if (!this.contains(event.target)) closeAll();
     });

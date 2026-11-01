@@ -14,8 +14,37 @@ import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
 import { staff, staffPosts, staffCounts } from '../data/site.js';
 
+/* The header's Teachers dropdown links here with a hash, so the two items
+   land on the segment they name instead of on the same unchanged page. */
+const KIND_BY_HASH = { teaching: 'teaching', 'non-teaching': 'nonTeaching', all: 'all' };
+const kindFromHash = () => KIND_BY_HASH[window.location.hash.replace('#', '')] || null;
+
 class StaffDirectory extends SiteComponent {
-  state = { query: '', post: '', kind: 'teaching' };
+  state = { query: '', post: '', kind: kindFromHash() || 'teaching' };
+
+  connectedCallback() {
+    super.connectedCallback();
+    /* Arriving at teachers.html#non-teaching from another page is handled by
+       the initial state above. Clicking the same link while already here
+       changes only the hash, which fires this and nothing else. */
+    this._onHash = () => {
+      const kind = kindFromHash();
+      if (!kind || kind === this.state.kind) return;
+      this.state.kind = kind;
+      this.syncSegment();
+      this.paint();
+    };
+    window.addEventListener('hashchange', this._onHash);
+  }
+
+  disconnectedCallback() { window.removeEventListener('hashchange', this._onHash); }
+
+  /** Move the segment control to wherever the state now is. */
+  syncSegment() {
+    qsa('input[name="staff-kind"]', this).forEach((input) => {
+      input.checked = input.value === this.state.kind;
+    });
+  }
 
   /** Rows surviving the current search, post filter and staff segment. */
   get matches() {
@@ -58,9 +87,12 @@ class StaffDirectory extends SiteComponent {
         </div>
 
         <div class="seg directory-seg" role="radiogroup" aria-label="Staff type">
-          <label class="seg-opt"><input type="radio" name="staff-kind" value="teaching" checked>Teaching</label>
-          <label class="seg-opt"><input type="radio" name="staff-kind" value="nonTeaching">Non-teaching</label>
-          <label class="seg-opt"><input type="radio" name="staff-kind" value="all">All</label>
+          ${each([['teaching', 'Teaching'], ['nonTeaching', 'Non-teaching'], ['all', 'All']],
+                 ([value, label]) => html`
+            <label class="seg-opt">
+              <input type="radio" name="staff-kind" value="${value}"
+                     ${raw(this.state.kind === value ? 'checked' : '')}>${label}
+            </label>`)}
         </div>
 
         <span class="directory-count" data-count></span>
