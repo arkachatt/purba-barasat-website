@@ -69,7 +69,6 @@ class SiteHeader extends SiteComponent {
               </div>`)}
           </nav>
           <div class="header-actions">
-            <a class="btn btn-secondary btn-md" href="notice.html">${raw(icon('bell', 16))}Notice</a>
             <!-- Leaves the website for the school's management software, so
                  it sits in the masthead rather than the navigation. -->
             <a class="btn btn-primary btn-md" href="${portal.href}">
@@ -84,7 +83,6 @@ class SiteHeader extends SiteComponent {
             ${raw(icon('menu', 22))}
           </button>
           ${raw(brand('sm'))}
-          <a class="btn btn-secondary btn-square" href="notice.html" aria-label="Notice">${raw(icon('bell', 18))}</a>
           <a class="btn btn-primary" href="${portal.href}"
              style="height:44px;padding-inline:12px;flex:none;font-size:14px">${portal.label}</a>
         </div>

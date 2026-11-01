@@ -101,7 +101,10 @@ export const navigation = [
      convention knows it does. A named item costs one slot on the bar. */
   { label: 'Home',              bn: 'হোম',                  href: 'index.html' },
   { label: 'About Us',          bn: 'আমাদের সম্পর্কে',       href: 'about.html' },
-  { label: "From HM's Desk",    bn: 'প্রধান শিক্ষকের কলম',    href: 'hm.html' },
+  /* From HM's Desk and Notice are deliberately not on the bar: the home page
+     carries both — the Headmaster's card with its Read more, and the notice
+     strip with its View all notices — and they are in the footer's quick
+     links too. hm.html and notice.html are untouched and still open. */
   { label: 'Teachers',          bn: 'শিক্ষকমণ্ডলী',          href: 'teachers.html',
     children: [
       /* The hash picks the directory's teaching/non-teaching segment — see
