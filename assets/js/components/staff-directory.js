@@ -12,11 +12,25 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { staff, staffPosts, staffCounts } from '../data/site.js';
+import { staff, staffPosts } from '../data/site.js';
 
 /* The header's Teachers dropdown links here with a hash, so the two items
    land on the segment they name instead of on the same unchanged page. */
-const KIND_BY_HASH = { teaching: 'teaching', 'non-teaching': 'nonTeaching', all: 'all' };
+const KIND_BY_HASH = {
+  teaching: 'teaching', 'non-teaching': 'nonTeaching',
+  'casual-teaching': 'casualTeaching', 'casual-non-teaching': 'casualNonTeaching',
+  all: 'all',
+};
+
+/* The segments, in the order the control shows them. The sanctioned posts
+   first, then the casual register, then everyone. */
+const SEGMENTS = [
+  ['teaching', 'Teaching'],
+  ['nonTeaching', 'Non-teaching'],
+  ['casualTeaching', 'Casual teaching'],
+  ['casualNonTeaching', 'Casual non-teaching'],
+  ['all', 'All'],
+];
 const kindFromHash = () => KIND_BY_HASH[window.location.hash.replace('#', '')] || null;
 
 class StaffDirectory extends SiteComponent {
@@ -81,14 +95,13 @@ class StaffDirectory extends SiteComponent {
         <div class="field directory-post">
           <label for="staff-post">Filter by post</label>
           <select class="input" id="staff-post" data-post>
-            <option value="">All posts (${staffCounts.teachingSanctioned + staffCounts.nonTeachingSanctioned})</option>
+            <option value="">All posts</option>
             ${each(staffPosts, (post) => html`<option value="${post}">${post}</option>`)}
           </select>
         </div>
 
         <div class="seg directory-seg" role="radiogroup" aria-label="Staff type">
-          ${each([['teaching', 'Teaching'], ['nonTeaching', 'Non-teaching'], ['all', 'All']],
-                 ([value, label]) => html`
+          ${each(SEGMENTS, ([value, label]) => html`
             <label class="seg-opt">
               <input type="radio" name="staff-kind" value="${value}"
                      ${raw(this.state.kind === value ? 'checked' : '')}>${label}

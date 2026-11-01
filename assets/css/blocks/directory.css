@@ -10,8 +10,11 @@
 .directory-search .input { padding-left: 38px; }
 .directory-search svg { position: absolute; left: 12px; top: 13px; color: var(--color-neutral-600); }
 .directory-post { width: 260px; }
-.directory-seg { height: var(--tap); }
-.directory-seg .seg-opt { min-height: var(--tap); font-size: 15px; padding-inline: 16px; }
+/* Five segments do not always fit one line beside the search box and the
+   post select, so the control wraps inside its own border rather than
+   pushing the count off the row. */
+.directory-seg { flex-wrap: wrap; }
+.directory-seg .seg-opt { min-height: var(--tap); font-size: 15px; padding-inline: 14px; }
 .directory-count {
   font-size: 14px; color: var(--color-neutral-700);
   margin-left: auto; padding-bottom: 12px;
@@ -55,7 +58,10 @@
 @media (max-width: 1023px) {
   .directory-controls { flex-direction: column; align-items: stretch; gap: 12px; }
   .directory-search, .directory-post { max-width: none; width: auto; min-width: 0; }
-  .directory-seg { display: none; }       /* the post select already covers it */
+  /* Kept on a phone: the post select cannot reach a whole register, so
+     hiding this put three of the five groups out of reach entirely. */
+  .directory-seg { width: 100%; }
+  .directory-seg .seg-opt { flex: 1 1 auto; justify-content: center; font-size: 14px; padding-inline: 10px; }
   .directory-count { margin-left: 0; padding-bottom: 0; font-size: 13px; }
   .directory-table-wrap { display: none; }
   .directory-cards { display: flex; }

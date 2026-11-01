@@ -97,6 +97,8 @@ export const navigation = [
          `teachers.html` link would do nothing at all. */
       { label: 'Teaching Staff',     bn: 'শিক্ষক',           href: 'teachers.html#teaching' },
       { label: 'Non-teaching Staff', bn: 'শিক্ষাকর্মী',       href: 'teachers.html#non-teaching' },
+      { label: 'Casual Teaching',    bn: 'অস্থায়ী শিক্ষক',     href: 'teachers.html#casual-teaching' },
+      { label: 'Casual Non-teaching', bn: 'অস্থায়ী কর্মী',     href: 'teachers.html#casual-non-teaching' },
     ] },
   { label: 'Students',          bn: 'ছাত্রছাত্রী',           href: 'students.html',
     children: [
@@ -411,10 +413,38 @@ export const staff = [
   { sl: 57, name: 'Sri Subhadeep Basu', post: 'Computer Teacher', group: 'Computer Teacher', kind: 'teaching', qualification: 'B.C.A.', phone: '99038 14352', tel: '+919903814352', email: 'subhadeepbasu007@gmail.com', photo: 'assets/img/staff/subhadeep-basu.jpg' },
 ];
 
+/**
+ * Casual staff — appointed by the school rather than against a sanctioned
+ * post, so they are a register of their own: their own serial numbers (C1
+ * upward, as the office's own list runs), no vacancies to show, and they are
+ * left out of the sanctioned-post counts above.
+ *
+ * They are in the same array so that one search box, one post filter and one
+ * table serve the whole staff; the `kind` is what keeps the two registers
+ * apart. No honorifics here: the office's list gives none, and Sri or Smt. is
+ * not something to guess at for a real person.
+ */
+const casualStaff = [
+  { sl: 'C1',  name: 'Sankar Biswas',          post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C2',  name: 'Chandrani Mitra',        post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C3',  name: 'Biswajit Mondal',        post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C4',  name: 'Visadeb Chatterjee',     post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C5',  name: 'Pradip Saha (Soumen)',   post: 'Office Staff',  group: 'Office Staff',  kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C6',  name: 'Swapan Das',             post: 'Group D Staff', group: 'Group D Staff', kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C7',  name: 'Pradip Paul',            post: 'Group D Staff', group: 'Group D Staff', kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C8',  name: 'Soma Bhowmik',           post: 'Group D Staff', group: 'Group D Staff', kind: 'casualNonTeaching', qualification: null, photo: null },
+  { sl: 'C9',  name: 'Subal Paul',             post: 'Teacher',       group: 'Teacher',       kind: 'casualTeaching',    qualification: 'M.Com., B.Ed.', photo: null },
+  { sl: 'C10', name: 'Ankita Chowdhury',       post: 'Teacher',       group: 'Teacher',       kind: 'casualTeaching',    qualification: 'M.A. (Journalism and Mass Communication), B.Ed.', photo: null },
+  { sl: 'C11', name: 'Rinki Biswas',           post: 'Teacher',       group: 'Teacher',       kind: 'casualTeaching',    qualification: 'M.A. (Sanskrit), B.Ed.', photo: null },
+];
+
+staff.push(...casualStaff);
+
 /** Which posts the filter offers, in the order the office lists them. */
 export const staffPosts = [
   'Headmaster', 'Assistant Headmaster', 'Assistant Teacher', 'Para Teacher',
   'Computer Teacher', 'ICT Teacher', 'Librarian', 'Clerk', 'Group D Staff',
+  'Teacher', 'Office Staff',
 ];
 
 /* Headline figures, counted from the roster rather than typed in twice. */
@@ -426,6 +456,10 @@ export const staffCounts = {
   teachingSanctioned: sanctioned('teaching'),
   nonTeaching: inPost('nonTeaching'),
   nonTeachingSanctioned: sanctioned('nonTeaching'),
+  /* Casual appointments are not sanctioned posts, so they are counted apart
+     and never folded into the figures above. */
+  casualTeaching: inPost('casualTeaching'),
+  casualNonTeaching: inPost('casualNonTeaching'),
   updated: 'As published by the school office',
 };
 
