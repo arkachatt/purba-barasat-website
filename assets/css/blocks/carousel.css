@@ -15,7 +15,15 @@
   display: grid; place-items: center;
 }
 .carousel-slide[hidden] { display: none; }
-.carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+/* Pinned to the frame rather than laid out inside it: as a grid item the
+   image kept its own aspect ratio, overflowed the 600px frame and was then
+   clipped at both ends — which no object-position can correct, because
+   nothing was being cover-cropped. Filling the frame exactly is what makes
+   a slide's `focus` mean anything. */
+.carousel-slide img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
 
 /* The "Photo n of N · subject" chip that labels an unset placeholder. */
 .carousel-plate {

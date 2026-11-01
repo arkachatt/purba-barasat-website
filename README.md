@@ -209,9 +209,8 @@ with a `set*Adapter()` seam. Until those are wired:
   `features.enquiry`, because validating an enquiry and then pointing the
   visitor at the phone number reads like the office received it. Connect the
   inbox with `setEnquiryAdapter(fn)`, then switch the flag back on.
-- **Photographs** — most image slots (`carouselSlides`, `about.gallery`,
-  event covers, staff portraits) are `null` and render a hatched placeholder
-  naming the subject. The Headmaster's portrait is in, cropped to the 5:6 of
+- **Photographs** — most image slots (`about.gallery`, event covers, staff
+  portraits) are `null` and render a hatched placeholder naming the subject. The Headmaster's portrait is in, cropped to the 5:6 of
   both photo boxes. Set a path and the placeholder
   steps aside. The crest is in: `school.logo` is the masked PNG used in the
   header and footer, `school.logoFlat` the opaque copy used for the iOS home

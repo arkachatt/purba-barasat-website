@@ -116,16 +116,23 @@ export const navigation = [
 ];
 
 /** Carousel slides. Give a slide an `image` and the hatched plate steps aside. */
-/* Every slide is waiting for a photograph from the school and renders a
-   hatched placeholder naming its subject until one arrives. Set `image` to a
-   path to fill one; add `alt` describing what is in it, and `duotone: true`
-   to wash it into the steel accent — the design system's treatment for
-   content imagery, which the school's own photographs do not need. */
+/* The hero. Only photographs the school has actually supplied go in here:
+   an empty slide beside a real one reads as a gallery that failed to load,
+   so the carousel hides its arrows and dots while there is a single slide
+   rather than offering to page through nothing.
+
+   `focus` is the image's object-position under `object-fit: cover`. The
+   frame is wider than this photograph, so the overflow is vertical, and
+   anchoring it to the bottom crops the sky rather than the signboard and
+   the children. `duotone: true` would wash the photograph into the steel
+   accent — the design system's treatment for content imagery, which the
+   school's own photographs do not need. */
 export const carouselSlides = [
-  { caption: 'Science laboratory, Class XI', image: null },
-  { caption: 'Annual sports day, 2026',      image: null },
-  { caption: 'Library reading room',         image: null },
-  { caption: 'Independence Day assembly',    image: null },
+  { caption: 'The school on Taki Road, and students with their drawings',
+    image: 'assets/img/campus-banner.jpg',
+    alt: 'Two photographs side by side: the frontage of Purba Barasat Adarsha Bidyapith on Taki Road with its name board, and students of the school holding up drawings they have made',
+    focus: 'bottom',
+    duotone: false },
 ];
 
 export const carouselIntro = {
