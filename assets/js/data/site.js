@@ -487,8 +487,12 @@ export const admission = {
       streams: [
         {
           id: 'bengali', title: 'Bengali Medium · Class V',
+          /* The school's own notice, converted from the office's .docx. A
+             notice whose href is still '#pdf' has no file behind it yet and
+             the button does not offer to save it. */
           notice: { title: 'Admission Notice — Bengali Medium', titleClosed: 'Bengali Medium Notice 2026–27 (archived)',
-                    meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
+                    meta: 'PDF · 263 KB · Published 1 Nov 2026', metaClosed: 'PDF · 263 KB',
+                    href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
           apply: { label: 'Apply Online — Bengali Medium →', href: 'admission-form.html?medium=bengali' },
         },
         {

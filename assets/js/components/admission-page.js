@@ -18,6 +18,17 @@ import { admission } from '../data/site.js';
  * it keeps its plain `notice` / `apply` pair and needs no data of its own
  * here. The untitled single stream renders exactly the markup it always did.
  */
+/**
+ * Whether a notice has a real file behind it.
+ *
+ * A placeholder href is still '#pdf'; putting `download` on that would save
+ * the admission page itself under the name "pdf", which looks like a working
+ * button right up to the moment the guardian opens the file.
+ */
+function hasFile(notice) {
+  return Boolean(notice.href) && !notice.href.startsWith('#');
+}
+
 function streamsOf(block) {
   return block.streams || [{ notice: block.notice, apply: block.apply }];
 }
@@ -75,7 +86,8 @@ class AdmissionPage extends SiteComponent {
                         <div class="doc-row-meta">${open ? stream.notice.meta : stream.notice.metaClosed}</div>
                       </div>
                     </div>
-                    <a class="btn btn-secondary btn-md" href="${stream.notice.href}">
+                    <a class="btn btn-secondary btn-md" href="${stream.notice.href}"
+                       ${raw(hasFile(stream.notice) ? 'download' : '')}>
                       ${raw(icon('download', 16))}Download
                     </a>
                   </div>

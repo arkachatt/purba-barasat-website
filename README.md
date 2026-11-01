@@ -212,7 +212,15 @@ with a `set*Adapter()` seam. Until those are wired:
   `school.logo`, `about.gallery`, event covers, staff portraits) is `null` and
   renders a hatched placeholder naming its subject. Set a path and the
   placeholder steps aside.
-- **PDFs** — notice, syllabus, merit-list and routine links point at `#pdf`
-  pending the real files.
+- **PDFs** — the Bengali-medium admission notice is real and lives in
+  `assets/pdf/`. The English-medium and Class XI notices, and the syllabus,
+  merit-list and routine links, still point at `#pdf`; a notice whose `href`
+  still starts with `#` gets no `download` attribute, so the button cannot
+  quietly save the admission page under the name "pdf".
+
+  `tools/notice-docx-to-html.py` turns the office's .docx into an A4 page to
+  print to PDF with headless Chrome — see the comment at the top of it. It
+  lifts the text out of the document's XML rather than retyping it, which is
+  what keeps the Bengali exact.
 - **Map** — `contact.map.embed` is `null`, which draws the graph-paper
   placeholder; set it to an embed URL to show a real map.
