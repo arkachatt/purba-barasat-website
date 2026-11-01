@@ -9,7 +9,7 @@
  * school, so it must never depend on a server answering.
  */
 import { config } from '../config.js';
-import { admissionForm, admissionStreams, dmy } from '../data/site.js';
+import { admissionForm, admissionStreams, admissionWindow, dmy } from '../data/site.js';
 
 /* Drafts are per medium: one family applying for two children, one in each
    medium, is an ordinary case, and a shared key would have the second
@@ -37,6 +37,30 @@ export const allFields = (form = admissionForm) =>
  * cannot import this, so the two have to stay honest by being trivial.
  */
 const roman = (klass) => String(klass || '').replace('Class ', '').trim() || '?';
+
+/* ── the admission window ───────────────────────────────────────────────── */
+
+/** Raised when something tries to submit outside the published window. */
+export class AdmissionClosedError extends Error {}
+
+/**
+ * Where `now` falls against the window the notice publishes: 'before' while
+ * the form has not opened, 'open' while it accepts submissions, 'after' once
+ * it has closed.
+ *
+ * Both ends are compared as instants, so the office's +05:30 deadline is the
+ * same moment everywhere. Only the clock on the applicant's own device can be
+ * wrong, which is why Code.gs checks the window again on the server — that is
+ * the copy that decides whether a row is written.
+ */
+export function admissionWindowState(now = new Date()) {
+  const at = now.getTime();
+  if (at < Date.parse(admissionWindow.opens)) return 'before';
+  if (at >= Date.parse(admissionWindow.closes)) return 'after';
+  return 'open';
+}
+
+export const admissionIsOpen = (now) => admissionWindowState(now) === 'open';
 
 /* ── validation ─────────────────────────────────────────────────────────── */
 
@@ -241,6 +265,13 @@ export function setSubmitAdapter(next) { submitAdapter = next; }
  * must still be able to produce the PDF when the network is down.
  */
 export async function submitApplication({ data, clientRef, medium }) {
+  /* The form freezes itself outside the window, so reaching this is either a
+     tab left open across the deadline or a hand-made request. Either way no
+     receipt is minted and no draft is cleared. */
+  if (!admissionIsOpen()) {
+    throw new AdmissionClosedError(`The admission form is ${admissionWindowState()} its window.`);
+  }
+
   let result;
   try {
     result = await submitAdapter({ data, clientRef, medium });

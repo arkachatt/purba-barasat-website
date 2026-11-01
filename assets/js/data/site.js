@@ -87,6 +87,9 @@ export const headerStrip = {
 
 /** Primary navigation. `children` turns an item into a dropdown / drawer group. */
 export const navigation = [
+  /* The crest already links home, but only someone who has met that
+     convention knows it does. A named item costs one slot on the bar. */
+  { label: 'Home',              bn: 'হোম',                  href: 'index.html' },
   { label: 'About Us',          bn: 'আমাদের সম্পর্কে',       href: 'about.html' },
   { label: "From HM's Desk",    bn: 'প্রধান শিক্ষকের কলম',    href: 'hm.html' },
   { label: 'Teachers',          bn: 'শিক্ষকমণ্ডলী',          href: 'teachers.html',
@@ -515,6 +518,30 @@ export const students = {
  * nothing else needs touching.
  */
 export const admissionClosedClasses = ['Class IX'];
+
+/**
+ * When the online form accepts a submission, from the notice: the form opens
+ * on 5 November 2026 and closes at midnight at the end of 25 November 2026,
+ * both days included, exactly as the notice prints the dates.
+ *
+ * The offsets are written out, so the deadline is the school office's own
+ * clock rather than whatever clock the applicant's device is set to. A
+ * guardian applying from abroad, or from a phone with the wrong time zone,
+ * gets the same closing moment as one standing outside the office.
+ *
+ * Outside the window the form is shown but frozen — every field disabled and
+ * a panel saying when it opens — rather than hidden, so a guardian can read
+ * what will be asked and come back prepared.
+ */
+export const admissionWindow = {
+  opens: '2026-11-05T00:00:00+05:30',
+  /* Midnight at the END of the 25th: the whole of the last day counts. */
+  closes: '2026-11-26T00:00:00+05:30',
+  opensLabel: '5 November 2026',
+  closesLabel: '25 November 2026',
+  /* What the office still accepts once the online form has closed. */
+  counterLabel: '13 to 28 November 2026, 11:30–13:00',
+};
 
 /**
  * The window of birth dates each class accepts, as the school's two notices

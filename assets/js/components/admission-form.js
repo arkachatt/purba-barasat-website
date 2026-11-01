@@ -19,10 +19,10 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { admissionStreams, formFor } from '../data/site.js';
+import { admissionStreams, admissionWindow, formFor } from '../data/site.js';
 import {
   validateAll, allFields, loadDraft, saveDraft, clearDraft, draftReference,
-  newClientRef, submitApplication, saveSubmission,
+  newClientRef, submitApplication, saveSubmission, admissionWindowState,
 } from '../services/admission.js';
 import { downloadApplicationPdf, loadJsPdf } from '../services/pdf.js';
 
@@ -71,6 +71,31 @@ class AdmissionForm extends SiteComponent {
 
   /* ── markup ───────────────────────────────────────────────────────────── */
 
+  /** 'before' | 'open' | 'after', read once per render. */
+  get windowState() { return admissionWindowState(); }
+  get frozen() { return this.windowState !== 'open'; }
+
+  /**
+   * The panel above a frozen form. The dates are the notice's own, and the
+   * closed state points at the office counter rather than stopping dead —
+   * printed forms are still taken there after the online form shuts.
+   */
+  renderWindowNotice() {
+    const before = this.windowState === 'before';
+    return html`
+      <state-alert tone="status" icon="${before ? 'calendar' : 'info'}"
+                   heading="${before
+                     ? `The form opens on ${admissionWindow.opensLabel}`
+                     : `Online applications closed on ${admissionWindow.closesLabel}`}">
+        ${before
+          ? html`Please come back on ${admissionWindow.opensLabel}. Every question is below so
+                 you can see what will be asked and have the papers ready, but nothing can be
+                 filled in or sent until the form opens.`
+          : html`The online form closed at midnight on ${admissionWindow.closesLabel}. The school
+                 office counter takes printed forms and documents ${admissionWindow.counterLabel}.`}
+      </state-alert>`;
+  }
+
   render() {
     if (!this.medium) return this.renderChooser();
 
@@ -90,6 +115,8 @@ class AdmissionForm extends SiteComponent {
         </div>
       </div>
 
+      ${when(this.frozen, () => this.renderWindowNotice())}
+
       <div class="form-shell">
         <aside class="form-aside">
           <p class="form-aside-intro">${form.intro}</p>
@@ -105,7 +132,7 @@ class AdmissionForm extends SiteComponent {
 
         <form class="form-panel blueprint" novalidate>
           ${each(form.groups, (group) => html`
-            <fieldset class="form-group">
+            <fieldset class="form-group" ${raw(this.frozen ? 'disabled' : '')}>
               <legend>${group.title} <span class="bn">/ ${group.titleBn}</span></legend>
               ${when(group.note, () => html`<p class="form-group-note">${group.note}</p>`)}
               <div class="form-grid">
@@ -114,7 +141,8 @@ class AdmissionForm extends SiteComponent {
             </fieldset>`)}
 
           <label class="radio declaration">
-            <input type="checkbox" data-declare ${raw(this.declared ? 'checked' : '')}>
+            <input type="checkbox" data-declare ${raw(this.declared ? 'checked' : '')}
+                   ${raw(this.frozen ? 'disabled' : '')}>
             <span class="dot"></span>${form.declaration}
           </label>
 
@@ -126,15 +154,25 @@ class AdmissionForm extends SiteComponent {
                when it was last saved, and Discard draft wipes it. -->
           <div class="form-actions">
             <div class="form-actions-main">
-              <button type="submit" class="btn btn-primary" data-submit>
-                ${raw(icon('download', 16))}${form.submitLabel}
+              <button type="submit" class="btn btn-primary" data-submit
+                      ${raw(this.frozen ? 'disabled' : '')}>
+                ${raw(icon('download', 16))}${this.frozen
+                  ? (this.windowState === 'before'
+                      ? `Opens ${admissionWindow.opensLabel}`
+                      : 'Online applications closed')
+                  : form.submitLabel}
               </button>
             </div>
           </div>
           <p class="form-busy" data-busy role="status" aria-live="polite"></p>
           <p class="form-foot-note">
-            Submitting downloads a PDF of this form. Print it, sign it, and bring it to the
-            school office with the original documents.
+            ${this.frozen
+              ? (this.windowState === 'before'
+                  ? html`This form is read-only until it opens; nothing typed into it would be kept.`
+                  : html`This form is read-only now that it has closed; nothing typed into it
+                         would be kept.`)
+              : html`Submitting downloads a PDF of this form. Print it, sign it, and bring it to
+                     the school office with the original documents.`}
           </p>
         </form>
       </div>`;
@@ -306,6 +344,10 @@ class AdmissionForm extends SiteComponent {
 
   async submit() {
     if (this.submitting || !this.declared) return;
+    /* A tab left open across either edge of the window: re-render, which
+       freezes the fields and explains, rather than posting into a closed
+       register. */
+    if (this.frozen) { this.update(); return; }
 
     this.errors = validateAll(this.data, this.form);
     if (Object.keys(this.errors).length) {
@@ -322,9 +364,19 @@ class AdmissionForm extends SiteComponent {
     const pdfReady = loadJsPdf().catch(() => null);
 
     this.setBusy('Sending your details to the school…');
-    const receipt = await submitApplication({
-      data: this.data, clientRef: this.clientRef, medium: this.medium,
-    });
+    let receipt;
+    try {
+      receipt = await submitApplication({
+        data: this.data, clientRef: this.clientRef, medium: this.medium,
+      });
+    } catch {
+      /* The only thing submitApplication refuses outright is a closed
+         window, and the clock can cross it between the click and here. */
+      this.submitting = false;
+      this.setBusy('');
+      this.update();
+      return;
+    }
 
     this.setBusy('Building your application form…');
     try {

@@ -16,6 +16,27 @@ const SHEET_NAME = 'Applications';
 const SESSION = '27';
 
 /**
+ * When the online form accepts a submission, from the school's notice: the
+ * 5th to the 25th of November 2026, both days included, so the close is
+ * midnight at the end of the 25th.
+ *
+ * The website freezes its own form outside this window, but that check runs
+ * on the applicant's device and against the applicant's clock. This one
+ * decides whether a row is written, and must stay in step with
+ * `admissionWindow` in assets/js/data/site.js.
+ */
+const WINDOW_OPENS = new Date('2026-11-05T00:00:00+05:30');
+const WINDOW_CLOSES = new Date('2026-11-26T00:00:00+05:30');
+
+/** 'before' while it has not opened, 'open', or 'after' once it has closed. */
+function windowState_(now) {
+  const at = (now || new Date()).getTime();
+  if (at < WINDOW_OPENS.getTime()) return 'before';
+  if (at >= WINDOW_CLOSES.getTime()) return 'after';
+  return 'open';
+}
+
+/**
  * Two registers, one script.
  *
  * Each medium has its own spreadsheet and its own serial counter, so the
@@ -84,6 +105,15 @@ function doPost(e) {
     const stream = STREAMS[mediumId];
     if (!stream) return json_({ ok: false, error: 'unknown medium: ' + mediumId });
 
+    /* Outside the published window nothing is written and no reference is
+       handed out — not for a tab left open across the deadline, and not for
+       a request made by hand. The website's own freeze is the courtesy; this
+       is the rule. */
+    const state = windowState_();
+    if (state !== 'open') {
+      return json_({ ok: false, error: 'admission window ' + state, windowState: state });
+    }
+
     const sheet = getSheet_(stream);
 
     /* A retry after a dropped connection carries the same clientRef — update
@@ -118,7 +148,14 @@ function doPost(e) {
 function doGet() {
   const streams = {};
   for (const id in STREAMS) streams[id] = STREAMS[id].code;
-  return json_({ ok: true, service: 'pbab-admission', columns: COLUMNS.length, streams: streams });
+  return json_({
+    ok: true, service: 'pbab-admission', columns: COLUMNS.length, streams: streams,
+    window: {
+      state: windowState_(),
+      opens: WINDOW_OPENS.toISOString(),
+      closes: WINDOW_CLOSES.toISOString(),
+    },
+  });
 }
 
 /**
