@@ -139,7 +139,11 @@ export const navigation = [
       { label: 'Managing Committee', bn: 'পরিচালন সমিতি', href: 'administration.html#managing-committee' },
       { label: 'Finance Committee', bn: 'অর্থ সমিতি',      href: 'administration.html#finance-committee' },
     ] },
-  { label: 'Admission',         bn: 'ভর্তি',                href: 'admission.html' },
+  { label: 'Admission',         bn: 'ভর্তি',                href: 'admission.html',
+    children: [
+      { label: 'Admission 2027', bn: 'ভর্তি ২০২৭',   href: 'admission.html' },
+      { label: 'Fee Structure',  bn: 'ফি কাঠামো',    href: 'fee-structure.html' },
+    ] },
   { label: 'Academic Calendar', bn: 'শিক্ষাবর্ষ পঞ্জিকা',     href: 'calendar.html',
     feature: 'calendar',
     children: [
