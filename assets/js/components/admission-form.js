@@ -52,6 +52,15 @@ class AdmissionForm extends SiteComponent {
       if (field.value !== undefined) this.data[field.name] = field.value;
       else if (field.type === 'select' && field.options) this.data[field.name] = field.options[0];
     });
+    /* A draft saved while a class was still open can carry one that has since
+       been closed. The select cannot show a disabled option as chosen, so
+       move the answer to where the select actually is — otherwise the form
+       would reject a class the applicant can no longer see. */
+    allFields(this.form).forEach((field) => {
+      const closed = field.disabledOptions || [];
+      if (!closed.includes(this.data[field.name])) return;
+      this.data[field.name] = field.value ?? field.options.find((o) => !closed.includes(o));
+    });
     /* Carried with the answers so the receipt, and therefore the PDF and the
        confirmation page, know their own medium without being told again. */
     this.data.medium = this.medium;
@@ -160,11 +169,20 @@ class AdmissionForm extends SiteComponent {
     const error = this.errors[field.name];
 
     const control = () => {
-      if (field.type === 'select') return html`
-        <select class="input" id="${id}" name="${field.name}" ${raw(field.options.length === 1 ? 'disabled' : '')}>
-          ${each(field.options, (option) => html`
-            <option ${raw(option === value ? 'selected' : '')}>${option}</option>`)}
-        </select>`;
+      /* A single-option select is read-only; individual options can also be
+         greyed (`disabledOptions`) for a class the school lists but is not
+         admitting to this session. The option keeps its plain value, so if it
+         is ever opened the stored answer does not change shape. */
+      if (field.type === 'select') {
+        const closed = field.disabledOptions || [];
+        return html`
+          <select class="input" id="${id}" name="${field.name}"
+                  ${raw(field.options.length === 1 ? 'disabled' : '')}>
+            ${each(field.options, (option) => closed.includes(option)
+              ? html`<option value="${option}" disabled>${option} — not this session</option>`
+              : html`<option ${raw(option === value ? 'selected' : '')}>${option}</option>`)}
+          </select>`;
+      }
 
       if (field.type === 'textarea') return html`
         <textarea class="input" id="${id}" name="${field.name}"

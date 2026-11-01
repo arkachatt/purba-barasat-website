@@ -110,6 +110,22 @@ export const rules = {
     return null;
   },
   /**
+   * A class the school lists but is not admitting to this session.
+   *
+   * The dropdown already greys it, so this catches only the two ways round
+   * that: a draft saved before the class was closed, and a tampered select.
+   * Both would otherwise file a child into a register the office is not
+   * reading.
+   */
+  classOffered(value, data) {
+    const stream = admissionStreams[data.medium] || admissionStreams.bengali;
+    if ((stream.notYet || []).includes(value)) {
+      return `${value} is not being admitted this session. Choose another class.`;
+    }
+    return null;
+  },
+
+  /**
    * The class passed has to be the one below the class applied for.
    *
    * It is a plain list rather than a select that follows the class above it,

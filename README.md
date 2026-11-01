@@ -113,8 +113,12 @@ Three states every admin-updated site hits are real components, not decoration:
 
 It serves **two streams**, Bengali and English medium, chosen by `?medium=` on
 the URL. They share all thirty-one questions and differ only in the classes on
-offer — Bengali admits to Class V, English to Classes V–IX — which `formFor()`
-patches in. Each writes to its **own spreadsheet with its own serial
+offer — Bengali admits to Class V, English to Classes V–VIII — which
+`formFor()` patches in. English lists Class IX too, greyed and unselectable:
+`admissionClosedClasses` in `data/site.js` is the one place that says which
+classes are listed but not admitted this session, and it also keeps the class
+out of the eligibility line published on the admission page. Delete a class
+from that array to open it. Each writes to its **own spreadsheet with its own serial
 numbering**, so both run their own 00001, and references carry the medium and
 the class: `PBAB/27/B/V/00001`, `PBAB/27/E/VII/00002`. With no usable
 `?medium=` the page offers a choice rather than guessing, because a child

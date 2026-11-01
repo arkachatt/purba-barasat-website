@@ -129,7 +129,7 @@ export const carouselIntro = {
 export const admissionBanner = {
   active: true,
   chip: 'Open now',
-  title: 'Admission open for Classes V–IX — Session 2027–28',
+  title: 'Admission open for Classes V–VIII — Session 2027–28',
   sub: 'ভর্তি চলছে · Bengali and English medium · Forms accepted 5–25 January 2027',
   cta: { label: 'Go to Admission', href: 'admission.html' },
 };
@@ -429,6 +429,15 @@ export const students = {
  * admission page is built from them below, so the page cannot drift out of
  * step with what the form actually accepts.
  */
+/**
+ * Classes that have a rule and a row in the form but are not admitted this
+ * session. They appear greyed and unselectable in the class dropdown, are
+ * refused on submit, and are left out of the eligibility line published on
+ * the admission page. The year the school opens one, delete it from here and
+ * nothing else needs touching.
+ */
+export const admissionClosedClasses = ['Class IX'];
+
 export const admissionAgeRanges = {
   'Class V':    { min: 10, max: 14 },
   'Class VI':   { min: 11, max: 15 },
@@ -438,7 +447,8 @@ export const admissionAgeRanges = {
 };
 
 const ageEligibilityLine = (() => {
-  const names = Object.keys(admissionAgeRanges);
+  const names = Object.keys(admissionAgeRanges)
+    .filter((klass) => !admissionClosedClasses.includes(klass));
   const first = names[0];
   const last = names[names.length - 1];
   return `Age as on 1 January 2027: ${admissionAgeRanges[first].min}+ for ${first}, ` +
@@ -466,8 +476,8 @@ export const admission = {
          lottery are the same for both, so saying them twice would only be two
          places to keep in step. What differs — the classes on offer, the
          notice and the form it opens — hangs off `streams`. */
-      id: 'A', kicker: 'Block A', title: 'Classes V–IX', open: true,
-      sub: 'পঞ্চম থেকে নবম শ্রেণি · Bengali and English medium · Age as on 1 Jan 2027',
+      id: 'A', kicker: 'Block A', title: 'Classes V–VIII', open: true,
+      sub: 'পঞ্চম থেকে অষ্টম শ্রেণি · Bengali and English medium · Age as on 1 Jan 2027',
       subClosed: 'Eligibility and documents stay published for reference',
       rules: [
         ageEligibilityLine,
@@ -482,7 +492,7 @@ export const admission = {
           apply: { label: 'Apply Online — Bengali Medium →', href: 'admission-form.html?medium=bengali' },
         },
         {
-          id: 'english', title: 'English Medium · Classes V–IX',
+          id: 'english', title: 'English Medium · Classes V–VIII',
           notice: { title: 'Admission Notice — English Medium', titleClosed: 'English Medium Notice 2026–27 (archived)',
                     meta: 'PDF · 240 KB · Published 20 Dec 2026', metaClosed: 'PDF · 240 KB', href: '#pdf' },
           apply: { label: 'Apply Online — English Medium →', href: 'admission-form.html?medium=english' },
@@ -542,8 +552,13 @@ export const admissionStreams = {
     label: 'English Medium', labelBn: 'ইংরেজি মাধ্যম',
     kicker: 'Admission · English medium · Session 2027–28',
     title: 'Online Application — English Medium',
+    /* Class IX stays in the list, greyed, rather than being removed: the
+       school means to admit to it, and `admissionClosedClasses` is the one
+       place that says not yet. The two arrays stay index-aligned, which is
+       how `rules.lastClass` pairs them. */
     classes: ['Class V', 'Class VI', 'Class VII', 'Class VIII', 'Class IX'],
     lastClasses: ['Class IV', 'Class V', 'Class VI', 'Class VII', 'Class VIII'],
+    notYet: admissionClosedClasses,
   },
 };
 
@@ -579,7 +594,8 @@ export const admissionForm = {
       fields: [
         /* `options` for this field and for lastClass are filled in by
            formFor() — they are the only part of the schema a stream changes. */
-        { name: 'class', label: 'Class applying for', pdfLabel: 'Class', type: 'select', required: true, half: true },
+        { name: 'class', label: 'Class applying for', pdfLabel: 'Class', type: 'select', required: true, half: true,
+          rule: 'classOffered' },
         { name: 'nameEn', label: 'Name of student (English)', pdfLabel: 'Name of student',
           type: 'text', required: true, half: true,
           placeholder: 'As on birth certificate', requiredMessage: "Enter the student's name." },
@@ -697,7 +713,11 @@ export function formFor(streamId) {
       ...group,
       fields: group.fields.map((field) => {
         if (field.name === 'class') {
-          return { ...field, options: stream.classes, value: stream.classes[0] };
+          /* `disabledOptions` greys a class the school is not admitting to
+             this session; the default is the first class it IS admitting. */
+          const notYet = stream.notYet || [];
+          const open = stream.classes.filter((klass) => !notYet.includes(klass));
+          return { ...field, options: stream.classes, disabledOptions: notYet, value: open[0] };
         }
         if (field.name === 'lastClass') return { ...field, options: stream.lastClasses };
         return field;
