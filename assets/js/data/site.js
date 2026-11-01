@@ -339,7 +339,9 @@ export const hmLetter = {
  *
  * Photographs, telephone numbers and email addresses come from the school's
  * own consent form, and only where that person ticked yes to that particular
- * item: 21 photographs, 16 email addresses, 7 mobile numbers. Several people
+ * item: 21 photographs, 16 email addresses, 7 mobile numbers. Sri Prasanta
+ * Mridha's portrait came to the office separately and is the one entry here
+ * with no row in that form. Several people
  * sent a photograph while refusing one or both of the contact details, and
  * their row shows a dash — that is the answer they gave, not missing data.
  * Nobody who did not fill the form in appears here with anything.
@@ -370,7 +372,7 @@ export const staff = [
   { sl: 19, name: 'Smt. Shampa Das', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Food & Nutrition) (1st Class), B.Ed. (1st Class)', photo: 'assets/img/staff/shampa-das.jpg' },
   { sl: 20, name: 'Smt. Nabomita Howlader', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Human Development), B.Ed. (First Class)', email: 'mitanabo84@gmail.com', photo: 'assets/img/staff/nabomita-howlader.jpg' },
   { sl: 21, name: 'Smt. Kumkum Mandal Basak', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Economics) (1st Class), B.Ed. (First Class), M.Phil.', photo: null },
-  { sl: 22, name: 'Sri Prasanta Mridha', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Chemistry) (1st Class), M.A. (Education) (1st Class), B.Ed. (First Class)', photo: null },
+  { sl: 22, name: 'Sri Prasanta Mridha', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Chemistry) (1st Class), M.A. (Education) (1st Class), B.Ed. (First Class)', photo: 'assets/img/staff/prasanta-mridha.jpg' },
   { sl: 23, name: 'Sri Sudarsan Pramanik', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed. (First Class)', photo: null },
   { sl: 24, name: 'Sri Rajat Subhra Karmakar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Mathematics) (1st Class), B.Ed. (First Class)', photo: null },
   { sl: 25, name: 'Sri Subhashis Ghorui', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Pure Science), D.El.Ed. (1st Class)', photo: null },
