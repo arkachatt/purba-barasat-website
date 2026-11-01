@@ -393,6 +393,11 @@ class AdmissionForm extends SiteComponent {
   }
 
   persist() {
+    /* The foot note promises that nothing typed into a frozen form is kept,
+       and a disabled field cannot be typed into anyway — so a change event
+       arriving while frozen is something other than a guardian filling the
+       form in, and is not worth storing a child's Aadhaar for. */
+    if (this.frozen) return;
     this.savedAt = Date.now();
     saveDraft(this.medium, { data: this.data, ref: this.ref, clientRef: this.clientRef });
     this.paintDraftNote();
