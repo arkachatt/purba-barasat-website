@@ -36,7 +36,7 @@ class StudentStrength extends SiteComponent {
           <div class="blueprint strength-bar">
             <div>
               <div class="kicker kicker-sm">Total enrolment</div>
-              <div class="strength-total-sub">${students.sections} sections · as on 01 Jul 2026</div>
+              <div class="strength-total-sub">${students.sections} sections · ${students.asOnShort}</div>
             </div>
             <div class="strength-bar-figure">${students.total}</div>
           </div>
@@ -49,6 +49,7 @@ class StudentStrength extends SiteComponent {
               ${each(klass.sections, ([section, count]) => html`
                 <div class="strength-row"><span>Section ${section}</span><span>${count}</span></div>`)}
             </section>`)}
+          <div class="strength-note">${students.note}</div>
           <div class="strength-note">${students.privacyNote}</div>
         </div>
 
@@ -58,11 +59,7 @@ class StudentStrength extends SiteComponent {
             <div class="strength-total-figure">${students.total}</div>
             <div class="strength-total-sub">${students.summary}</div>
           </div>
-          <div class="blueprint strength-streams">
-            <div class="kicker kicker-sm">Streams in Class XI–XII</div>
-            ${each(Object.entries(students.streams), ([stream, subjects]) => html`
-              <p>${stream}: ${subjects}</p>`)}
-          </div>
+          <p class="strength-aside-note">${students.note}</p>
           ${when(features.login, () => html`
             <a class="btn btn-secondary btn-lg" href="login.html">Student portal → Log In</a>`)}
         </aside>

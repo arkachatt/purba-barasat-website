@@ -403,29 +403,44 @@ export const staffCounts = {
   updated: 'As published by the school office',
 };
 
+/* Class-wise enrolment, from the office's own student list in Chalked
+   (admin.chalked.in), pulled class by class on 1 November 2026. Sections the
+   list carries but has no students in — 9-D, 9-E, and all three of Class XII
+   — are left out rather than printed as zeroes.
+
+   The totals below are counted from this table, not typed beside it, and the
+   teacher figure comes from the staff roster. A number published twice is a
+   number that will disagree with itself eventually. */
+const studentClasses = [
+  { name: 'Class V',    sections: [['A', 126], ['B', 125], ['C', 124], ['D', 42]] },
+  { name: 'Class VI',   sections: [['A', 133], ['B', 130], ['C', 124], ['D', 40]] },
+  { name: 'Class VII',  sections: [['A', 130], ['B', 128], ['C', 131], ['D', 37], ['E', 37]] },
+  { name: 'Class VIII', sections: [['A', 116], ['B', 112], ['C', 115], ['D', 6], ['E', 10]] },
+  { name: 'Class IX',   sections: [['A', 128], ['B', 128], ['C', 132]] },
+  { name: 'Class X',    sections: [['A', 102], ['B', 100], ['C', 100]] },
+  { name: 'Class XI',   sections: [['Arts', 162], ['Commerce', 126], ['Science', 131]] },
+];
+
+const sectionCount = studentClasses.reduce((n, klass) => n + klass.sections.length, 0);
+const studentCount = studentClasses.reduce(
+  (n, klass) => n + klass.sections.reduce((sum, [, count]) => sum + count, 0), 0);
+const asOnShort = 'as on 01 Nov 2026';
+
 export const students = {
   kicker: '04 · Class-wise strength',
   title: 'Students',
   titleBn: 'ছাত্রছাত্রী',
-  asOn: 'Session 2026–27 · as on 01 Jul 2026',
+  asOnShort,
+  asOn: `Session 2026–27 · ${asOnShort}`,
   privacyNote: 'Counts only — no personal data is published.',
-  total: '1,104',
-  summary: 'Classes V–XII · 22 sections · 38 teachers',
-  sections: 22,
-  classes: [
-    { name: 'Class V',    sections: [['A', 48], ['B', 46], ['C', 45]] },
-    { name: 'Class VI',   sections: [['A', 47], ['B', 44], ['C', 43]] },
-    { name: 'Class VII',  sections: [['A', 45], ['B', 45], ['C', 41]] },
-    { name: 'Class VIII', sections: [['A', 46], ['B', 44], ['C', 40]] },
-    { name: 'Class IX',   sections: [['A', 50], ['B', 49], ['C', 47]] },
-    { name: 'Class X',    sections: [['A', 52], ['B', 51], ['C', 48]] },
-    { name: 'Class XI',   sections: [['A (Science)', 58], ['B (Arts)', 72]] },
-    { name: 'Class XII',  sections: [['A (Science)', 54], ['B (Arts)', 69]] },
-  ],
-  streams: {
-    Science: 'Physics, Chemistry, Mathematics, Biology, Computer Application',
-    Arts: 'History, Geography, Political Science, Philosophy, Sanskrit, Education',
-  },
+  total: studentCount.toLocaleString('en-IN'),
+  summary: `Classes V–XI · ${sectionCount} sections · ${staffCounts.teaching} teachers`,
+  /* Said plainly rather than left as a gap between "V–XII" everywhere else
+     on the site and "V–XI" here. */
+  note: 'Class XII is not counted here. The office\'s list for this session ' +
+    'carries its Arts, Commerce and Science sections but has no students in them.',
+  sections: sectionCount,
+  classes: studentClasses,
 };
 
 /* ══════════════════════════════════════════════════════════════════════════

@@ -23,9 +23,9 @@
   font-size: 56px; line-height: 1; margin: 6px 0 2px;
 }
 .strength-total-sub { font-size: 14px; color: var(--color-neutral-700); }
-.strength-streams { padding: 20px; font-size: 15px; line-height: 1.5; }
-.strength-streams .kicker { margin-bottom: 8px; }
-.strength-streams p { margin: 0 0 6px; }
+.strength-aside-note {
+  margin: 0; font-size: 14px; line-height: 1.5; color: var(--color-neutral-700);
+}
 
 /* — phone: a summary bar, then one panel per class — */
 .strength-cards { display: none; flex-direction: column; gap: 18px; }
