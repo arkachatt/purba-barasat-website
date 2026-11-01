@@ -127,6 +127,15 @@ export const navigation = [
       { label: 'Class-wise Strength', bn: 'শ্রেণিভিত্তিক',   href: 'students.html' },
       { label: 'Student Portal',      bn: 'পোর্টাল',          href: 'login.html', feature: 'login' },
     ] },
+  { label: 'Administration',    bn: 'প্রশাসন',               href: 'administration.html',
+    children: [
+      /* The hash picks the body — see `bodyFromHash` in
+         components/administration-bodies.js. All three carry one, so every
+         item works from the Administration page itself. */
+      { label: 'Academic Council',  bn: 'শিক্ষা পরিষদ',   href: 'administration.html#academic-council' },
+      { label: 'Managing Committee', bn: 'পরিচালন সমিতি', href: 'administration.html#managing-committee' },
+      { label: 'Finance Committee', bn: 'অর্থ সমিতি',      href: 'administration.html#finance-committee' },
+    ] },
   { label: 'Admission',         bn: 'ভর্তি',                href: 'admission.html' },
   { label: 'Academic Calendar', bn: 'শিক্ষাবর্ষ পঞ্জিকা',     href: 'calendar.html',
     feature: 'calendar',
@@ -1109,6 +1118,33 @@ export const events = [
     ],
   },
 ];
+
+/**
+ * The three bodies that run the school, each a list of names.
+ *
+ * `members` is empty until the office sends the lists; an empty one renders
+ * the "not updated yet" panel rather than an empty frame, and filling one in
+ * is adding entries here and nothing else. A member is
+ * `{ name, post }` — `post` is their place on that body (Chairman,
+ * Secretary, Teacher Representative, Guardian Representative…), not their
+ * job at the school, and may be left out.
+ */
+export const administration = {
+  kicker: '09 · Administration',
+  title: 'Administration',
+  titleBn: 'প্রশাসন',
+  meta: 'The three bodies that run the school|Names as the school office publishes them.',
+  emptyHeading: 'Not updated yet',
+  emptyBody: 'The school office has not published this list yet. Please come back later.',
+  bodies: [
+    { id: 'academic-council', label: 'Academic Council', bn: 'শিক্ষা পরিষদ',
+      short: 'Academic', icon: 'graduation-cap', members: [] },
+    { id: 'managing-committee', label: 'Managing Committee', bn: 'পরিচালন সমিতি',
+      short: 'Managing', icon: 'shield', members: [] },
+    { id: 'finance-committee', label: 'Finance Committee', bn: 'অর্থ সমিতি',
+      short: 'Finance', icon: 'file-text', members: [] },
+  ],
+};
 
 export const noticeBoard = {
   kicker: 'Notice board',

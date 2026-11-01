@@ -25,6 +25,7 @@ import './components/admission-page.js';
 import './components/admission-form.js';
 import './components/admission-confirmation.js';
 import './components/academic-calendar.js';
+import './components/administration-bodies.js';
 import './components/board-results.js';
 import './components/event-list.js';
 import './components/event-detail.js';

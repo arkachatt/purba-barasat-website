@@ -1,0 +1,39 @@
+/* ==========================================================================
+   administration.css — <administration-bodies>. Three lists of names behind
+   the tab rail that calendar.css defines; only the list itself is here.
+   ========================================================================== */
+
+.body-panel[hidden] { display: none; }
+.body-panel { margin-top: 24px; }
+
+.body-list-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 16px 20px; border-bottom: 1px solid var(--color-divider);
+}
+.body-list-name {
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight);
+  font-size: 20px;
+}
+.body-list-count { font-size: 14px; color: var(--color-neutral-700); }
+
+.body-members { margin: 0; padding: 0; list-style: none; counter-reset: member; }
+.body-members li {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  padding: 12px 20px 12px 52px; position: relative;
+  border-bottom: 1px solid var(--color-divider);
+}
+.body-members li:last-child { border-bottom: 0; }
+/* The serial is drawn rather than typed, so the office's list can be pasted
+   in as plain names and still read as a numbered record. */
+.body-members li::before {
+  counter-increment: member; content: counter(member);
+  position: absolute; left: 20px;
+  font-variant-numeric: tabular-nums; color: var(--color-neutral-600);
+}
+.body-member-name { font-size: 17px; font-weight: 500; }
+.body-member-post { font-size: 14px; color: var(--color-neutral-700); text-align: right; }
+
+@media (max-width: 767px) {
+  .body-members li { flex-direction: column; gap: 2px; padding-left: 44px; }
+  .body-member-post { text-align: left; }
+}

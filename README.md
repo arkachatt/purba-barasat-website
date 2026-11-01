@@ -15,6 +15,7 @@ ES modules need HTTP — opening `index.html` over `file://` will not work.
 | Page | File | Design |
 |---|---|---|
 | Home | `index.html` | 01 · 1a–1d |
+| Administration | `administration.html` | — |
 | Log In gateway | `login.html` | 01 · 1e–1f |
 | About Us | `about.html` | 02 · 1a–1b |
 | From HM's Desk | `hm.html` | 02 · 1c–1d |
