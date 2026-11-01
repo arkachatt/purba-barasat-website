@@ -101,17 +101,19 @@ for child in body:
 open(OUT, 'w', encoding='utf-8').write("""<!DOCTYPE html>
 <html lang="bn"><head><meta charset="utf-8"><title>notice</title><style>
   /* Sized so the longest notice so far — English medium, four classes in the
-     date-of-birth table — still lands on one page. */
-  @page { size: A4; margin: 12mm 14mm; }
+     date-of-birth table and the selection-by-lottery section — still lands on
+     one page. Tightened once already when that section was added; the next
+     notice that grows will need the body font dropped to 9.5pt. */
+  @page { size: A4; margin: 10mm 14mm; }
   * { box-sizing: border-box; }
   body { margin: 0; font-family: "Kohinoor Bangla", "Noto Sans Bengali", sans-serif;
-         font-size: 10pt; line-height: 1.45; color: #000; }
-  .letterhead { display: block; width: 100%; margin: 0 0 8px; }
-  p { margin: 0 0 6px; text-align: justify; }
+         font-size: 10pt; line-height: 1.38; color: #000; }
+  .letterhead { display: block; width: 100%; margin: 0 0 6px; }
+  p { margin: 0 0 5px; text-align: justify; }
   p.center { text-align: center; }
-  .memo { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 11px;
-          border-bottom: 1px solid #000; padding-bottom: 5px; text-align: left; }
-  table { width: 100%; border-collapse: collapse; margin: 5px 0 11px; }
+  .memo { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 9px;
+          border-bottom: 1px solid #000; padding-bottom: 4px; text-align: left; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 9px; }
   table.grid th, table.grid td { border: 1px solid #000; padding: 4px 8px; vertical-align: top;
                                  text-align: left; }
   table.grid th { background: #ececec; }

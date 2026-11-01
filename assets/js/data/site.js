@@ -492,16 +492,15 @@ export const admission = {
       id: 'A', kicker: 'Block A', title: 'Classes V–VIII', open: true,
       sub: 'পঞ্চম থেকে অষ্টম শ্রেণি · Bengali and English medium · Session 2027',
       subClosed: 'Eligibility and documents stay published for reference',
-      /* Every line below the first comes from the school's own notice. The
-         lottery line does not — it predates the notice and the notice is
-         silent on how selection is made, so check it before the next one. */
+      /* Every line comes from the school's own notice, the lottery one
+         included — the notice now carries a selection section of its own. */
       rules: [
         'Online form 5–25 November 2026 · printed form and documents at the office 13–28 November 2026, 11:30–13:00',
         dobEligibilityLine,
-        'Application fee ₹100, paid at the office when the printed form is submitted',
+        'Application fee ₹100 — a processing charge, paid at the school office counter when the printed form is submitted, and not refundable',
         'Documents (photocopies): the printed application with a recent passport photo, Aadhaar of student and guardian (self-attested), digital birth certificate, caste certificate if SC/ST/OBC, and the first page of the bank passbook showing the account number and IFSC',
         'Bring the original documents for verification. Incomplete or late applications are not accepted',
-        'Selection by lottery where applications exceed seats (per state rules)',
+        'Where applications exceed seats, selection is by lottery. The dates of the lottery, of its result and of the final admission process are announced in due course',
       ],
       streams: [
         {
@@ -510,14 +509,14 @@ export const admission = {
              notice whose href is still '#pdf' has no file behind it yet and
              the button does not offer to save it. */
           notice: { title: 'Admission Notice — Bengali Medium', titleClosed: 'Bengali Medium Notice 2026–27 (archived)',
-                    meta: 'PDF · 263 KB · Published 1 Nov 2026', metaClosed: 'PDF · 263 KB',
+                    meta: 'PDF · 266 KB · Published 1 Nov 2026', metaClosed: 'PDF · 266 KB',
                     href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
           apply: { label: 'Apply Online — Bengali Medium →', href: 'admission-form.html?medium=bengali' },
         },
         {
           id: 'english', title: 'English Medium · Classes V–VIII',
           notice: { title: 'Admission Notice — English Medium', titleClosed: 'English Medium Notice 2026–27 (archived)',
-                    meta: 'PDF · 211 KB · Published 1 Nov 2026', metaClosed: 'PDF · 211 KB',
+                    meta: 'PDF · 219 KB · Published 1 Nov 2026', metaClosed: 'PDF · 219 KB',
                     href: 'assets/pdf/admission-notice-2027-english-medium.pdf' },
           apply: { label: 'Apply Online — English Medium →', href: 'admission-form.html?medium=english' },
         },
@@ -544,7 +543,7 @@ export const admission = {
   ],
   notes: [
     { heading: 'How it works', text: 'Fill the online form between 5 and 25 November 2026 and download the application PDF it produces. Print it, sign it, and bring it to the office between 13 and 28 November 2026, 11:30–13:00, with the original documents.' },
-    { heading: 'Fees', text: 'Application fee ₹100, paid at the office when the printed form is submitted. Admission fee as per Government of West Bengal norms — payable after selection.' },
+    { heading: 'Fees', text: 'Application fee ₹100 — a processing charge, paid at the school office counter when the printed form is submitted. It is not refundable. Admission fee as per Government of West Bengal norms — payable after selection.' },
     { heading: 'Help', text: 'Office helpline (033) 2552 2928 / (033) 2584 4601, 10:30–16:30 Mon–Sat. Guardians without internet may fill the form at the school office.' },
   ],
 };
@@ -755,7 +754,7 @@ export const admissionConfirmation = {
   next: [
     { title: 'Print', text: 'Your application form has downloaded. Print it and sign it, and keep the reference number safe.' },
     { title: 'Verify', text: 'Bring the printout, the ₹100 application fee and the original documents to the office between 13 and 28 November 2026, 11:30–13:00.' },
-    { title: 'Result', text: 'Selection results, and the lottery where one is needed, are published on the Notice page and on the school notice board.' },
+    { title: 'Result', text: 'Where applications exceed seats, selection is by lottery. Its date, its result and the final admission dates are announced in due course, on the Notice page and on the school notice board.' },
   ],
 };
 
