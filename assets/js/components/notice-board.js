@@ -37,7 +37,7 @@ class NoticeBoard extends SiteComponent {
           <label for="notice-search">Search notices</label>
           <div class="input-wrap">
             <input class="input" id="notice-search" data-search
-                   placeholder="e.g. puja vacation, Class XI, S2 routine…">
+                   placeholder="e.g. admission, Class V, English medium…">
             ${raw(icon('search', 18))}
           </div>
         </div>

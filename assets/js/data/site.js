@@ -134,16 +134,21 @@ export const admissionBanner = {
   cta: { label: 'Go to Admission', href: 'admission.html' },
 };
 
-/** Notices, newest first. `tone` picks the chip: 'accent' highlights, 'neutral' files. */
+/** Notices, newest first. `tone` picks the chip: 'accent' highlights, 'neutral' files.
+ *
+ * Only notices the school has actually issued belong here. Each row links
+ * straight to its PDF rather than to an anchor on notice.html — a guardian on
+ * a phone should reach the document in one tap. The same two notices make up
+ * `noticeBoard.list` below, so the home strip and the notice page cannot drift
+ * apart.
+ */
 export const notices = [
-  { id: 'n1', day: '18 Sep', year: '2026', tag: 'Holiday', tone: 'accent', href: 'notice.html#n1',
-    text: 'Puja vacation: school closed from 14 Oct to 2 Nov 2026. Classes resume 3 Nov.' },
-  { id: 'n2', day: '15 Sep', year: '2026', tag: 'Exam', tone: 'neutral', href: 'notice.html#n2',
-    text: 'Second Summative Evaluation (S2) routine for Classes V–X published.' },
-  { id: 'n3', day: '09 Sep', year: '2026', tag: 'Office', tone: 'neutral', href: 'notice.html#n3',
-    text: 'Class XI registration (WBCHSE) — submit forms to the office by 20 Sep.' },
-  { id: 'n4', day: '02 Sep', year: '2026', tag: 'Meeting', tone: 'neutral', href: 'notice.html#n4',
-    text: 'Parent–teacher meeting for Classes IX & X on Saturday, 12 Sep, 11:00.' },
+  { id: 'adm-2027-bengali', day: '01 Nov', year: '2026', tag: 'Admission', tone: 'accent',
+    href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf',
+    text: 'Admission Notice 2027 — Bengali medium, Class V. Online form 5–25 November 2026.' },
+  { id: 'adm-2027-english', day: '01 Nov', year: '2026', tag: 'Admission', tone: 'accent',
+    href: 'assets/pdf/admission-notice-2027-english-medium.pdf',
+    text: 'Admission Notice 2027 — English medium, Classes V–VIII. Online form 5–25 November 2026.' },
 ];
 
 export const headmaster = {
@@ -970,35 +975,24 @@ export const noticeBoard = {
   kicker: 'Notice board',
   title: 'Notice',
   titleBn: 'বিজ্ঞপ্তি',
-  meta: 'Newest first · 46 notices in 2026|Each notice is a PDF signed by the Headmaster.',
-  declaredTotal: 46,
-  years: ['2026', '2025', '2024', '2023'],
-  categories: ['Holiday', 'Exam', 'Admission', 'Office', 'Meeting'],
+  meta: 'Newest first · 2 notices in 2026|Each notice is a PDF signed by the Headmaster.',
+  /* The count the page prints beside the rows. It is declared rather than
+     derived because the office's older circulars are not on the site yet;
+     when they are loaded it should simply equal `list.length`. */
+  declaredTotal: 2,
+  years: ['2026'],
+  categories: ['Admission'],
+  /* The school's real notices. The two admission notices are the only ones
+     published so far; the home-page strip above shows the same pair. */
   list: [
-    { date: '18 Sep 2026', year: '2026', category: 'Holiday', tone: 'accent',
-      title: 'Puja vacation 2026 — school closed 14 Oct to 2 Nov',
-      ref: 'Ref. PBAB/N/2026/46 · Classes resume Tuesday 3 Nov', pdf: 'PDF · 96 KB', href: '#pdf' },
-    { date: '15 Sep 2026', year: '2026', category: 'Exam', tone: 'neutral',
-      title: 'Second Summative Evaluation (S2) routine, Classes V–X',
-      ref: 'Ref. PBAB/N/2026/45 · 23 Nov – 2 Dec', pdf: 'PDF · 210 KB', href: '#pdf' },
-    { date: '09 Sep 2026', year: '2026', category: 'Office', tone: 'neutral',
-      title: 'Class XI registration (WBCHSE) — forms due 20 Sep',
-      ref: 'Ref. PBAB/N/2026/44 · Submit to the office with 2 photos', pdf: 'PDF · 88 KB', href: '#pdf' },
-    { date: '02 Sep 2026', year: '2026', category: 'Meeting', tone: 'neutral',
-      title: 'Parent–teacher meeting, Classes IX & X — Sat 12 Sep, 11:00',
-      ref: 'Ref. PBAB/N/2026/43 · Assembly hall', pdf: 'PDF · 72 KB', href: '#pdf' },
-    { date: '28 Aug 2026', year: '2026', category: 'Office', tone: 'neutral',
-      title: 'Kanyashree K1/K2 renewal — document submission window',
-      ref: 'Ref. PBAB/N/2026/42 · 1–15 Sep at the office', pdf: 'PDF · 64 KB', href: '#pdf' },
-    { date: '20 Aug 2026', year: '2026', category: 'Exam', tone: 'neutral',
-      title: 'Test examination routine — Class X and Class XII',
-      ref: 'Ref. PBAB/N/2026/41 · 16–27 Nov', pdf: 'PDF · 180 KB', href: '#pdf' },
-    { date: '12 Aug 2026', year: '2026', category: 'Office', tone: 'neutral',
-      title: 'Independence Day programme — attendance compulsory for Classes VIII–XII',
-      ref: 'Ref. PBAB/N/2026/40 · Report by 7:45', pdf: 'PDF · 58 KB', href: '#pdf' },
-    { date: '01 Aug 2026', year: '2026', category: 'Office', tone: 'neutral',
-      title: 'Sabooj Sathi cycle distribution — Class IX list',
-      ref: 'Ref. PBAB/N/2026/39', pdf: 'PDF · 140 KB', href: '#pdf' },
+    { date: '01 Nov 2026', year: '2026', category: 'Admission', tone: 'accent',
+      title: 'Admission Notice 2027 — Bengali Medium, Class V',
+      ref: 'Ref. PBAB/BMU/ADM2027/01 · Online form 5–25 Nov · office counter 13–28 Nov',
+      pdf: 'PDF · 266 KB', href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
+    { date: '01 Nov 2026', year: '2026', category: 'Admission', tone: 'accent',
+      title: 'Admission Notice 2027 — English Medium, Classes V–VIII',
+      ref: 'Ref. PBAB/EMU/ADM2027/01 · Online form 5–25 Nov · office counter 13–28 Nov',
+      pdf: 'PDF · 219 KB', href: 'assets/pdf/admission-notice-2027-english-medium.pdf' },
   ],
 };
 
