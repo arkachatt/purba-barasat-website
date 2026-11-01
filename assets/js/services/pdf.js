@@ -17,6 +17,37 @@ import { school, admissionForm } from '../data/site.js';
 
 export class PdfUnavailableError extends Error {}
 
+/* ── the crest ──────────────────────────────────────────────────────────── */
+
+/* The school's mark, on the masthead of the printed form. Read once and kept
+   as a data URL, because jsPDF wants bytes rather than a path. The flat copy
+   is the one used: the form prints on paper, so the transparent version's
+   hole would show as white anyway, and an opaque PNG asks nothing of jsPDF's
+   alpha handling.
+
+   An empty string is the cached "we tried and could not", so a form is still
+   built when the image is missing. The printout is the artefact that has to
+   survive a bad network; a crest is not worth failing it for. */
+let crest = null;
+
+async function loadCrest() {
+  if (crest !== null) return crest;
+  try {
+    const response = await fetch(school.logoFlat);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const blob = await response.blob();
+    crest = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    crest = '';
+  }
+  return crest;
+}
+
 /* ── loading ────────────────────────────────────────────────────────────── */
 
 let loading = null;
@@ -128,15 +159,20 @@ export async function buildApplicationPdf({ receipt }) {
   const data = receipt.data || {};
   let y = PAGE.margin;
 
-  /* — masthead, with the photograph box the office expects — */
+  /* — masthead: crest at the left, photograph box at the right — */
   const photo = { w: 32, h: 34, x: PAGE.w - PAGE.margin - 32, y: PAGE.margin };
+  const mark = school.logoFlat ? await loadCrest() : '';
+  const CREST = 24;
+  if (mark) doc.addImage(mark, 'PNG', PAGE.margin, PAGE.margin, CREST, CREST);
   doc.setDrawColor(120); doc.setLineWidth(0.3);
   doc.rect(photo.x, photo.y, photo.w, photo.h);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(7); doc.setTextColor(110);
   doc.text(['Affix a recent', 'passport', 'photograph'], photo.x + photo.w / 2, photo.y + 14,
     { align: 'center', lineHeightFactor: 1.5 });
 
-  const headCentre = (PAGE.margin + photo.x - 4) / 2;
+  /* The name sits between the crest and the photograph box, centred on what
+     is left rather than on the page, so it is not pushed into either. */
+  const headCentre = (PAGE.margin + (mark ? CREST + 4 : 0) + photo.x - 4) / 2;
   doc.setTextColor(20);
   doc.setFont('helvetica', 'bold'); doc.setFontSize(14);
   y += 6;

@@ -27,7 +27,10 @@ class SiteHeader extends SiteComponent {
 
     const brand = (size) => html`
       <a class="brand" href="index.html" aria-label="${school.name} — home">
-        <span class="brand-mark blueprint">${
+        <span class="brand-mark ${school.logo ? '' : 'blueprint'}">${
+          /* The hairline plate frames the LOGO placeholder. A round crest
+             needs no square around it, so the frame goes when the crest
+             arrives. */
           school.logo ? raw(`<img src="${school.logo}" alt="">`) : 'LOGO'
         }</span>
         <span class="brand-text">

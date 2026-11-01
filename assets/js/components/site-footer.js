@@ -6,7 +6,7 @@
  * required to show.
  */
 import { SiteComponent, define } from '../core/component.js';
-import { html, raw, each } from '../core/dom.js';
+import { html, raw, each, when } from '../core/dom.js';
 import { icon } from '../core/icons.js';
 import { school, footerLinks, affiliation, features } from '../data/site.js';
 
@@ -17,6 +17,8 @@ class SiteFooter extends SiteComponent {
       <footer class="site-footer">
         <div class="footer-grid">
           <div class="footer-col footer-col--brand">
+            ${when(school.logo, () => html`
+              <img class="footer-mark" src="${school.logo}" alt="" width="56" height="56">`)}
             <span class="footer-name">${school.name}</span>
             <span class="footer-name-bn">${school.nameBn}</span>
             <address class="footer-address">

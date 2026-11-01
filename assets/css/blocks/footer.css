@@ -19,6 +19,9 @@
 }
 .footer-col { display: flex; flex-direction: column; gap: 8px; }
 .footer-col--brand { gap: 6px; }
+/* The crest's own white disc carries it against the dark footer, so it
+   needs no plate behind it. */
+.footer-mark { width: 56px; height: 56px; margin-bottom: 10px; }
 
 .footer-name {
   font-family: var(--font-heading); font-weight: var(--font-heading-weight);

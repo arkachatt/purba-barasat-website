@@ -209,10 +209,13 @@ with a `set*Adapter()` seam. Until those are wired:
   `features.enquiry`, because validating an enquiry and then pointing the
   visitor at the phone number reads like the office received it. Connect the
   inbox with `setEnquiryAdapter(fn)`, then switch the flag back on.
-- **Photographs** — every image slot (`carouselSlides`, `headmaster.photo`,
-  `school.logo`, `about.gallery`, event covers, staff portraits) is `null` and
-  renders a hatched placeholder naming its subject. Set a path and the
-  placeholder steps aside.
+- **Photographs** — most image slots (`carouselSlides`, `headmaster.photo`,
+  `about.gallery`, event covers, staff portraits) are `null` and render a
+  hatched placeholder naming the subject. Set a path and the placeholder
+  steps aside. The crest is in: `school.logo` is the masked PNG used in the
+  header and footer, `school.logoFlat` the opaque copy used for the iOS home
+  screen icon and the application PDF, both made from the office's
+  2048px original.
 - **PDFs** — both admission notices are real and live in `assets/pdf/`. The
   Class XI notice, and the syllabus, merit-list and routine links, still
   point at `#pdf`; a notice whose `href` still starts with `#` gets no

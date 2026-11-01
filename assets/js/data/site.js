@@ -51,7 +51,15 @@ export const school = {
   nameBn: 'পূর্ব বারাসাত আদর্শ বিদ্যাপীঠ',
   district: 'North 24 Parganas',
   established: 1963,
-  logo: null,                       // path to a crest image; null keeps the LOGO plate
+  /* The school's crest. `logo` is the masked PNG — everything outside the
+     circle is transparent, so it sits on the header, the footer or any other
+     surface without a white box around it. `logoFlat` is the same mark on
+     opaque white, for the two places transparency is wrong: the iOS home
+     screen icon, which fills transparency with black, and the application
+     PDF, which prints on paper. Setting `logo` to null brings back the LOGO
+     plate the design started with. */
+  logo: 'assets/img/logo.png',
+  logoFlat: 'assets/img/logo-flat.png',
   address: ['Purba Barasat, P.O. Barasat', 'North 24 Parganas, West Bengal 700124'],
   /* Two office lines. `phone` is the first of them, so anything showing a
      single number — the footer, the PDF header, the enquiry fallback — keeps
