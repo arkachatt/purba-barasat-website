@@ -240,6 +240,23 @@ export const footerLinks = [
   { label: 'Log In',       href: 'login.html', feature: 'login' },
 ];
 
+/**
+ * The legal pages, linked from the footer only — every site puts them there
+ * and nobody looks for them on the menu bar.
+ *
+ * They were written from templates the office supplied and are three static
+ * pages rather than entries in this file: 27 KB of legal text would be
+ * downloaded by every visitor to every page if it lived here, and a lawyer
+ * editing a clause should be editing the page, not a data module.
+ * `tools/legal-md-to-html.py` records which placeholder in each template was
+ * filled with what.
+ */
+export const legalLinks = [
+  { label: 'Terms of Service',     href: 'terms-of-service.html' },
+  { label: 'Terms and Conditions', href: 'terms-and-conditions.html' },
+  { label: 'Privacy Policy',       href: 'privacy-policy.html' },
+];
+
 export const affiliation =
   'Government-sponsored school under the <strong>School Education Department, Government of West Bengal</strong>. ' +
   'Affiliated to WBBSE (Madhyamik) and WBCHSE (Higher Secondary).';

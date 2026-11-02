@@ -17,6 +17,9 @@ ES modules need HTTP — opening `index.html` over `file://` will not work.
 | Home | `index.html` | 01 · 1a–1d |
 | Administration | `administration.html` | — |
 | Fee Structure | `fee-structure.html` | — |
+| Terms of Service | `terms-of-service.html` | — |
+| Terms and Conditions | `terms-and-conditions.html` | — |
+| Privacy Policy | `privacy-policy.html` | — |
 | Log In gateway | `login.html` | 01 · 1e–1f |
 | About Us | `about.html` | 02 · 1a–1b |
 | From HM's Desk | `hm.html` | 02 · 1c–1d |

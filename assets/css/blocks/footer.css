@@ -50,6 +50,11 @@
 }
 .footer-affiliation strong { color: #fff; font-weight: 500; }
 
+/* Three rows' worth of small print on one line where it fits: copyright,
+   the legal pages, and who keeps the site. */
+.footer-legal-links a { color: inherit; }
+.footer-legal-links a:hover { color: #fff; }
+
 .footer-legal {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
   padding: 14px var(--page-pad-x);

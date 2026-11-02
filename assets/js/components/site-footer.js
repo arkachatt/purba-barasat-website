@@ -8,7 +8,7 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { school, footerLinks, affiliation, maintainer, features } from '../data/site.js';
+import { school, footerLinks, legalLinks, affiliation, maintainer, features } from '../data/site.js';
 
 class SiteFooter extends SiteComponent {
   render() {
@@ -52,6 +52,9 @@ class SiteFooter extends SiteComponent {
 
         <div class="footer-legal">
           <span>© ${year} ${school.name} · DISE code ${school.diseCode}</span>
+          <span class="footer-legal-links">
+            ${each(legalLinks, (link, i) => html`${when(i > 0, () => raw(' · '))}<a href="${link.href}">${link.label}</a>`)}
+          </span>
           <span>Content maintained by ${maintainer.name}. Phone:
             <a href="${maintainer.phone.href}">${maintainer.phone.label}</a></span>
         </div>

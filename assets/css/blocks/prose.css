@@ -23,6 +23,17 @@
 }
 .prose-signature-post { font-size: 15px; color: var(--color-neutral-700); }
 
+/* — the legal pages — numbered clauses rather than an essay, so the measure
+   is a little wider and the headings a little quieter than the About body. */
+.legal { max-width: 78ch; }
+.legal h2 { font-size: 21px; margin: 28px 0 8px; }
+.legal h2:first-child { margin-top: 0; }
+.legal p { margin: 0 0 10px; }
+.legal ul { margin-bottom: 14px; }
+.legal-table-wrap { overflow-x: auto; margin: 4px 0 16px; }
+.legal-table-wrap .table { font-size: 15px; }
+.legal code { font-size: 15px; }
+
 /* Body + sidebar: the sidebar is a fixed 340px so the measure stays readable. */
 .with-aside {
   display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 56px; align-items: start;
