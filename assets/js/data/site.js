@@ -379,10 +379,15 @@ export const hmLetter = {
  *
  * Photographs, telephone numbers and email addresses come from the school's
  * own consent form, and only where that person ticked yes to that particular
- * item: 26 photographs, 21 email addresses, 11 mobile numbers. Two more
+ * item: 33 photographs, 26 email addresses, 15 mobile numbers. Two more
  * portraits — Sri Prasanta Mridha's and Sri Sanjay Ghosh's — came to the
  * office separately and have no row in that form. Where someone has filled
- * the form in twice, the later answer is the one published. Several people
+ * the form in twice, the later answer is the one published.
+ *
+ * Sri Samir Acharya has a row in the form and uploaded a photograph through
+ * it, but the portrait published for him is still the one the office sent
+ * directly — the two do not look like the same man, and that is a question
+ * for the office rather than something to decide from a file name. Several people
  * sent a photograph while refusing one or both of the contact details, and
  * their row shows a dash — that is the answer they gave, not missing data.
  * Nobody who did not fill the form in appears here with anything.
@@ -398,24 +403,24 @@ export const staff = [
   { sl: 4, name: 'Smt. Reshma Khatun', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed.', phone: '80170 43291', tel: '+918017043291', email: 'reshma2uin@gmail.com', photo: 'assets/img/staff/reshma-khatun.jpg' },
   { sl: 5, name: 'Sri Trinath Mistri', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed.', photo: null },
   { sl: 6, name: 'Sri Sanjay Ghosh', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Com., B.Ed. (First Class), C.A., C.M.A.', photo: 'assets/img/staff/sanjay-ghosh.jpg' },
-  { sl: 7, name: 'Sri Dipnarayan Biswas', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Hons.) (Physics), B.Ed.', photo: null },
+  { sl: 7, name: 'Sri Dipnarayan Biswas', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Hons.) (Physics), B.Ed.', photo: 'assets/img/staff/dipnarayan-biswas.jpg' },
   { sl: 8, name: 'Sri Biplab Haldar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Chemistry), B.Ed. (First Class)', photo: null },
   { sl: 9, name: 'Sri Debashis Sarkar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (English), B.Ed. (First Class)', email: 'debashis2uin@gmail.com', photo: 'assets/img/staff/debashis-sarkar.jpg' },
   { sl: 10, name: 'Smt. Chaitali Saha', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed. (First Class)', phone: '94336 80852', tel: '+919433680852', email: 'chaitalisaha09@gmail.com', photo: 'assets/img/staff/chaitali-saha.jpg' },
-  { sl: 11, name: 'Sri Lakshman Halder', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (English), B.Ed. (First Class)', photo: null },
+  { sl: 11, name: 'Sri Lakshman Halder', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (English), B.Ed. (First Class)', phone: '97752 67510', tel: '+919775267510', email: 'lakshmanhalder9775@gmail.com', photo: 'assets/img/staff/lakshman-halder.jpg' },
   { sl: 12, name: 'Sri Nandalal Roy', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Com. (Hons.), B.P.Ed. (First Class)', photo: null },
   { sl: 13, name: 'Smt. Debdutta Mukherjee (Chakraborty)', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (First Class), B.Ed. (First Class)', email: 'dmc.pbab.07@gmail.com', photo: 'assets/img/staff/debdutta-mukherjee.jpg' },
   { sl: 14, name: 'Sri Anup Mondal', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.A. (English), M.A. (History), B.Ed. (1st Class)', phone: '70037 65660', tel: '+917003765660', photo: 'assets/img/staff/anup-mondal.jpg' },
   { sl: 15, name: 'Sri Rabindranath Mandal', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (History), B.Ed. (First Class)', photo: null },
   { sl: 16, name: 'Sri Kallol Kanti Mondal', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Education), B.Ed.', phone: '62901 64759', tel: '+916290164759', email: 'kallol2uin@gmail.com', photo: 'assets/img/staff/kallol-mondal.jpg' },
-  { sl: 17, name: 'Sri Goutam Jana', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Hons.) (Computer Science), M.C.A., B.Ed.', photo: null },
-  { sl: 18, name: 'Sri Subal Sarkar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Political Science), B.Ed.', photo: null },
+  { sl: 17, name: 'Sri Goutam Jana', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Hons.) (Computer Science), M.C.A., B.Ed.', email: 'jana.goutam@gmail.com', photo: 'assets/img/staff/goutam-jana.jpg' },
+  { sl: 18, name: 'Sri Subal Sarkar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Political Science), B.Ed.', phone: '97329 45034', tel: '+919732945034', email: 'subal2uin@gmail.com', photo: 'assets/img/staff/subal-sarkar.jpg' },
   { sl: 19, name: 'Smt. Shampa Das', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Food & Nutrition) (1st Class), B.Ed. (1st Class)', photo: 'assets/img/staff/shampa-das.jpg' },
   { sl: 20, name: 'Smt. Nabomita Howlader', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Human Development), B.Ed. (First Class)', email: 'mitanabo84@gmail.com', photo: 'assets/img/staff/nabomita-howlader.jpg' },
   { sl: 21, name: 'Smt. Kumkum Mandal Basak', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Economics) (1st Class), B.Ed. (First Class), M.Phil.', photo: null },
   { sl: 22, name: 'Sri Prasanta Mridha', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Chemistry) (1st Class), M.A. (Education) (1st Class), B.Ed. (First Class)', photo: 'assets/img/staff/prasanta-mridha.jpg' },
   { sl: 23, name: 'Sri Sudarsan Pramanik', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed. (First Class)', phone: '98755 46652', tel: '+919875546652', email: 'pramanik.sudarsan@gmail.com', photo: 'assets/img/staff/sudarsan-pramanik.jpg' },
-  { sl: 24, name: 'Sri Rajat Subhra Karmakar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Mathematics) (1st Class), B.Ed. (First Class)', photo: null },
+  { sl: 24, name: 'Sri Rajat Subhra Karmakar', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Mathematics) (1st Class), B.Ed. (First Class)', photo: 'assets/img/staff/rajat-subhra-karmakar.jpg' },
   { sl: 25, name: 'Sri Subhashis Ghorui', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Pure Science), D.El.Ed. (1st Class)', photo: null },
   { sl: 26, name: 'Smt. Manami Dasgupta', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Zoology) (1st Class), B.Ed. (1st Class)', email: 'manamidasgupta@gmail.com', photo: 'assets/img/staff/manami-dasgupta.jpg' },
   { sl: 27, name: 'Sri Debal Deb Bhattacharjee', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Physics) (1st Class), B.Ed. (1st Class)', email: 'debaldeb@gmail.com', photo: 'assets/img/staff/debal-bhattacharjee.jpg' },
@@ -425,13 +430,13 @@ export const staff = [
   { sl: 31, name: 'Sri Piyali Basu', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Agriculture), B.Ed. (First Class)', photo: null },
   { sl: 32, name: 'Smt. Shipra Sarkar (Biswas)', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Pure Science), B.Ed. (First Class)', photo: 'assets/img/staff/shipra-sarkar.jpg' },
   { sl: 33, name: 'Sri Avijit Halder', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Zoology) (1st Class), B.Ed. (1st Class)', photo: 'assets/img/staff/avijit-halder.jpg' },
-  { sl: 34, name: 'Sri Ismail Mollick', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Geography) (1st Class), B.Ed. (1st Class)', photo: null },
+  { sl: 34, name: 'Sri Ismail Mollick', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Geography) (1st Class), B.Ed. (1st Class)', email: 'ismailmallick10@gmail.com', photo: 'assets/img/staff/ismail-mollick.jpg' },
   { sl: 35, name: 'Smt. Sutapa Mitra', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (English), B.Ed. (1st Class)', email: 'mitrasutapa1982@gmail.com', photo: 'assets/img/staff/sutapa-mitra.jpg' },
   { sl: 36, name: 'Barnali Podder', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (History), B.Ed. (1st Class)', email: 'barnali585@gmail.com', photo: 'assets/img/staff/barnali-podder.jpg' },
   { sl: 37, name: 'Sri Ram Krishna Barui', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Bengali), B.Ed. (1st Class)', photo: null },
   { sl: 38, name: 'Md. Mainur Islam', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Mathematics) (1st Class), B.Ed. (1st Class)', photo: null },
   { sl: 39, name: 'Smt. Purnima Mondal', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.A. (Sanskrit), M.A. (History), B.Ed. (1st Class)', photo: null },
-  { sl: 40, name: 'Smt. Nandini Ray', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Zoology) (1st Class), B.Ed. (1st Class)', photo: null },
+  { sl: 40, name: 'Smt. Nandini Ray', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Zoology) (1st Class), B.Ed. (1st Class)', phone: '94747 53930', tel: '+919474753930', email: 'nandiniraybio@gmail.com', photo: 'assets/img/staff/nandini-ray.jpg' },
   { sl: 41, name: 'Smt. Ajukta Sarker', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.Sc. (Zoology) (1st Class), B.Ed. (1st Class)', phone: '99337 91666', tel: '+919933791666', email: 'ajuktasarker@gmail.com', photo: 'assets/img/staff/ajukta-sarker.jpg' },
   { sl: 42, name: 'Sri Rajib Das', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'B.Sc. (Physics – Hons.), B.Ed. (1st Class)', phone: '74320 96178', tel: '+917432096178', email: 'mastermindrajib@gmail.com', photo: 'assets/img/staff/rajib-das.jpg' },
   { sl: 43, name: 'Smt. Kalpana Roy', post: 'Assistant Teacher', group: 'Assistant Teacher', kind: 'teaching', qualification: 'M.A. (Music), B.Ed. (First Class)', photo: null },
