@@ -214,7 +214,10 @@ export const headmaster = {
   name: 'Samir Acharya',
   post: 'Headmaster (HM) · M.Sc. (Chemistry), B.Ed. (First Class)',
   postShort: 'Headmaster · M.Sc. (Chemistry), B.Ed. (First Class)',
-  /* The office's photograph, cropped to the 5:6 both photo boxes use. */
+  /* The Headmaster's own photograph, the one he sent through the staff
+     consent form, cropped to the 5:6 both photo boxes use. The roster row
+     and hm.html read the same file, so there is one portrait of him on the
+     site and not three that can drift apart. */
   photo: 'assets/img/headmaster.jpg',
   excerpt: "Purba Barasat Adarsha Bidyapith has stood beside Taki Road since 1963, when a few determined people of Kalikapur began a school with two classes under a tiled roof. What has not changed is who the school is for\u2026",
   href: 'hm.html',
@@ -384,10 +387,9 @@ export const hmLetter = {
  * office separately and have no row in that form. Where someone has filled
  * the form in twice, the later answer is the one published.
  *
- * Sri Samir Acharya has a row in the form and uploaded a photograph through
- * it, but the portrait published for him is still the one the office sent
- * directly — the two do not look like the same man, and that is a question
- * for the office rather than something to decide from a file name. Several people
+ * Sri Samir Acharya's portrait is his own upload from that form, which
+ * replaced an earlier one sent to the office; the office confirmed which of
+ * the two is him. Several people
  * sent a photograph while refusing one or both of the contact details, and
  * their row shows a dash — that is the answer they gave, not missing data.
  * Nobody who did not fill the form in appears here with anything.
