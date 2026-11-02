@@ -215,7 +215,7 @@ with a `set*Adapter()` seam. Until those are wired:
   inbox with `setEnquiryAdapter(fn)`, then switch the flag back on.
 - **Photographs** — the remaining image slots (`about.gallery`, event covers)
   are `null` and render a hatched placeholder naming the subject. Staff
-  portraits are in for the 33 people who sent one through the school's
+  portraits are in for the 34 people who sent one through the school's
   consent form, together with the 26 email addresses and 15 mobile numbers
   those same people agreed to publish; everyone else shows a dash. The Headmaster's portrait is in, cropped to the 5:6 of
   both photo boxes. Set a path and the placeholder

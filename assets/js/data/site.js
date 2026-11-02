@@ -382,7 +382,8 @@ export const hmLetter = {
  *
  * Photographs, telephone numbers and email addresses come from the school's
  * own consent form, and only where that person ticked yes to that particular
- * item: 33 photographs, 26 email addresses, 15 mobile numbers. Two more
+ * item: 34 photographs, 26 email addresses, 15 mobile numbers — 36
+ * responses from 34 people, two of whom filled it in twice. Two more
  * portraits — Sri Prasanta Mridha's and Sri Sanjay Ghosh's — came to the
  * office separately and have no row in that form. Where someone has filled
  * the form in twice, the later answer is the one published.
