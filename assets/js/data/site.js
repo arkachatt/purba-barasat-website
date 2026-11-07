@@ -405,7 +405,7 @@ export const about = {
   gallery: {
     photos: [
       { caption: 'The school office', image: 'assets/img/school-office.jpg' },
-      { caption: 'Main building', image: null },
+      { caption: 'Main building', image: 'assets/img/main-building.jpg' },
       { caption: 'Science lab', image: null },
       { caption: 'Library', image: null },
       { caption: 'Playground', image: null },
