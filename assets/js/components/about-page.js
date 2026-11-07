@@ -2,7 +2,8 @@
  * <about-page>
  *
  * The school's own account of itself: rich-text history and mission, a
- * milestone rail, the "at a glance" facts panel and the photo gallery.
+ * milestone rail, the "at a glance" facts panel, the two leadership rolls
+ * transcribed from the corridor's honours boards, and the photo gallery.
  */
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when } from '../core/dom.js';
@@ -49,12 +50,58 @@ class AboutPage extends SiteComponent {
         </aside>
       </div>
 
+      ${when(about.leadership, () => this.renderLeadership())}
+
       <section>
         <div class="section-head section-head--roomy">
           <h2>Photo gallery <span class="bn">/ চিত্রশালা</span></h2>
           <span class="text-muted" style="font-size:14px">${about.gallery.note}</span>
         </div>
         <photo-gallery source="about" cols="3"></photo-gallery>
+      </section>`;
+  }
+
+  /**
+   * The honours boards, as two tables side by side on a wide screen.
+   *
+   * A period reads "from — to", and the person still in post gets "present"
+   * rather than a blank, so an empty cell is never left to mean two things.
+   */
+  renderLeadership() {
+    const { heading, note, rolls } = about.leadership;
+    return html`
+      <section class="leadership">
+        <div class="section-head section-head--roomy">
+          <h2>${heading}</h2>
+          <span class="text-muted" style="font-size:14px">${note}</span>
+        </div>
+        <div class="leadership-rolls">
+          ${each(rolls, (roll) => html`
+            <div class="blueprint leadership-roll">
+              <div class="leadership-roll-head">
+                ${roll.title}<span class="bn">${roll.titleBn}</span>
+              </div>
+              <table class="table leadership-table">
+                <thead><tr>
+                  <th style="width:44px">Sl.</th><th>Name</th><th>Period</th>
+                </tr></thead>
+                <tbody>
+                  ${each(roll.people, (person, i) => html`
+                    <tr ${raw(person.to ? '' : 'class="is-present"')}>
+                      <td class="is-sl">${i + 1}</td>
+                      <td>
+                        <span class="leadership-name">${person.name}</span>
+                        <span class="leadership-bn bn">${person.bn}</span>
+                        <span class="leadership-role">${person.role}</span>
+                      </td>
+                      <td class="leadership-period">
+                        ${person.from}<br>${person.to ? `to ${person.to}` : 'to present'}
+                      </td>
+                    </tr>`)}
+                </tbody>
+              </table>
+            </div>`)}
+        </div>
       </section>`;
   }
 }

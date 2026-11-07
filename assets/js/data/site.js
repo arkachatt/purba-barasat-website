@@ -324,6 +324,53 @@ export const about = {
   /* The account above is published over the Headmaster's signature. */
   signature: { name: 'Samir Acharya', post: 'Headmaster', date: '01 January 2026' },
 
+  /**
+   * The two honours boards in the school corridor, transcribed rather than
+   * photographed: hand-painted on wood at an angle, they are hard to read on
+   * a phone and invisible to a screen reader, and a name is worth searching
+   * for. Names are given as the boards paint them and in English beside.
+   *
+   * `to: null` means still in post. Sri Pranab Kumar Guha appears on both
+   * rolls — Teacher-in-Charge in 1964, Secretary from 1970 — which is the
+   * boards' own record, not a mistake here.
+   */
+  leadership: {
+    heading: 'Those who have led the school',
+    note: 'Transcribed from the honours boards in the school corridor. Dates are as painted there.',
+    rolls: [
+      {
+        title: 'Headmasters and Teachers-in-Charge',
+        titleBn: 'প্রধান শিক্ষক / ভারপ্রাপ্ত প্রধান শিক্ষক',
+        people: [
+          { name: 'Gita Chakrabarti',         bn: 'গীতা চক্রবর্তী',          role: 'Headmistress',                  from: '06-01-1963', to: '27-04-1963' },
+          { name: 'Jyotilal Chakrabarti',     bn: 'জ্যোতিলাল চক্রবর্তী',      role: 'Headmaster',                    from: '28-04-1963', to: '02-08-1964' },
+          { name: 'Pranab Kumar Guha',        bn: 'প্রণব কুমার গুহ',          role: 'Teacher-in-Charge',             from: '03-08-1964', to: '07-01-1965' },
+          { name: 'Bijay Krishna Rudra',      bn: 'বিজয় কৃষ্ণ রুদ্র',         role: 'Headmaster',                    from: '08-01-1965', to: '31-10-1999' },
+          { name: 'Tapas Kumar Chatterjee',   bn: 'তাপস কুমার চ্যাটার্জী',     role: 'Teacher-in-Charge',             from: '01-11-1999', to: '23-02-2000' },
+          { name: 'Ashok Kumar Saha',         bn: 'অশোক কুমার সাহা',         role: 'Headmaster',                    from: '24-02-2000', to: '30-09-2015' },
+          { name: 'Bamashankar Ray',          bn: 'বামাশংকর রায়',            role: 'Teacher-in-Charge',             from: '01-10-2015', to: '31-01-2017' },
+          { name: 'Chapal Kumar Bandyopadhyay', bn: 'চপল কুমার বন্দ্যোপাধ্যায়', role: 'Teacher-in-Charge, Secretary', from: '03-02-2017', to: '26-02-2018' },
+          { name: 'Samir Acharya',            bn: 'সমীর আচার্য্য',            role: 'Headmaster, Secretary',         from: '27-02-2018', to: null },
+        ],
+      },
+      {
+        title: 'Secretaries and Presidents of the Managing Committee',
+        titleBn: 'পরিচালন সমিতির সম্পাদক ও সভাপতি',
+        people: [
+          { name: 'Anukul Chandra Chattopadhyay', bn: 'অনুকূল চন্দ্র চট্টোপাধ্যায়', role: 'Secretary', from: '06-01-1963', to: '21-08-1965' },
+          { name: 'Shyamapada Chakrabarti',   bn: 'শ্যামাপদ চক্রবর্তী',       role: 'Secretary', from: '22-08-1965', to: '13-12-1970' },
+          { name: 'Pranab Kumar Guha',        bn: 'প্রণব কুমার গুহ',          role: 'Secretary', from: '14-12-1970', to: '20-08-1998' },
+          { name: 'Shantiranjan Ray Chowdhury', bn: 'শান্তিরঞ্জন রায় চৌধুরী', role: 'Secretary', from: '21-08-1998', to: '29-02-2004' },
+          { name: 'Dipak Kumar Saha',         bn: 'দিপক কুমার সাহা',         role: 'Secretary', from: '01-03-2004', to: '26-02-2007' },
+          { name: 'Swapan Kumar De',          bn: 'স্বপন কুমার দে',           role: 'Secretary', from: '27-02-2007', to: '25-02-2010' },
+          { name: 'Jatindranath Ray',         bn: 'যতীন্দ্রনাথ রায়',          role: 'Secretary', from: '26-02-2010', to: '25-02-2013' },
+          { name: 'Ranajit Das',              bn: 'রণজিত দাস',               role: 'Secretary', from: '26-02-2013', to: '25-02-2016' },
+          { name: 'Tapas Dasgupta',           bn: 'তাপস দাশগুপ্ত',            role: 'President', from: '26-02-2016', to: null },
+        ],
+      },
+    ],
+  },
+
   milestones: [
     { year: '1963', text: 'School founded — two classes in a tiled-roof building' },
     { year: '1965', text: 'Government recognition, Classes V–VI' },

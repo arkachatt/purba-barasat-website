@@ -23,6 +23,28 @@
 }
 .prose-signature-post { font-size: 15px; color: var(--color-neutral-700); }
 
+/* — the honours boards — two rolls of names, side by side where there is
+   room. The board itself is a table of three columns, so this is one too. */
+.leadership { margin-top: 8px; }
+.leadership-rolls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.leadership-roll { overflow: hidden; }
+.leadership-roll-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  padding: 14px 16px; border-bottom: 1px solid var(--color-divider);
+  font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px;
+}
+.leadership-roll-head .bn { font-size: 14px; color: var(--color-neutral-700); }
+.leadership-table { font-size: 15px; }
+.leadership-table th { padding: 10px 16px; }
+.leadership-table td { padding: 10px 16px; vertical-align: top; }
+.leadership-table td.is-sl { color: var(--color-neutral-600); }
+.leadership-name { display: block; font-weight: 500; }
+.leadership-bn { display: block; font-size: 14px; color: var(--color-neutral-700); }
+.leadership-role { display: block; font-size: 13px; color: var(--color-neutral-600); }
+.leadership-period { white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* The one still in post is the only row worth picking out. */
+.leadership-table tr.is-present td { background: var(--color-accent-100, transparent); font-weight: 500; }
+
 /* — the legal pages — numbered clauses rather than an essay, so the measure
    is a little wider and the headings a little quieter than the About body. */
 .legal { max-width: 78ch; }
@@ -73,6 +95,7 @@
 .milestone-text { font-size: 14px; line-height: 1.4; margin-top: 4px; }
 
 @media (max-width: 1023px) {
+  .leadership-rolls { grid-template-columns: 1fr; }
   .prose { font-size: 16px; }
   .prose h2 { font-size: 24px; }
   .with-aside { grid-template-columns: 1fr; gap: 28px; }
