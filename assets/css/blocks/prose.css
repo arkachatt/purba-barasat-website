@@ -26,10 +26,22 @@
 /* — the honours boards — two rolls of names, side by side where there is
    room. The board itself is a table of three columns, so this is one too. */
 .leadership { margin-top: 8px; }
-.leadership-rolls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.leadership-roll { overflow: hidden; }
+/* The two cards share one grid of two rows — heads, then tables — and each
+   card maps onto both through `subgrid`. Without it the longer English
+   title wraps, its Bengali line drops, and that card's table starts lower
+   than its neighbour's: two rolls of the same nine rows that do not line up.
+   The Bengali always takes its own line, so the heads differ by nothing but
+   the length of the English above it, which subgrid then evens out. */
+.leadership-rolls {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto 1fr; gap: 24px;
+}
+.leadership-roll {
+  display: grid; grid-row: span 2; grid-template-rows: subgrid;
+  overflow: hidden;
+}
 .leadership-roll-head {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  display: flex; flex-direction: column; gap: 2px;
   padding: 14px 16px; border-bottom: 1px solid var(--color-divider);
   font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 17px;
 }
@@ -95,7 +107,9 @@
 .milestone-text { font-size: 14px; line-height: 1.4; margin-top: 4px; }
 
 @media (max-width: 1023px) {
-  .leadership-rolls { grid-template-columns: 1fr; }
+  /* One per row: there is nothing left to line up, so the subgrid goes. */
+  .leadership-rolls { grid-template-columns: 1fr; grid-template-rows: none; }
+  .leadership-roll { display: block; }
   .prose { font-size: 16px; }
   .prose h2 { font-size: 24px; }
   .with-aside { grid-template-columns: 1fr; gap: 28px; }
