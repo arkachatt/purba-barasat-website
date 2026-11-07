@@ -325,8 +325,6 @@ export const about = {
       { type: 'p', text: "Despite a very high student enrolment and the constraints of its infrastructure, the school's results in both the Madhyamik and the Higher Secondary examinations have been notably commendable, and it has been officially designated an ‘A’ Category school." },
     ] },
   ],
-  /* The account above is published over the Headmaster's signature. */
-  signature: { name: 'Samir Acharya', post: 'Headmaster', date: '01 January 2026' },
 
   /**
    * The two honours boards in the school corridor, transcribed rather than
@@ -334,13 +332,21 @@ export const about = {
    * a phone and invisible to a screen reader, and a name is worth searching
    * for. Names are given as the boards paint them and in English beside.
    *
+   * The photograph below the heading is the room they hang in, and the only
+   * thing on the page that says where the boards are: the section carries no
+   * note of its own.
+   *
    * `to: null` means still in post. Sri Pranab Kumar Guha appears on both
    * rolls — Teacher-in-Charge in 1964, Secretary from 1970 — which is the
    * boards' own record, not a mistake here.
    */
   leadership: {
     heading: 'Those who have led the school',
-    note: 'Transcribed from the honours boards in the school corridor. Dates are as painted there.',
+    photo: {
+      src: 'assets/img/headmasters-room.jpg',
+      alt: "The Headmaster's room at Purba Barasat Adarsha Bidyapith: a long table with chairs, trophies on the desk, and the two painted honours boards on the wall behind",
+      caption: 'The two boards on the wall of the Headmaster’s room, from which the lists below are taken.',
+    },
     rolls: [
       {
         title: 'Headmasters and Teachers-in-Charge',
@@ -397,8 +403,8 @@ export const about = {
     ['Category', '‘A’ Category school'],
   ],
   gallery: {
-    note: '12 photos · managed from the CMS gallery',
     photos: [
+      { caption: 'The school office', image: 'assets/img/school-office.jpg' },
       { caption: 'Main building', image: null },
       { caption: 'Science lab', image: null },
       { caption: 'Library', image: null },

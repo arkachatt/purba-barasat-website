@@ -24,12 +24,6 @@ class AboutPage extends SiteComponent {
               ${each(section.blocks, block)}
             </section>`)}
 
-          ${when(about.signature, () => html`
-            <p class="prose-signature">
-              <span class="prose-signature-name">${about.signature.name}</span>
-              <span class="prose-signature-post">${about.signature.post} · ${about.signature.date}</span>
-            </p>`)}
-
           <section>
             <h2 style="margin-bottom:16px">Milestones</h2>
             <ol class="milestones">
@@ -55,7 +49,6 @@ class AboutPage extends SiteComponent {
       <section>
         <div class="section-head section-head--roomy">
           <h2>Photo gallery <span class="bn">/ চিত্রশালা</span></h2>
-          <span class="text-muted" style="font-size:14px">${about.gallery.note}</span>
         </div>
         <photo-gallery source="about" cols="3"></photo-gallery>
       </section>`;
@@ -68,13 +61,17 @@ class AboutPage extends SiteComponent {
    * rather than a blank, so an empty cell is never left to mean two things.
    */
   renderLeadership() {
-    const { heading, note, rolls } = about.leadership;
+    const { heading, rolls } = about.leadership;
     return html`
       <section class="leadership">
         <div class="section-head section-head--roomy">
           <h2>${heading}</h2>
-          <span class="text-muted" style="font-size:14px">${note}</span>
         </div>
+        ${when(about.leadership.photo, () => html`
+          <figure class="blueprint leadership-photo">
+            ${raw(`<img src="${about.leadership.photo.src}" alt="${about.leadership.photo.alt.replace(/"/g, '&quot;')}" loading="lazy">`)}
+            <figcaption>${about.leadership.photo.caption}</figcaption>
+          </figure>`)}
         <div class="leadership-rolls">
           ${each(rolls, (roll) => html`
             <div class="blueprint leadership-roll">

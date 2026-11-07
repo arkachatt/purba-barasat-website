@@ -26,6 +26,13 @@
 /* — the honours boards — two rolls of names, side by side where there is
    room. The board itself is a table of three columns, so this is one too. */
 .leadership { margin-top: 8px; }
+/* The room the boards hang in, above the lists taken off them. */
+.leadership-photo { margin: 0 0 24px; overflow: hidden; }
+.leadership-photo img { display: block; width: 100%; height: auto; }
+.leadership-photo figcaption {
+  padding: 10px 16px; font-size: 14px; color: var(--color-neutral-700);
+  border-top: 1px solid var(--color-divider);
+}
 /* The two cards share one grid of two rows — heads, then tables — and each
    card maps onto both through `subgrid`. Without it the longer English
    title wraps, its Bengali line drops, and that card's table starts lower
