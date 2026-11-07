@@ -173,6 +173,10 @@ export const carouselSlides = [
     alt: 'Two photographs side by side: the frontage of Purba Barasat Adarsha Bidyapith on Taki Road with its name board, and students of the school holding up drawings they have made',
     focus: 'bottom',
     duotone: false },
+  { caption: 'The school building, from the playing field',
+    image: 'assets/img/campus-field.jpg',
+    alt: 'The main building of Purba Barasat Adarsha Bidyapith seen across the school playing field, with trees along its front and a football goal in the middle distance',
+    duotone: false },
 ];
 
 export const carouselIntro = {
