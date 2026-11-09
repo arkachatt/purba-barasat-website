@@ -360,7 +360,11 @@ export const about = {
           { name: 'Ashok Kumar Saha',         bn: 'অশোক কুমার সাহা',         role: 'Headmaster',                    from: '24-02-2000', to: '30-09-2015' },
           { name: 'Bamashankar Ray',          bn: 'বামাশংকর রায়',            role: 'Teacher-in-Charge',             from: '01-10-2015', to: '31-01-2017' },
           { name: 'Chapal Kumar Bandyopadhyay', bn: 'চপল কুমার বন্দ্যোপাধ্যায়', role: 'Teacher-in-Charge, Secretary', from: '03-02-2017', to: '26-02-2018' },
-          { name: 'Samir Acharya',            bn: 'সমীর আচার্য্য',            role: 'Headmaster, Secretary',         from: '27-02-2018', to: null },
+          { name: 'Samir Acharya',            bn: 'সমীর আচার্য্য',            role: 'Headmaster, Secretary',         from: '27-02-2018', to: '17-06-2026' },
+          /* No Headmaster since. The post is held by an Administrator, which is
+             an office rather than a person, so the row carries no name in
+             Bengali and no role line of its own. */
+          { name: 'Administrator',            bn: null,                      role: null,                            from: '18-06-2026', to: null },
         ],
       },
       {

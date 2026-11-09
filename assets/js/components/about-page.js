@@ -88,8 +88,10 @@ class AboutPage extends SiteComponent {
                       <td class="is-sl">${i + 1}</td>
                       <td>
                         <span class="leadership-name">${person.name}</span>
-                        <span class="leadership-bn bn">${person.bn}</span>
-                        <span class="leadership-role">${person.role}</span>
+                        ${when(person.bn, () => html`
+                          <span class="leadership-bn bn">${person.bn}</span>`)}
+                        ${when(person.role, () => html`
+                          <span class="leadership-role">${person.role}</span>`)}
                       </td>
                       <td class="leadership-period">
                         ${person.from}<br>${person.to ? `to ${person.to}` : 'to present'}
