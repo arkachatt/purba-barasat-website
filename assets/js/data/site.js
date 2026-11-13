@@ -206,7 +206,7 @@ export const admissionBanner = {
 export const notices = [
   { id: 'adm-2027-bengali', day: '01 Nov', year: '2026', tag: 'Admission', tone: 'accent',
     href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf',
-    text: 'Admission Notice 2027 — Bengali medium, Class V. Online form 5–25 November 2026.' },
+    text: 'Admission Notice 2027 — Bengali medium, Classes V and VI. Online form 5–25 November 2026.' },
   { id: 'adm-2027-english', day: '01 Nov', year: '2026', tag: 'Admission', tone: 'accent',
     href: 'assets/pdf/admission-notice-2027-english-medium.pdf',
     text: 'Admission Notice 2027 — English medium, Classes V–VIII. Online form 5–25 November 2026.' },
@@ -744,7 +744,7 @@ export const admission = {
              notice whose href is still '#pdf' has no file behind it yet and
              the button does not offer to save it. */
           notice: { title: 'Admission Notice — Bengali Medium', titleClosed: 'Bengali Medium Notice 2026–27 (archived)',
-                    meta: 'PDF · 266 KB · Published 1 Nov 2026', metaClosed: 'PDF · 266 KB',
+                    meta: 'PDF · 333 KB · Published 1 Nov 2026', metaClosed: 'PDF · 333 KB',
                     href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
           apply: { label: 'Apply Online — Bengali Medium →', href: 'admission-form.html?medium=bengali' },
         },
@@ -1214,9 +1214,9 @@ export const noticeBoard = {
      published so far; the home-page strip above shows the same pair. */
   list: [
     { date: '01 Nov 2026', year: '2026', category: 'Admission', tone: 'accent',
-      title: 'Admission Notice 2027 — Bengali Medium, Class V',
+      title: 'Admission Notice 2027 — Bengali Medium, Classes V and VI',
       ref: 'Ref. PBAB/BMU/ADM2027/01 · Online form 5–25 Nov · office counter 13–28 Nov',
-      pdf: 'PDF · 266 KB', href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
+      pdf: 'PDF · 333 KB', href: 'assets/pdf/admission-notice-2027-bengali-medium.pdf' },
     { date: '01 Nov 2026', year: '2026', category: 'Admission', tone: 'accent',
       title: 'Admission Notice 2027 — English Medium, Classes V–VIII',
       ref: 'Ref. PBAB/EMU/ADM2027/01 · Online form 5–25 Nov · office counter 13–28 Nov',

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!--
+  The Bengali-medium admission notice, as the PDF the Admission and Notice
+  pages link to.
+
+  The source is kept here because the office's original PDF cannot be edited:
+  its Bengali is set in subsetted Type 3 fonts, so there are no glyphs to add
+  a line with. When the notice is amended, change this file and render it
+  again — not the PDF.
+
+  The letterhead beside this file was lifted out of the office's own PDF, so
+  the rendered notice carries the school's real letterhead rather than a
+  redrawn one. The typeface is Kohinoor Bangla, which is what the office used.
+
+  Render (one page, A4):
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless --disable-gpu --no-pdf-header-footer \
+      --print-to-pdf=assets/pdf/admission-notice-2027-bengali-medium.pdf \
+      "file://$PWD/tools/notices/admission-notice-2027-bengali-medium.html"
+
+  Check the page count afterwards: the layout is tuned to fit on one, and a
+  line too many pushes the signature block onto a second.
+-->
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 10mm 14mm 9mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Kohinoor Bangla", "Bangla MN", sans-serif;
+    font-size: 10.3pt; line-height: 1.55; color: #000; margin: 0;
+  }
+  .head img { width: 100%; display: block; margin-bottom: 7px; }
+  .refline {
+    display: flex; justify-content: space-between;
+    font-size: 9.6pt; margin-bottom: 11px;
+  }
+  h1 { font-size: 13.2pt; text-align: center; margin: 0 0 4px; font-weight: 700; }
+  h2.sub { font-size: 11.4pt; text-align: center; margin: 0 0 12px; font-weight: 700; }
+  p { margin: 0 0 8px; text-align: justify; }
+  h3 { font-size: 10.8pt; margin: 11px 0 5px; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  th, td {
+    border: 0.7pt solid #000; padding: 4px 8px; vertical-align: top;
+    text-align: left; font-size: 9.9pt;
+  }
+  th { font-weight: 700; background: #f2f2f2; }
+  td.k { width: 38%; }
+  ol.docs { margin: 0; padding-left: 0; list-style: none; }
+  ol.docs li { margin-bottom: 3px; text-align: justify; }
+  .note { text-align: justify; margin: 10px 0 0; }
+  .sign {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 22px; font-size: 9.9pt;
+  }
+  .sign .right { text-align: right; line-height: 1.5; }
+  .nowrap { white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div class="head"><img src="letterhead.jpg" alt=""></div>
+
+<div class="refline">
+  <span>স্মারক নং: PBAB/BMU/ADM2027/01</span>
+  <span>তারিখ: ০১/১১/২০২৬</span>
+</div>
+
+<h1>ভর্তি বিজ্ঞপ্তি (শিক্ষাবর্ষ ২০২৭)</h1>
+<h2 class="sub">বাংলা মাধ্যম: পঞ্চম ও ষষ্ঠ শ্রেণিতে (Class V &amp; Class VI) ভর্তির জন্য</h2>
+
+<p>এতদ্বারা পূর্ব বারাসাত আদর্শ বিদ্যাপীঠ (উঃ মাঃ কো-এড)-এ ২০২৭ শিক্ষাবর্ষে বাংলা মাধ্যমে পঞ্চম শ্রেণি (Class V) ও ষষ্ঠ শ্রেণিতে (Class VI) ভর্তির জন্য ছাত্র-ছাত্রীদের কাছ থেকে নির্দিষ্ট বয়ান অনুযায়ী আবেদনপত্র আহ্বান করা হচ্ছে। অভিভাবক ও ছাত্র-ছাত্রীদের নিম্নলিখিত সময়সূচী ও নিয়মাবলী যথাযথভাবে অনুসরণ করার নির্দেশ দেওয়া হচ্ছে:</p>
+
+<h3>১. আবেদন প্রক্রিয়া ও সময়সূচী</h3>
+<table>
+  <tr><th class="k">বিবরণ</th><th>সময়সূচী ও তথ্য</th></tr>
+  <tr>
+    <td class="k">অনলাইন আবেদনপত্র পূরণের সময়সীমা</td>
+    <td>৫ই নভেম্বর ২০২৬ থেকে ২৫শে নভেম্বর ২০২৬<br>
+        (বিদ্যালয়ের নির্দিষ্ট অনলাইন পোর্টালের মাধ্যমে: www.pbab.in)</td>
+  </tr>
+  <tr>
+    <td class="k">মুদ্রিত ফর্ম ও নথিপত্র অফলাইনে জমা</td>
+    <td>১৩ই নভেম্বর ২০২৬ থেকে ২৮শে নভেম্বর ২০২৬<br>
+        সময়: বেলা ১১:৩০ টা থেকে দুপুর ১:০০ টা পর্যন্ত (বিদ্যালয়ের অফিস কাউন্টার)<br>
+        আবেদন ফি: ₹১০০/- (একশত টাকা মাত্র) — প্রক্রিয়াকরণ বাবদ, মুদ্রিত ফর্ম জমা দেওয়ার সময় বিদ্যালয়ের অফিস কাউন্টারে প্রদেয় (অফেরতযোগ্য)।</td>
+  </tr>
+</table>
+
+<h3>২. বয়স ও জন্মতারিখের সময়সীমা (DOB)</h3>
+<table>
+  <tr><th class="k">শ্রেণি (বাংলা মাধ্যম)</th><th>প্রয়োজনীয় জন্মতারিখের ব্যাপ্তি</th></tr>
+  <tr>
+    <td class="k">পঞ্চম শ্রেণি (Class V)</td>
+    <td>০২/০১/২০১৬ থেকে ০১/০১/২০১৭ (উভয় দিন অন্তর্ভুক্ত)</td>
+  </tr>
+  <tr>
+    <td class="k">ষষ্ঠ শ্রেণি (Class VI)</td>
+    <td>০২/০১/২০১৫ থেকে ০১/০১/২০১৬ (উভয় দিন অন্তর্ভুক্ত)</td>
+  </tr>
+</table>
+
+<h3>৩. আবেদনের সাথে প্রয়োজনীয় নথিপত্র (জেরক্স কপি)</h3>
+<ol class="docs">
+  <li>ক) অনলাইনে পূরণ করা আবেদনপত্রের প্রিন্ট কপি এবং ছাত্র/ছাত্রীর সাম্প্রতিক পাসপোর্ট সাইজ রঙিন ছবি।</li>
+  <li>খ) ছাত্র/ছাত্রীর ও অভিভাবকের আধার কার্ডের (Aadhaar Card) স্ব-প্রত্যয়িত জেরক্স কপি।</li>
+  <li>গ) সংশ্লিষ্ট পৌরসভা বা পঞ্চায়েত কর্তৃক প্রদত্ত ডিজিটাল জন্ম সার্টিফিকেটের (Birth Certificate) জেরক্স কপি।</li>
+  <li>ঘ) সংরক্ষিত শ্রেণির (SC / ST / OBC) ক্ষেত্রে কাস্ট সার্টিফিকেটের জেরক্স কপি (যদি প্রযোজ্য হয়)।</li>
+  <li>ঙ) ছাত্র/ছাত্রীর বা যৌথ ব্যাংক পাসবইয়ের (Bank Passbook) প্রথম পাতার সুস্পষ্ট জেরক্স কপি (যেখানে অ্যাকাউন্ট নম্বর ও IFSC কোড দৃশ্যমান)।</li>
+</ol>
+
+<p class="note"><strong>বিশেষ দ্রষ্টব্য:</strong> ফর্ম জমা দেওয়ার সময় মূল নথিপত্র (Original Documents) সাথে রাখতে হবে যাচাইকরণের জন্য। অসম্পূর্ণ আবেদনপত্র বা নির্দিষ্ট সময়সীমা অতিক্রান্ত হওয়ার পর কোনো আবেদন গ্রহণ করা হবে না।</p>
+
+<h3>৪. নির্বাচন প্রক্রিয়া</h3>
+<p>আসনসংখ্যার তুলনায় আবেদনকারীর সংখ্যা বেশি হলে লটারির মাধ্যমে ছাত্র-ছাত্রী নির্বাচন করা হবে। লটারির তারিখ, ফলাফল প্রকাশের তারিখ এবং চূড়ান্ত ভর্তি প্রক্রিয়ার তারিখ যথাসময়ে জানিয়ে দেওয়া হবে।</p>
+
+<div class="sign">
+  <div>
+    তারিখ: ______________<br>
+    স্থান: বারাসাত
+  </div>
+  <div class="right">
+    প্রধান শিক্ষক / ভারপ্রাপ্ত শিক্ষক<br>
+    পূর্ব বারাসাত আদর্শ বিদ্যাপীঠ (উঃ মাঃ)<br>
+    বারাসাত, উত্তর ২৪ পরগণা
+  </div>
+</div>
+
+</body>
+</html>
