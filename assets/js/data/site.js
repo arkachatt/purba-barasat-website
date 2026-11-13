@@ -739,7 +739,7 @@ export const admission = {
       ],
       streams: [
         {
-          id: 'bengali', title: 'Bengali Medium · Class V',
+          id: 'bengali', title: 'Bengali Medium · Classes V and VI',
           /* The school's own notice, converted from the office's .docx. A
              notice whose href is still '#pdf' has no file behind it yet and
              the button does not offer to save it. */
@@ -802,8 +802,11 @@ export const admissionStreams = {
     label: 'Bengali Medium', labelBn: 'বাংলা মাধ্যম',
     kicker: 'Admission · Bengali medium · Session 2027',
     title: 'Online Application — Bengali Medium',
-    classes: ['Class V'],
-    lastClasses: ['Class IV'],
+    /* Class VI was added to this medium on 13 November 2026, mid-window.
+       The two arrays stay index-aligned — that is how `rules.lastClass`
+       pairs a class with the class below it. */
+    classes: ['Class V', 'Class VI'],
+    lastClasses: ['Class IV', 'Class V'],
   },
   english: {
     id: 'english', letter: 'E',
