@@ -334,6 +334,13 @@ export async function buildApplicationPdf({ receipt }) {
   doc.setFillColor(238); doc.rect(PAGE.margin, y, CONTENT, 6, 'F');
   doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(40);
   doc.text('FOR OFFICE USE ONLY', PAGE.margin + 3, y + 4.1);
+  /* The number repeated in the box the counter actually writes in. Without it
+     the clerk reads it off the line under the title band and copies it into
+     the register from memory, which is where a digit goes wrong. It is the
+     same `receipt.reference` the line above prints, so the two cannot
+     disagree, and it costs no vertical space — it shares the heading bar. */
+  doc.text(`Application No.  ${receipt.reference}`,
+    PAGE.w - PAGE.margin - 3, y + 4.1, { align: 'right' });
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(60);
   doc.text('Documents verified:    [  ] Birth certificate    [  ] Aadhaar    [  ] Report card    [  ] Caste certificate',
     PAGE.margin + 3, y + 11);
