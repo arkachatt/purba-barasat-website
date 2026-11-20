@@ -1,0 +1,13 @@
+# Purba Barasat Adarsha Bidyapith — https://pbab.in
+#
+# Everything is crawlable. The pages that should stay out of search results
+# say so with a <meta name="robots" content="noindex"> of their own, which is
+# deliberate: Disallow here would stop a crawler fetching the page at all, so
+# it would never read that noindex, and Google can still list a blocked URL
+# it has only seen linked from somewhere else. Allow the crawl, refuse the
+# listing.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://pbab.in/sitemap.xml
