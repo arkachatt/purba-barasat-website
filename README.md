@@ -8,6 +8,14 @@ step.
 python -m http.server 8000     # then http://localhost:8000
 ```
 
+**Maintaining this site: read [CLAUDE.md](CLAUDE.md) first.** It carries the
+rules that are not guessable from the code — above all that page content is
+baked into the HTML by `tools/prerender.py` and goes stale unless you re-run
+it. `python3 tools/check.py` verifies what a machine can verify.
+
+Use `python3 serve.py` rather than `http.server` for local preview: it sends
+no-cache headers, and the `@import` chain caches hard enough to hide edits.
+
 ES modules need HTTP — opening `index.html` over `file://` will not work.
 
 ## Pages
