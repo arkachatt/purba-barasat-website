@@ -43,4 +43,49 @@ export const config = {
 
   /** Session the admission form is collecting for, used on the printed form. */
   admissionSession: '2027',
+
+  /**
+   * Chalked, the school's management software.
+   *
+   * Public and unauthenticated by design — there is no key to keep out of this
+   * file. What there IS, is an allowlist at the other end: the ERP permits
+   * browser calls only from origins the school has named, so https://pbab.in
+   * and http://localhost:8000 are each separately allowed or separately
+   * refused. A 'network' failure on localhost usually means the latter.
+   *
+   * The switch is `features.erp` in data/site.js, not here: this file holds
+   * where things are, that one holds whether they are on.
+   */
+  erp: {
+    /** `{code}` is substituted twice — once as subdomain, once in the path. */
+    urlTemplate: 'https://{code}.chalked.in/api/public/{code}',
+
+    /* Site content comes from the Bengali-medium tenant alone. The English
+       tenant is a separate register, not a second website. */
+    contentTenant: 'purba-barasat',
+
+    /* Applications route by medium, because the two mediums are two tenants
+       with two application registers — the same split the spreadsheets had. */
+    tenants: { bengali: 'purba-barasat', english: 'pbab-english' },
+
+    /**
+     * Content timeout. Keep it WELL under the --virtual-time-budget in
+     * tools/prerender.py: a timer armed past that budget means the prerender
+     * dump fires while the fetch is still in flight, and a loading skeleton
+     * gets baked into the page. 4s against a 9s budget leaves room.
+     */
+    contentTimeoutMs: 4000,
+
+    /* Submissions get longer: a parent will wait, and losing an application
+       to an impatient timeout is worse than a slow spinner. */
+    submitTimeoutMs: 12000,
+
+    /* How many notices to ask for. The notice board pages client-side, so it
+       needs the whole list rather than a window of it. */
+    noticeLimit: 200,
+
+    /* Cache the content response for a few minutes in sessionStorage, so
+       clicking Home → Notice does not fetch the same payload twice. */
+    contentCacheMs: 5 * 60 * 1000,
+  },
 };

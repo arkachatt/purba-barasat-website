@@ -108,11 +108,36 @@ def dump(page):
     """The DOM as the browser has it, once the modules have had their say."""
     out = subprocess.run(
         [CHROME, '--headless', '--disable-gpu', '--virtual-time-budget=9000',
-         '--run-all-compositor-stages-before-draw', '--dump-dom', ORIGIN + page],
+         '--run-all-compositor-stages-before-draw',
+         # Cut the school's ERP off at the resolver, deliberately.
+         #
+         # Notices and the gallery are fetched from Chalked at runtime. Baking
+         # whatever it happened to return would make this script's output
+         # depend on a remote server: `prerender.py && git diff --quiet` would
+         # stop meaning "the baked copy is fresh" and start meaning "nobody
+         # has touched the CMS since", which is not a check anybody can act on.
+         # Worse, the budget above is VIRTUAL time: a request still in flight
+         # when it runs out leaves a loading skeleton on the page, and that is
+         # what would be committed.
+         #
+         # With the host unresolvable the fetch fails at once, the adapter
+         # falls through to data/site.js, and the bake is deterministic — and
+         # every run exercises the fallback path, which is the one that matters
+         # when the ERP is down. Keeping data/site.js current is
+         # tools/sync-notices.py's job, not this script's.
+         '--host-resolver-rules=MAP *.chalked.in ~NOTFOUND',
+         '--dump-dom', ORIGIN + page],
         capture_output=True, text=True, timeout=90)
     if not out.stdout:
         raise SystemExit('no DOM for %s\n%s' % (page, out.stderr[-800:]))
     return out.stdout
+
+
+# A page caught mid-fetch, or one whose fallback did not fire. Baking either
+# would publish grey placeholder bars to every crawler and every first paint —
+# and the text-length floor in main() would not notice, because the surrounding
+# copy is long enough on its own.
+UNFINISHED = re.compile(r'<skeleton-rows|state-alert[^>]*tone="error"', re.I)
 
 
 def rendered(page):
@@ -120,7 +145,14 @@ def rendered(page):
     body = body[body.index('<body'):]
     parser = TopLevel(body)
     parser.feed(body)
-    return [(tag, inner) for tag, inner in parser.found if inner.strip()]
+    blocks = [(tag, inner) for tag, inner in parser.found if inner.strip()]
+    for tag, inner in blocks:
+        if UNFINISHED.search(inner):
+            raise SystemExit(
+                '%s: <%s> is still loading or failed — refusing to bake it.\n'
+                'Is serve.py running? Did a component stop falling back to '
+                'data/site.js? See CLAUDE.md section 1.' % (page, tag))
+    return blocks
 
 
 def inject(path, blocks):

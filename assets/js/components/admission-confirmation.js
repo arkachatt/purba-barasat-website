@@ -82,6 +82,10 @@ class AdmissionConfirmation extends SiteComponent {
           <div class="confirmation-ref-meta">
             ${receipt ? [receipt.data?.nameEn || '—', receipt.data?.class, mediumLabel(receipt), when_].filter(Boolean).join(' · ') : 'No application found on this device'}
           </div>
+          ${when(receipt?.erpReference, () => html`
+            <div class="confirmation-ref-meta">
+              School register no. ${receipt.erpReference}
+            </div>`)}
           <button type="button" class="btn btn-primary btn-lg" data-download
                   ${raw(receipt ? '' : 'disabled')}>
             ${raw(icon('download', 18))}Download application PDF

@@ -39,6 +39,14 @@ export const features = {
      guardian would fill it in and the office would never see it. The address,
      phone and map stay, and widen to fill the page. */
   enquiry: false,
+
+  /* The school's management software, Chalked, as a source and a destination:
+     notices and the gallery are read from its CMS, and applications and
+     enquiries are posted to it. Off, and the site is exactly what it was —
+     every one of those reads falls back to the data in this file, which is
+     also what `tools/prerender.py` deliberately bakes. The tenant codes and
+     timeouts are in assets/js/config.js; this is only the switch. */
+  erp: false,
 };
 
 /**

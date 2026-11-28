@@ -8,11 +8,20 @@
 import { SiteComponent, define } from '../core/component.js';
 import { html, raw, each, when, qsa } from '../core/dom.js';
 import { icon } from '../core/icons.js';
-import { noticeBoard } from '../data/site.js';
 import { load } from '../services/content.js';
 
 class NoticeBoard extends SiteComponent {
-  state = { query: '', year: noticeBoard.years[0], category: '', page: 0 };
+  /* 'All years' until the list lands: the years are derived FROM the list,
+     so before it arrives there is no newest year to default to. Seeding this
+     from data/site.js — as it used to — meant that the moment the CMS carried
+     a notice from a year this file had never heard of, the default filter hid
+     it and no dropdown offered to show it. */
+  state = { query: '', year: 'All years', category: '', page: 0 };
+  /* Whether the visitor has chosen a year themselves, so arriving data never
+     overrules them. */
+  yearTouched = false;
+  years = [];
+  categories = [];
   /* null while the list is on its way, so the first paint is a skeleton and
      not an empty frame that then jumps. */
   list = null;
@@ -46,7 +55,6 @@ class NoticeBoard extends SiteComponent {
           <div class="field field-year">
             <label for="notice-year">Year</label>
             <select class="input" id="notice-year" data-year>
-              ${each(noticeBoard.years, (year) => html`<option>${year}</option>`)}
               <option>All years</option>
             </select>
           </div>
@@ -54,7 +62,6 @@ class NoticeBoard extends SiteComponent {
             <label for="notice-category">Category</label>
             <select class="input" id="notice-category" data-category>
               <option value="">All categories</option>
-              ${each(noticeBoard.categories, (category) => html`<option>${category}</option>`)}
             </select>
           </div>
         </div>
@@ -70,7 +77,8 @@ class NoticeBoard extends SiteComponent {
       this.state.query = event.target.value; this.state.page = 0; this.paint();
     });
     this.querySelector('[data-year]').addEventListener('change', (event) => {
-      this.state.year = event.target.value; this.state.page = 0; this.paint();
+      this.state.year = event.target.value; this.yearTouched = true;
+      this.state.page = 0; this.paint();
     });
     this.querySelector('[data-category]').addEventListener('change', (event) => {
       this.state.category = event.target.value; this.state.page = 0; this.paint();
@@ -82,10 +90,31 @@ class NoticeBoard extends SiteComponent {
     this.paint();
     try {
       this.list = await load('noticeBoard');
+      this.years = [...new Set(this.list.map((n) => n.year).filter(Boolean))]
+        .sort().reverse();
+      this.categories = [...new Set(this.list.map((n) => n.category).filter(Boolean))].sort();
+      if (!this.yearTouched && this.years.length) [this.state.year] = this.years;
+      this.syncFilters();
     } catch {
       this.loadError = true;
     }
     this.paint();
+  }
+
+  /** Put the years and categories the list actually contains into the two
+      dropdowns, keeping whatever the visitor has already selected. */
+  syncFilters() {
+    const year = this.querySelector('[data-year]');
+    year.innerHTML = String(html`
+      ${each(this.years, (y) => html`<option>${y}</option>`)}
+      <option>All years</option>`);
+    year.value = this.state.year;
+
+    const category = this.querySelector('[data-category]');
+    category.innerHTML = String(html`
+      <option value="">All categories</option>
+      ${each(this.categories, (c) => html`<option>${c}</option>`)}`);
+    category.value = this.state.category;
   }
 
   paint() {
@@ -114,7 +143,7 @@ class NoticeBoard extends SiteComponent {
     const pages = Math.max(1, Math.ceil(matches.length / this.pageSize));
 
     this.querySelector('[data-count]').textContent = matches.length
-      ? `Showing ${rows.length} of ${noticeBoard.declaredTotal}`
+      ? `Showing ${rows.length} of ${this.list.length}`
       : '';
 
     const unfiltered = !this.state.query && !this.state.category &&

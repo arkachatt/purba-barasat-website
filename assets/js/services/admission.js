@@ -230,7 +230,10 @@ export function draftReference(draft, medium) {
  * opaque — we would lose the reference and could not tell success from
  * failure.)
  */
-async function postToSheet({ data, clientRef, medium }) {
+/* Exported because the ERP adapter in erp-admission.js writes through it
+   rather than instead of it: the PBAB/27/B/V/00001 series is minted by
+   the Apps Script counter, and nothing in a static site can mint it. */
+export async function postToSheet({ data, clientRef, medium }) {
   const endpoint = config.admissionEndpoint;
   if (!endpoint) return { synced: false, syncError: 'not-configured' };
 
@@ -284,6 +287,12 @@ export async function submitApplication({ data, clientRef, medium }) {
     submittedAt: new Date(),
     synced: Boolean(result.synced),
     syncError: result.syncError ?? null,
+    /* The school's register number, from the ERP, beside the one the family
+       quotes. Null whenever the ERP was not reached — which never costs the
+       applicant anything, because `reference` above is what the form prints. */
+    erpReference: result.erpReference ?? null,
+    erpSynced: Boolean(result.erpSynced),
+    erpError: result.erpError ?? null,
     medium,
     clientRef,
     data,
@@ -338,8 +347,23 @@ export async function retrySubmission(receipt) {
      quietly land in the wrong register on the second. */
   const result = await submitAdapter({
     data: receipt.data, clientRef: receipt.clientRef, medium: receipt.medium,
+    /* The whole receipt, so an adapter writing to a second destination can
+       see what that destination already said. The ERP has no idempotency
+       key, so "did this arrive last time?" is a question only the caller can
+       answer — see safeToRepeat() in erp-admission.js. */
+    previous: receipt,
   });
-  if (!result?.synced) return { ...receipt, syncError: result?.syncError || 'unreachable' };
+  if (!result?.synced) {
+    return {
+      ...receipt,
+      syncError: result?.syncError || 'unreachable',
+      /* A retry can reach the ERP even when the sheet refuses, so carry back
+         whatever it said rather than leaving the first attempt's verdict. */
+      erpReference: result?.erpReference ?? receipt.erpReference ?? null,
+      erpSynced: Boolean(result?.erpSynced ?? receipt.erpSynced),
+      erpError: result?.erpError ?? receipt.erpError ?? null,
+    };
+  }
 
   const updated = {
     ...receipt,
@@ -347,6 +371,9 @@ export async function retrySubmission(receipt) {
     submittedAt: new Date(receipt.submittedAt),
     synced: true,
     syncError: null,
+    erpReference: result.erpReference ?? receipt.erpReference ?? null,
+    erpSynced: Boolean(result.erpSynced ?? receipt.erpSynced),
+    erpError: result.erpError ?? null,
   };
   saveSubmission(updated);
   clearDraft(receipt.medium);

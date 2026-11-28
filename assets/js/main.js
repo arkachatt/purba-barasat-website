@@ -6,6 +6,12 @@
  * stylesheet in css/blocks/, one entry in css/site.css.
  */
 
+/* FIRST, and it must stay first: this installs the CMS adapters, and static
+   imports are evaluated in order. Below this line, importing a component
+   registers its element, which upgrades it, which starts its fetch — against
+   whichever adapter is installed by then. See services/erp-adapters.js. */
+import './services/erp-adapters.js';
+
 import './components/site-header.js';
 import './components/site-footer.js';
 import './components/photo-carousel.js';

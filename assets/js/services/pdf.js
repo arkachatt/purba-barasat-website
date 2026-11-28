@@ -341,6 +341,16 @@ export async function buildApplicationPdf({ receipt }) {
      disagree, and it costs no vertical space — it shares the heading bar. */
   doc.text(`Application No.  ${receipt.reference}`,
     PAGE.w - PAGE.margin - 3, y + 4.1, { align: 'right' });
+  /* The school's own register number, from the management software, under the
+     one the family quotes. Smaller and grey because it is the office's
+     business, not theirs — but printed, so the counter can find the online
+     record without asking anyone to read a screen. */
+  if (receipt.erpReference) {
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(6.5); doc.setTextColor(110);
+    doc.text(`School register no. ${latin1(receipt.erpReference)}`,
+      PAGE.w - PAGE.margin - 3, y + 8.6, { align: 'right' });
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(40);
+  }
   doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(60);
   doc.text('Documents verified:    [  ] Birth certificate    [  ] Aadhaar    [  ] Report card    [  ] Caste certificate',
     PAGE.margin + 3, y + 11);
