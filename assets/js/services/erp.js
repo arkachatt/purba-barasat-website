@@ -49,10 +49,13 @@ async function send(tenant, path, { method = 'GET', params, body, timeoutMs } = 
   try {
     response = await fetch(erpUrl(tenant, path, params), {
       method,
-      /* text/plain keeps this a CORS "simple request" — no preflight to
-         answer, the same reason services/admission.js posts that way. The
-         ERP reads the body as JSON regardless of what we label it. */
-      headers: body ? { 'Content-Type': 'text/plain;charset=utf-8' } : undefined,
+      /* Real JSON, unlike the text/plain services/admission.js sends to the
+         Apps Script. That trick exists because Apps Script cannot answer a
+         CORS preflight; Chalked can, and in fact insists — it refuses a
+         text/plain body outright ("Input should be a valid dictionary"). The
+         preflight is the price of the allowlist, and the allowlist is what
+         makes this safe to call from a browser at all. */
+      headers: body ? { 'Content-Type': 'application/json' } : undefined,
       body: body ? JSON.stringify(body) : undefined,
       signal: controller.signal,
     });
